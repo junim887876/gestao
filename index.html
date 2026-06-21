@@ -11,33 +11,56 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
-        /* (Todo o seu CSS original permanece intacto aqui. Omiti apenas para visualização direta, mas mantenha-o completo no seu arquivo) */
+        /* ========== VARIÁVEIS GLOBAIS ========== */
         :root {
-            --bg-body: #F4F7FE; --bg-card: #FFFFFF; --bg-input: #F8FAFC;
-            --primary: #4318FF; --primary-hover: #3311DB; --primary-light: rgba(67, 24, 255, 0.1);
-            --success: #05CD99; --success-light: rgba(5, 205, 153, 0.1);
-            --warning: #FFCE20; --danger: #EE5D50; --text-dark: #2B3674;
-            --text-gray: #A3AED0; --border-color: #E9EDF7; --row-hover: #F8FAFC;
+            --bg-body: #F4F7FE;
+            --bg-card: #FFFFFF;
+            --bg-input: #F8FAFC;
+            --primary: #4318FF;
+            --primary-hover: #3311DB;
+            --primary-light: rgba(67, 24, 255, 0.1);
+            --success: #05CD99;
+            --success-light: rgba(5, 205, 153, 0.1);
+            --warning: #FFCE20;
+            --danger: #EE5D50;
+            --text-dark: #2B3674;
+            --text-gray: #A3AED0;
+            --border-color: #E9EDF7;
+            --row-hover: #F8FAFC;
             --shadow-soft: 0px 18px 40px rgba(112, 144, 176, 0.12);
             --shadow-hover: 0px 20px 50px rgba(67, 24, 255, 0.15);
-            --font-title: 'Poppins', sans-serif; --font-body: 'DM Sans', sans-serif;
-            --radius-lg: 20px; --radius-md: 12px;
+            
+            --font-title: 'Poppins', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+            --radius-lg: 20px;
+            --radius-md: 12px;
         }
+
         [data-theme="dark"] {
-            --bg-body: #0F172A; --bg-card: #1E293B; --bg-input: #334155;
-            --primary: #6366F1; --primary-hover: #818CF8; --primary-light: rgba(99, 102, 241, 0.1);
-            --success: #34D399; --success-light: rgba(52, 211, 153, 0.1);
-            --text-dark: #F8FAFC; --text-gray: #94A3B8; --border-color: #334155;
+            --bg-body: #0F172A;
+            --bg-card: #1E293B;
+            --bg-input: #334155;
+            --primary: #6366F1;
+            --primary-hover: #818CF8;
+            --primary-light: rgba(99, 102, 241, 0.1);
+            --success: #34D399;
+            --success-light: rgba(52, 211, 153, 0.1);
+            --text-dark: #F8FAFC;
+            --text-gray: #94A3B8;
+            --border-color: #334155;
             --row-hover: #334155;
             --shadow-soft: 0px 10px 30px rgba(0, 0, 0, 0.4);
             --shadow-hover: 0px 15px 40px rgba(99, 102, 241, 0.2);
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; }
         body { width: 100vw; height: 100vh; overflow: hidden; background-color: var(--bg-body); color: var(--text-dark); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
         input, select, textarea { font-size: 16px !important; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--text-gray); border-radius: 10px; opacity: 0.5; }
+
+        /* ========== LAYOUT PRINCIPAL ========== */
         .main-container { display: flex; height: 100vh; flex-direction: column; }
         .topbar { background: var(--bg-card); height: 80px; padding: 0 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 10; box-shadow: var(--shadow-soft); }
         .topbar-logo { font-family: var(--font-title); font-size: 1.5rem; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; gap: 10px; }
@@ -46,15 +69,21 @@
         .btn-theme { background: var(--bg-body); border: 1px solid var(--border-color); color: var(--text-dark); width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.2s; font-size: 1.1rem; }
         .btn-theme:hover { background: var(--border-color); transform: scale(1.05); }
         .user-avatar { width: 42px; height: 42px; background: var(--primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #FFF; font-weight: bold; font-size: 1.1rem; }
+
+        /* ========== SIDEBAR DE NAVEGAÇÃO ========== */
         .sidebar { width: 280px; background: var(--bg-card); border-right: 1px solid var(--border-color); padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
         .nav-item { padding: 14px 16px; border-radius: var(--radius-md); cursor: pointer; transition: 0.3s; font-weight: 500; display: flex; align-items: center; gap: 12px; color: var(--text-gray); border-left: 3px solid transparent; }
         .nav-item:hover { background: var(--primary-light); color: var(--primary); }
         .nav-item.active { background: var(--primary-light); color: var(--primary); border-left-color: var(--primary); font-weight: 700; }
         .nav-item i { font-size: 1.2rem; }
+
+        /* ========== ÁREA DE CONTEÚDO ========== */
         .content-wrapper { flex: 1; overflow-y: auto; padding: 40px 5%; max-width: 1400px; margin: 0 auto; width: 100%; }
         .section { display: none; animation: fadeIn 0.4s ease; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ========== CARDS E LAYOUTS ========== */
         .welcome-banner { background: linear-gradient(135deg, var(--primary) 0%, #1A0B6E 100%); border-radius: var(--radius-lg); padding: 35px 40px; color: #FFF; margin-bottom: 30px; box-shadow: var(--shadow-soft); position: relative; overflow: hidden; }
         [data-theme="dark"] .welcome-banner { background: linear-gradient(135deg, var(--primary) 0%, #312E81 100%); }
         .welcome-banner::after { content: ''; position: absolute; right: -50px; top: -50px; width: 250px; height: 250px; background: rgba(255, 255, 255, 0.05); border-radius: 50%; }
@@ -74,9 +103,13 @@
         .saas-card-header { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
         .saas-card-header h3 { font-family: var(--font-title); font-size: 1.3rem; color: var(--text-dark); }
         .saas-card-header p { font-size: 0.9rem; color: var(--text-gray); margin-top: 5px; }
+
+        /* ========== BOTÃO FLUTUANTE DE AÇÃO ========== */
         .fab-button { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%); border: none; border-radius: 50%; color: #FFF; font-size: 1.8rem; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: var(--shadow-hover); transition: 0.3s; z-index: 100; }
         .fab-button:hover { transform: scale(1.1) rotate(90deg); box-shadow: 0px 25px 60px rgba(67, 24, 255, 0.3); }
         .fab-button:active { transform: scale(0.95); }
+
+        /* ========== MODAL/FORMULÁRIO ========== */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; animation: fadeInOverlay 0.3s ease; }
         .modal-overlay.active { display: flex; justify-content: center; align-items: center; }
         @keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
@@ -95,6 +128,8 @@
         .btn-primary { width: 100%; height: 50px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%); color: #FFF; border: none; border-radius: var(--radius-md); font-family: var(--font-title); font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 10px; }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
         .btn-primary:active { transform: translateY(0); }
+
+        /* ========== LISTAGEM DE ITENS ========== */
         .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; margin-top: 25px; }
         .item-card { background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); padding: 25px; transition: 0.3s; display: flex; flex-direction: column; gap: 15px; position: relative; overflow: hidden; }
         .item-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--primary), var(--success)); }
@@ -116,6 +151,8 @@
         .btn-action.delete:hover { background: var(--danger); color: #FFF; }
         .btn-action.generate { background: var(--success-light); color: var(--success); }
         .btn-action.generate:hover { background: var(--success); color: #FFF; }
+
+        /* ========== GRÁFICOS E NOTIFICAÇÕES ========== */
         .chart-container { position: relative; height: 350px; margin-top: 20px; }
         #toast-container { position: fixed; bottom: 30px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 12px; }
         .toast { background: var(--bg-card); border-radius: var(--radius-md); padding: 16px 20px; box-shadow: var(--shadow-soft); display: flex; align-items: center; gap: 15px; font-family: var(--font-body); font-weight: 500; font-size: 0.95rem; color: var(--text-dark); transform: translateX(120%); animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; border-left: 5px solid var(--primary); border-top: 1px solid var(--border-color); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); }
@@ -128,6 +165,8 @@
         .empty-state { text-align: center; padding: 60px 20px; color: var(--text-gray); }
         .empty-state i { font-size: 4rem; margin-bottom: 20px; opacity: 0.3; }
         .empty-state p { font-size: 1.1rem; margin-bottom: 10px; }
+
+        /* ========== RESPONSIVIDADE ========== */
         @media (max-width: 1024px) { .sidebar { width: 240px; } .items-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); } .content-wrapper { padding: 30px 3%; } }
         @media (max-width: 768px) { .main-container { flex-direction: column; } .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border-color); padding: 15px; flex-direction: row; overflow-x: auto; overflow-y: hidden; } .nav-item { white-space: nowrap; padding: 10px 14px; font-size: 0.9rem; } .topbar { height: 70px; padding: 0 20px; } .topbar-logo { font-size: 1.2rem; } .user-controls { gap: 10px; } .welcome-banner { padding: 25px 20px; } .welcome-text h2 { font-size: 1.4rem; } .items-grid { grid-template-columns: 1fr; } .summary-cards { grid-template-columns: 1fr; } .fab-button { width: 55px; height: 55px; font-size: 1.5rem; bottom: 20px; right: 20px; } .modal-content { padding: 25px 20px; max-width: 95%; } .form-grid.two-cols { grid-template-columns: 1fr; } }
         @media (max-width: 480px) { .topbar { padding: 0 15px; height: 60px; } .topbar-logo { font-size: 1rem; } .topbar-logo span { display: none; } .content-wrapper { padding: 20px 15px; } .saas-card { padding: 20px 15px; } .welcome-banner { padding: 20px 15px; } .welcome-text h2 { font-size: 1.2rem; } .summary-card { gap: 15px; padding: 15px; } .summary-icon { width: 50px; height: 50px; font-size: 1.4rem; } .summary-info h3 { font-size: 1.5rem; } .fab-button { width: 50px; height: 50px; font-size: 1.3rem; } .item-card { padding: 18px; } #toast-container { right: 10px; bottom: 20px; } .toast { width: calc(100vw - 20px); max-width: 400px; } }
@@ -192,6 +231,7 @@
             </div>
 
             <div class="content-wrapper">
+                
                 <section id="dashboard" class="section active">
                     <div class="welcome-banner">
                         <div class="welcome-text">
@@ -199,6 +239,7 @@
                             <p>Acompanhe todos os seus investimentos, negócios e rentabilidade em uma plataforma integrada.</p>
                         </div>
                     </div>
+
                     <div class="summary-cards">
                         <div class="summary-card success">
                             <div class="summary-icon"><i class="fa-solid fa-home"></i></div>
@@ -217,6 +258,7 @@
                             <div class="summary-info"><span>Total Geral</span><h3 id="total-geral">R$ 0,00</h3></div>
                         </div>
                     </div>
+
                     <div class="saas-card">
                         <div class="saas-card-header"><h3>Gráfico de Receitas Mensais</h3></div>
                         <div class="chart-container"><canvas id="chartReceitasMensais"></canvas></div>
@@ -225,7 +267,7 @@
 
                 <section id="casas" class="section">
                     <div class="welcome-banner" style="background: linear-gradient(135deg, #FF6B6B 0%, #C92A2A 100%);">
-                        <div class="welcome-text"><h2>Minhas Casas de Aluguel</h2><p>Gerencie seus aluguéis e gere cobranças.</p></div>
+                        <div class="welcome-text"><h2>Minhas Casas de Aluguel</h2><p>Gerencie seus aluguéis e acompanhe recebimentos.</p></div>
                     </div>
                     <div class="summary-cards">
                         <div class="summary-card">
@@ -242,7 +284,7 @@
                         </div>
                     </div>
                     <div class="saas-card">
-                        <div class="saas-card-header"><h3>Recebimentos por Casa</h3></div>
+                        <div class="saas-card-header"><h3>Gráfico de Recebimentos por Casa</h3></div>
                         <div class="chart-container"><canvas id="chartCasas"></canvas></div>
                     </div>
                     <div class="items-grid" id="listaCasas"></div>
@@ -250,7 +292,7 @@
 
                 <section id="energia" class="section">
                     <div class="welcome-banner" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);">
-                        <div class="welcome-text"><h2>Energia Solar</h2><p>Gerencie seus clientes com desconto automático de 20%.</p></div>
+                        <div class="welcome-text"><h2>Energia Solar</h2><p>Gerencie clientes e gere faturas com desconto automático.</p></div>
                     </div>
                     <div class="summary-cards">
                         <div class="summary-card">
@@ -304,7 +346,7 @@
                     <div class="summary-cards">
                         <div class="summary-card">
                             <div class="summary-icon" style="background: rgba(236, 72, 153, 0.15); color: #EC4899;"><i class="fa-solid fa-bowl-food"></i></div>
-                            <div class="summary-info"><span>Faturamento Mês</span><h3 id="faturamento-acai">R$ 0,00</h3></div>
+                            <div class="summary-info"><span>Entradas Mês</span><h3 id="faturamento-acai">R$ 0,00</h3></div>
                         </div>
                         <div class="summary-card">
                             <div class="summary-icon" style="background: rgba(239, 68, 68, 0.15); color: #EF4444;"><i class="fa-solid fa-trending-down"></i></div>
@@ -339,20 +381,24 @@
     </div>
 
     <script>
-        // ========== COLOQUE SUA URL DO APPS SCRIPT AQUI ==========
+        // ========== INTEGRAÇÃO OFICIAL COM APPS SCRIPT ==========
         const CONFIG = {
-            formUrl: 'https://script.google.com/macros/s/AKfycbzp7hh7BtTPahMfhcn7Y5hRlZyzzGV7LpKMZqeE1vlTMJJ0xeK9d8L_XDymODw_pZ2C/exec' 
+            formUrl: 'https://script.google.com/macros/s/AKfycbzp7hh7BtTPahMfhcn7Y5hRlZyzzGV7LpKMZqeE1vlTMJJ0xeK9d8L_XDymODw_pZ2C/exec',
+            sheetUrl: 'https://docs.google.com/spreadsheets/d/18N_L_t9amEgOsjqNfiwUaTnSespPMqL5a15xxCzTGBE/edit?usp=sharing'
         };
 
+        // Dados em memória
         let dados = { casas: [], energia: [], juridico: [], emprestimo: [], acai: [], barbearia: [] };
         let abaAtual = 'dashboard';
         let modalAtual = null;
 
+        // ========== INICIALIZAÇÃO ==========
         document.addEventListener('DOMContentLoaded', function() {
             initTheme();
             sincronizarDados();
         });
 
+        // ========== GERENCIAMENTO DE TEMA ==========
         function initTheme() {
             const tema = localStorage.getItem('tema_fm') || 'light';
             document.documentElement.setAttribute('data-theme', tema);
@@ -372,6 +418,7 @@
             document.querySelector('.btn-theme i').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
         }
 
+        // ========== NOTIFICAÇÕES TOAST ==========
         function showToast(mensagem, tipo = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -385,12 +432,14 @@
             }, 3000);
         }
 
+        // ========== NAVEGAÇÃO ENTRE ABAS ==========
         function mudarAba(aba) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(aba).classList.add('active');
             event.target.closest('.nav-item').classList.add('active');
             abaAtual = aba;
+            
             setTimeout(() => {
                 if(aba === 'casas') atualizarGraficoCasas();
                 if(aba === 'juridico') atualizarGraficoJuridico();
@@ -398,31 +447,173 @@
             }, 100);
         }
 
+        // ========== GERENCIAMENTO DO MODAL ==========
         function abrirModalAtual() {
             modalAtual = abaAtual;
-            const titulos = { 'casas': 'Adicionar Casa', 'energia': 'Adicionar Cliente Energia Solar', 'juridico': 'Adicionar Processo Jurídico', 'emprestimo': 'Adicionar Empréstimo', 'acai': 'Adicionar Movimento', 'barbearia': 'Registrar Dia' };
+            const titulos = {
+                'casas': 'Adicionar Casa',
+                'energia': 'Adicionar Cliente Energia Solar',
+                'juridico': 'Adicionar Processo Jurídico',
+                'emprestimo': 'Adicionar Empréstimo',
+                'acai': 'Adicionar Movimento',
+                'barbearia': 'Registrar Dia'
+            };
             document.getElementById('modalTitle').textContent = titulos[abaAtual] || 'Adicionar';
-            const formularios = { 'casas': gerarFormularioCasa(), 'energia': gerarFormularioEnergia(), 'juridico': gerarFormularioJuridico(), 'emprestimo': gerarFormularioEmprestimo(), 'acai': gerarFormularioAcai(), 'barbearia': gerarFormularioBarbearia() };
+            const formularios = {
+                'casas': gerarFormularioCasa(),
+                'energia': gerarFormularioEnergia(),
+                'juridico': gerarFormularioJuridico(),
+                'emprestimo': gerarFormularioEmprestimo(),
+                'acai': gerarFormularioAcai(),
+                'barbearia': gerarFormularioBarbearia()
+            };
             document.getElementById('modalBody').innerHTML = formularios[abaAtual] || '';
             document.getElementById('modalOverlay').classList.add('active');
         }
 
-        function fecharModal() { document.getElementById('modalOverlay').classList.remove('active'); modalAtual = null; }
-        document.addEventListener('click', function(e) { if(e.target === document.getElementById('modalOverlay')) fecharModal(); });
+        function fecharModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            modalAtual = null;
+        }
 
-        function gerarFormularioCasa() { return `<div class="form-grid two-cols"><div><label class="form-label">Nome do Imóvel</label><input type="text" class="form-control" id="inp_casa_nome"></div><div><label class="form-label">Endereço</label><input type="text" class="form-control" id="inp_casa_endereco"></div></div><div class="form-grid two-cols"><div><label class="form-label">Inquilino</label><input type="text" class="form-control" id="inp_casa_inquilino"></div><div><label class="form-label">Celular</label><input type="tel" class="form-control" id="inp_casa_celular"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor (R$)</label><input type="number" class="form-control" id="inp_casa_valor" step="0.01"></div><div><label class="form-label">Dia</label><input type="number" class="form-control" id="inp_casa_dia" min="1" max="31"></div></div><div class="form-grid two-cols"><div><label class="form-label">Data Início</label><input type="date" class="form-control" id="inp_casa_data_inicio"></div><div><label class="form-label">Meses</label><input type="number" class="form-control" id="inp_casa_tempo" min="1"></div></div><button class="btn-primary" onclick="salvarCasa()"><i class="fa-solid fa-save"></i> Salvar</button>`; }
-        function gerarFormularioEnergia() { return `<div class="form-grid two-cols"><div><label class="form-label">Cliente</label><input type="text" class="form-control" id="inp_energia_nome"></div><div><label class="form-label">Celular</label><input type="tel" class="form-control" id="inp_energia_celular"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Original (R$)</label><input type="number" class="form-control" id="inp_energia_valor" step="0.01"></div><div><label class="form-label">Data</label><input type="date" class="form-control" id="inp_energia_data"></div></div><div><label class="form-label">Período</label><input type="text" class="form-control" id="inp_energia_periodo"></div><button class="btn-primary" onclick="salvarEnergia()"><i class="fa-solid fa-save"></i> Salvar</button>`; }
-        function gerarFormularioJuridico() { return `<div class="form-grid two-cols"><div><label class="form-label">Cliente</label><input type="text" class="form-control" id="inp_jur_nome"></div><div><label class="form-label">Tipo</label><input type="text" class="form-control" id="inp_jur_tipo"></div></div><div class="form-grid"><label class="form-label">Descrição</label><textarea class="form-control" id="inp_jur_desc"></textarea></div><div class="form-grid two-cols"><div><label class="form-label">Valor (R$)</label><input type="number" class="form-control" id="inp_jur_valor" step="0.01"></div><div><label class="form-label">Data</label><input type="date" class="form-control" id="inp_jur_data"></div></div><div class="form-grid two-cols"><div><label class="form-label">Investidor</label><select class="form-control" id="inp_jur_investidor"><option value="Fernanda">Fernanda</option><option value="Junior">Júnior</option></select></div><div><label class="form-label">Status</label><select class="form-control" id="inp_jur_status"><option value="Pendente">Pendente</option><option value="Ativo">Ativo</option><option value="Recebido">Recebido</option></select></div></div><button class="btn-primary" onclick="salvarJuridico()"><i class="fa-solid fa-save"></i> Salvar</button>`; }
-        function gerarFormularioEmprestimo() { return `<div class="form-grid"><div><label class="form-label">Pessoa</label><input type="text" class="form-control" id="inp_emp_nome"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor (R$)</label><input type="number" class="form-control" id="inp_emp_valor" step="0.01"></div><div><label class="form-label">Parcelas</label><input type="number" class="form-control" id="inp_emp_parcelas" min="1"></div></div><div class="form-grid two-cols"><div><label class="form-label">Mensal (R$)</label><input type="number" class="form-control" id="inp_emp_valor_mensal" step="0.01"></div><div><label class="form-label">Próximo</label><input type="date" class="form-control" id="inp_emp_data"></div></div><button class="btn-primary" onclick="salvarEmprestimo()"><i class="fa-solid fa-save"></i> Salvar</button>`; }
-        function gerarFormularioAcai() { return `<div class="form-grid two-cols"><div><label class="form-label">Data</label><input type="date" class="form-control" id="inp_acai_data"></div><div><label class="form-label">Tipo</label><select class="form-control" id="inp_acai_tipo"><option value="Entrada">Entrada (Venda)</option><option value="Saida">Saída (Compra)</option></select></div></div><div class="form-grid"><div><label class="form-label">Descrição</label><input type="text" class="form-control" id="inp_acai_desc"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor (R$)</label><input type="number" class="form-control" id="inp_acai_valor" step="0.01"></div><div><label class="form-label">Qtd (kg)</label><input type="number" class="form-control" id="inp_acai_qtd" step="0.5"></div></div><button class="btn-primary" onclick="salvarAcai()"><i class="fa-solid fa-save"></i> Salvar</button>`; }
-        function gerarFormularioBarbearia() { return `<div class="form-grid"><div><label class="form-label">Data</label><input type="date" class="form-control" id="inp_barb_data"></div></div><div class="form-grid two-cols"><div><label class="form-label">Faturamento (R$)</label><input type="number" class="form-control" id="inp_barb_faturamento" step="0.01"></div><div><label class="form-label">Bebidas (R$)</label><input type="number" class="form-control" id="inp_barb_bebidas" step="0.01"></div></div><div class="form-grid"><div><label class="form-label">Pomadas (R$)</label><input type="number" class="form-control" id="inp_barb_pomadas" step="0.01"></div></div><button class="btn-primary" onclick="salvarBarbearia()"><i class="fa-solid fa-save"></i> Salvar</button>`; }
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('modalOverlay');
+            if(event.target === modal) { fecharModal(); }
+        });
 
-        // MÁGICA DA INTEGRAÇÃO
+        // ========== FORMULÁRIOS ==========
+        function gerarFormularioCasa() {
+            return `
+                <div class="form-grid two-cols">
+                    <div><label class="form-label">Nome do Imóvel</label><input type="text" class="form-control" id="inp_casa_nome"></div>
+                    <div><label class="form-label">Endereço</label><input type="text" class="form-control" id="inp_casa_endereco"></div>
+                </div>
+                <div class="form-grid two-cols">
+                    <div><label class="form-label">Nome do Inquilino</label><input type="text" class="form-control" id="inp_casa_inquilino"></div>
+                    <div><label class="form-label">Celular</label><input type="tel" class="form-control" id="inp_casa_celular"></div>
+                </div>
+                <div class="form-grid two-cols">
+                    <div><label class="form-label">Valor Aluguel (R$)</label><input type="number" class="form-control" id="inp_casa_valor" step="0.01"></div>
+                    <div><label class="form-label">Dia do Pagamento</label><input type="number" class="form-control" id="inp_casa_dia" min="1" max="31"></div>
+                </div>
+                <div class="form-grid two-cols">
+                    <div><label class="form-label">Data Início</label><input type="date" class="form-control" id="inp_casa_data_inicio"></div>
+                    <div><label class="form-label">Tempo Contrato (meses)</label><input type="number" class="form-control" id="inp_casa_tempo" min="1"></div>
+                </div>
+                <button class="btn-primary" onclick="salvarCasa()"><i class="fa-solid fa-save"></i> Salvar Casa</button>
+            `;
+        }
+
+        function gerarFormularioEnergia() {
+            return `
+                <div class="form-grid">
+                    <div><label class="form-label">Nome do Cliente</label><input type="text" class="form-control" id="inp_energia_nome"></div>
+                    <div><label class="form-label">Celular</label><input type="tel" class="form-control" id="inp_energia_celular"></div>
+                </div>
+                <div class="form-grid two-cols">
+                    <div><label class="form-label">Valor Fatura (R$)</label><input type="number" class="form-control" id="inp_energia_valor" step="0.01"></div>
+                    <div><label class="form-label">Data Fatura</label><input type="date" class="form-control" id="inp_energia_data"></div>
+                </div>
+                <div><label class="form-label">Período</label><input type="text" class="form-control" id="inp_energia_periodo" placeholder="Ex: Junho/2024"></div>
+                <button class="btn-primary" onclick="salvarEnergia()"><i class="fa-solid fa-save"></i> Salvar Cliente</button>
+            `;
+        }
+
+        function gerarFormularioJuridico() {
+            return `
+                <div class="form-grid">
+                    <div><label class="form-label">Nome do Cliente</label><input type="text" class="form-control" id="inp_jur_nome"></div>
+                    <div><label class="form-label">Tipo de Processo</label><input type="text" class="form-control" id="inp_jur_tipo"></div>
+                </div>
+                <div class="form-grid">
+                    <label class="form-label">Descrição da Causa</label><textarea class="form-control" id="inp_jur_desc"></textarea>
+                </div>
+                <div class="form-grid two-cols">
+                    <div><label class="form-label">Valor da Causa (R$)</label><input type="number" class="form-control" id="inp_jur_valor" step="0.01"></div>
+                    <div><label class="form-label">Data Julgamento</label><input type="date" class="form-control" id="inp_jur_data"></div>
+                </div>
+                <div class="form-grid two-cols">
+                    <div>
+                        <label class="form-label">Investidor</label>
+                        <select class="form-control" id="inp_jur_investidor">
+                            <option value="Fernanda">Fernanda (Integral)</option>
+                            <option value="Junior">Júnior (6% Fixo)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label">Status</label>
+                        <select class="form-control" id="inp_jur_status">
+                            <option value="Pendente">⏳ Pendente</option>
+                            <option value="Ativo">✅ Ativo</option>
+                            <option value="Recebido">🎉 Recebido</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="salvarJuridico()"><i class="fa-solid fa-save"></i> Salvar Processo</button>
+            `;
+        }
+
+        function gerarFormularioEmprestimo() {
+            return `
+                <div class="form-grid">
+                    <div><label class="form-label">Nome da Pessoa</label><input type="text" class="form-control" id="inp_emp_nome"></div>
+                </div>
+                <div class="form-grid two-cols">
+                    <div><label class="form-label">Valor Emprestado (R$)</label><input type="number" class="form-control" id="inp_emp_valor" step="0.01"></div>
+                    <div><label class="form-label">Parcelas</label><input type="number" class="form-control" id="inp_emp_parcelas" min="1"></div>
+                </div>
+                <div class="form-grid two-cols">
+                    <div><label class="form-label">Valor Mensal (R$)</label><input type="number" class="form-control" id="inp_emp_valor_mensal" step="0.01"></div>
+                    <div><label class="form-label">Próximo Recebimento</label><input type="date" class="form-control" id="inp_emp_data"></div>
+                </div>
+                <button class="btn-primary" onclick="salvarEmprestimo()"><i class="fa-solid fa-save"></i> Salvar Empréstimo</button>
+            `;
+        }
+
+        function gerarFormularioAcai() {
+            return `
+                <div class="form-grid two-cols">
+                    <div><label class="form-label">Data</label><input type="date" class="form-control" id="inp_acai_data"></div>
+                    <div>
+                        <label class="form-label">Tipo</label>
+                        <select class="form-control" id="inp_acai_tipo">
+                            <option value="Entrada">📈 Entrada (Venda)</option>
+                            <option value="Saida">📉 Saída (Compra)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div><label class="form-label">Descrição</label><input type="text" class="form-control" id="inp_acai_desc"></div>
+                </div>
+                <div class="form-grid two-cols">
+                    <div><label class="form-label">Valor (R$)</label><input type="number" class="form-control" id="inp_acai_valor" step="0.01"></div>
+                    <div><label class="form-label">Quantidade (kg)</label><input type="number" class="form-control" id="inp_acai_qtd" step="0.5"></div>
+                </div>
+                <button class="btn-primary" onclick="salvarAcai()"><i class="fa-solid fa-save"></i> Registrar Movimento</button>
+            `;
+        }
+
+        function gerarFormularioBarbearia() {
+            return `
+                <div class="form-grid">
+                    <div><label class="form-label">Data</label><input type="date" class="form-control" id="inp_barb_data"></div>
+                </div>
+                <div class="form-grid two-cols">
+                    <div><label class="form-label">Faturamento (R$)</label><input type="number" class="form-control" id="inp_barb_faturamento" step="0.01"></div>
+                    <div><label class="form-label">Gasto Bebidas (R$)</label><input type="number" class="form-control" id="inp_barb_bebidas" step="0.01"></div>
+                </div>
+                <div class="form-grid">
+                    <div><label class="form-label">Gasto Pomadas (R$)</label><input type="number" class="form-control" id="inp_barb_pomadas" step="0.01"></div>
+                </div>
+                <button class="btn-primary" onclick="salvarBarbearia()"><i class="fa-solid fa-save"></i> Registrar Dia</button>
+            `;
+        }
+
+        // ========== COMUNICAÇÃO COM GOOGLE SHEETS ==========
         async function enviarParaGoogleSheets(tipo, item) {
             try {
-                if (CONFIG.formUrl === 'SUA_URL_DO_APP_SCRIPT_AQUI') return;
-                
                 let valores = [];
+                // Estruturando os dados de acordo com as colunas que você precisa em cada aba
                 if (tipo === 'casas') valores = [item.id, item.nome, item.endereco, item.inquilino, item.celular, item.valor, item.dia, item.data_inicio, item.tempo_contrato, item.data_criacao];
                 else if (tipo === 'energia') valores = [item.id, item.nome, item.celular, item.valor_original, item.desconto, item.valor_final, item.data, item.periodo, item.data_criacao];
                 else if (tipo === 'juridico') valores = [item.id, item.nome, item.tipo, item.descricao, item.valor, item.data, item.investidor, item.status, item.data_criacao];
@@ -430,65 +621,145 @@
                 else if (tipo === 'acai') valores = [item.id, item.data, item.tipo, item.descricao, item.valor, item.quantidade, item.data_criacao];
                 else if (tipo === 'barbearia') valores = [item.id, item.data, item.faturamento, item.bebidas, item.pomadas, item.data_criacao];
 
-                await fetch(CONFIG.formUrl, {
+                // Requisição assíncrona sem travar a tela
+                fetch(CONFIG.formUrl, {
                     method: 'POST',
                     body: JSON.stringify({ tipo: tipo, valores: valores }),
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' } // text/plain evita bloqueios drásticos de CORS no Sheets
-                });
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8' // Importante para evitar bloqueio de CORS no Google
+                    }
+                }).then(response => response.json())
+                  .then(result => console.log('Sincronizado na Planilha:', result))
+                  .catch(err => console.error('Aviso de rede (normal no GAS):', err));
+
             } catch (error) {
-                console.error('Erro na planilha:', error);
+                console.error('Erro na preparação do envio:', error);
             }
         }
 
+        // ========== FUNÇÕES DE SALVAMENTO ==========
         async function salvarCasa() {
-            const c = { id: Date.now(), nome: document.getElementById('inp_casa_nome').value, endereco: document.getElementById('inp_casa_endereco').value, inquilino: document.getElementById('inp_casa_inquilino').value, celular: document.getElementById('inp_casa_celular').value, valor: parseFloat(document.getElementById('inp_casa_valor').value)||0, dia: parseInt(document.getElementById('inp_casa_dia').value)||1, data_inicio: document.getElementById('inp_casa_data_inicio').value, tempo_contrato: parseInt(document.getElementById('inp_casa_tempo').value)||12, data_criacao: new Date().toISOString() };
-            if(!c.nome) return showToast('Preencha os campos!', 'error');
-            dados.casas.push(c); localStorage.setItem('casas_data', JSON.stringify(dados.casas));
-            fecharModal(); renderizarCasas(); atualizarDashboard(); showToast('Casa salva!');
-            await enviarParaGoogleSheets('casas', c);
+            const casa = {
+                id: Date.now(),
+                nome: document.getElementById('inp_casa_nome').value,
+                endereco: document.getElementById('inp_casa_endereco').value,
+                inquilino: document.getElementById('inp_casa_inquilino').value,
+                celular: document.getElementById('inp_casa_celular').value,
+                valor: parseFloat(document.getElementById('inp_casa_valor').value) || 0,
+                dia: parseInt(document.getElementById('inp_casa_dia').value) || 1,
+                data_inicio: document.getElementById('inp_casa_data_inicio').value,
+                tempo_contrato: parseInt(document.getElementById('inp_casa_tempo').value) || 12,
+                data_criacao: new Date().toISOString()
+            };
+
+            if(!casa.nome || !casa.inquilino) return showToast('Preencha os campos obrigatórios!', 'error');
+
+            dados.casas.push(casa);
+            localStorage.setItem('casas_data', JSON.stringify(dados.casas));
+            fecharModal(); renderizarCasas(); atualizarDashboard(); showToast('Casa cadastrada!');
+            await enviarParaGoogleSheets('casas', casa);
         }
-        
+
         async function salvarEnergia() {
-            let v = parseFloat(document.getElementById('inp_energia_valor').value)||0;
-            const c = { id: Date.now(), nome: document.getElementById('inp_energia_nome').value, celular: document.getElementById('inp_energia_celular').value, valor_original: v, desconto: v*0.2, valor_final: v*0.8, data: document.getElementById('inp_energia_data').value, periodo: document.getElementById('inp_energia_periodo').value, data_criacao: new Date().toISOString() };
-            if(!c.nome) return showToast('Preencha!', 'error');
-            dados.energia.push(c); localStorage.setItem('energia_data', JSON.stringify(dados.energia));
-            fecharModal(); renderizarEnergiaSolar(); atualizarDashboard(); showToast('Energia salva!');
-            await enviarParaGoogleSheets('energia', c);
+            let v = parseFloat(document.getElementById('inp_energia_valor').value) || 0;
+            const energia = {
+                id: Date.now(),
+                nome: document.getElementById('inp_energia_nome').value,
+                celular: document.getElementById('inp_energia_celular').value,
+                valor_original: v,
+                desconto: v * 0.20,
+                valor_final: v * 0.80,
+                data: document.getElementById('inp_energia_data').value,
+                periodo: document.getElementById('inp_energia_periodo').value,
+                data_criacao: new Date().toISOString()
+            };
+
+            if(!energia.nome || energia.valor_original <= 0) return showToast('Preencha os campos!', 'error');
+
+            dados.energia.push(energia);
+            localStorage.setItem('energia_data', JSON.stringify(dados.energia));
+            fecharModal(); renderizarEnergiaSolar(); atualizarDashboard(); showToast('Cliente registrado!');
+            await enviarParaGoogleSheets('energia', energia);
         }
 
         async function salvarJuridico() {
-            const j = { id: Date.now(), nome: document.getElementById('inp_jur_nome').value, tipo: document.getElementById('inp_jur_tipo').value, descricao: document.getElementById('inp_jur_desc').value, valor: parseFloat(document.getElementById('inp_jur_valor').value)||0, data: document.getElementById('inp_jur_data').value, investidor: document.getElementById('inp_jur_investidor').value, status: document.getElementById('inp_jur_status').value, data_criacao: new Date().toISOString() };
-            if(!j.nome) return showToast('Preencha!', 'error');
-            dados.juridico.push(j); localStorage.setItem('juridico_data', JSON.stringify(dados.juridico));
+            const juridico = {
+                id: Date.now(),
+                nome: document.getElementById('inp_jur_nome').value,
+                tipo: document.getElementById('inp_jur_tipo').value,
+                descricao: document.getElementById('inp_jur_desc').value,
+                valor: parseFloat(document.getElementById('inp_jur_valor').value) || 0,
+                data: document.getElementById('inp_jur_data').value,
+                investidor: document.getElementById('inp_jur_investidor').value,
+                status: document.getElementById('inp_jur_status').value,
+                data_criacao: new Date().toISOString()
+            };
+
+            if(!juridico.nome) return showToast('Preencha o nome!', 'error');
+
+            dados.juridico.push(juridico);
+            localStorage.setItem('juridico_data', JSON.stringify(dados.juridico));
             fecharModal(); renderizarJuridico(); atualizarDashboard(); showToast('Processo salvo!');
-            await enviarParaGoogleSheets('juridico', j);
+            await enviarParaGoogleSheets('juridico', juridico);
         }
 
         async function salvarEmprestimo() {
-            const e = { id: Date.now(), nome: document.getElementById('inp_emp_nome').value, valor: parseFloat(document.getElementById('inp_emp_valor').value)||0, parcelas: parseInt(document.getElementById('inp_emp_parcelas').value)||1, valor_mensal: parseFloat(document.getElementById('inp_emp_valor_mensal').value)||0, data: document.getElementById('inp_emp_data').value, data_criacao: new Date().toISOString() };
-            if(!e.nome) return showToast('Preencha!', 'error');
-            dados.emprestimo.push(e); localStorage.setItem('emprestimo_data', JSON.stringify(dados.emprestimo));
+            const emprestimo = {
+                id: Date.now(),
+                nome: document.getElementById('inp_emp_nome').value,
+                valor: parseFloat(document.getElementById('inp_emp_valor').value) || 0,
+                parcelas: parseInt(document.getElementById('inp_emp_parcelas').value) || 1,
+                valor_mensal: parseFloat(document.getElementById('inp_emp_valor_mensal').value) || 0,
+                data: document.getElementById('inp_emp_data').value,
+                data_criacao: new Date().toISOString()
+            };
+
+            if(!emprestimo.nome) return showToast('Preencha o nome!', 'error');
+
+            dados.emprestimo.push(emprestimo);
+            localStorage.setItem('emprestimo_data', JSON.stringify(dados.emprestimo));
             fecharModal(); renderizarEmprestimo(); atualizarDashboard(); showToast('Empréstimo salvo!');
-            await enviarParaGoogleSheets('emprestimo', e);
+            await enviarParaGoogleSheets('emprestimo', emprestimo);
         }
 
         async function salvarAcai() {
-            const a = { id: Date.now(), data: document.getElementById('inp_acai_data').value, tipo: document.getElementById('inp_acai_tipo').value, descricao: document.getElementById('inp_acai_desc').value, valor: parseFloat(document.getElementById('inp_acai_valor').value)||0, quantidade: parseFloat(document.getElementById('inp_acai_qtd').value)||0, data_criacao: new Date().toISOString() };
-            if(!a.data) return showToast('Preencha!', 'error');
-            dados.acai.push(a); localStorage.setItem('acai_data', JSON.stringify(dados.acai));
+            const acai = {
+                id: Date.now(),
+                data: document.getElementById('inp_acai_data').value,
+                tipo: document.getElementById('inp_acai_tipo').value,
+                descricao: document.getElementById('inp_acai_desc').value,
+                valor: parseFloat(document.getElementById('inp_acai_valor').value) || 0,
+                quantidade: parseFloat(document.getElementById('inp_acai_qtd').value) || 0,
+                data_criacao: new Date().toISOString()
+            };
+
+            if(!acai.data) return showToast('Preencha a data!', 'error');
+
+            dados.acai.push(acai);
+            localStorage.setItem('acai_data', JSON.stringify(dados.acai));
             fecharModal(); renderizarAcai(); atualizarDashboard(); showToast('Açaí registrado!');
-            await enviarParaGoogleSheets('acai', a);
+            await enviarParaGoogleSheets('acai', acai);
         }
 
         async function salvarBarbearia() {
-            const b = { id: Date.now(), data: document.getElementById('inp_barb_data').value, faturamento: parseFloat(document.getElementById('inp_barb_faturamento').value)||0, bebidas: parseFloat(document.getElementById('inp_barb_bebidas').value)||0, pomadas: parseFloat(document.getElementById('inp_barb_pomadas').value)||0, data_criacao: new Date().toISOString() };
-            if(!b.data) return showToast('Preencha!', 'error');
-            dados.barbearia.push(b); localStorage.setItem('barbearia_data', JSON.stringify(dados.barbearia));
+            const barbearia = {
+                id: Date.now(),
+                data: document.getElementById('inp_barb_data').value,
+                faturamento: parseFloat(document.getElementById('inp_barb_faturamento').value) || 0,
+                bebidas: parseFloat(document.getElementById('inp_barb_bebidas').value) || 0,
+                pomadas: parseFloat(document.getElementById('inp_barb_pomadas').value) || 0,
+                data_criacao: new Date().toISOString()
+            };
+
+            if(!barbearia.data) return showToast('Preencha a data!', 'error');
+
+            dados.barbearia.push(barbearia);
+            localStorage.setItem('barbearia_data', JSON.stringify(dados.barbearia));
             fecharModal(); renderizarBarbearia(); atualizarDashboard(); showToast('Barbearia salva!');
-            await enviarParaGoogleSheets('barbearia', b);
+            await enviarParaGoogleSheets('barbearia', barbearia);
         }
 
+        // ========== SINCRONIZAÇÃO E RENDERIZAÇÃO ==========
         function sincronizarDados() {
             dados.casas = JSON.parse(localStorage.getItem('casas_data')) || [];
             dados.energia = JSON.parse(localStorage.getItem('energia_data')) || [];
@@ -496,106 +767,276 @@
             dados.emprestimo = JSON.parse(localStorage.getItem('emprestimo_data')) || [];
             dados.acai = JSON.parse(localStorage.getItem('acai_data')) || [];
             dados.barbearia = JSON.parse(localStorage.getItem('barbearia_data')) || [];
+
             if(abaAtual === 'casas') renderizarCasas();
             if(abaAtual === 'energia') renderizarEnergiaSolar();
             if(abaAtual === 'juridico') renderizarJuridico();
             if(abaAtual === 'emprestimo') renderizarEmprestimo();
             if(abaAtual === 'acai') renderizarAcai();
             if(abaAtual === 'barbearia') renderizarBarbearia();
+            
             atualizarDashboard();
         }
 
+        // --- RENDERIZADORES COM BOTÃO DE LIXEIRA APLICADO ---
         function renderizarCasas() {
-            const c = document.getElementById('listaCasas');
-            if(!dados.casas.length) { c.innerHTML = `<div class="empty-state"><i class="fa-regular fa-folder-open"></i><p>Nenhuma casa</p></div>`; return;}
-            let html = '', total = 0;
+            const container = document.getElementById('listaCasas');
+            if(!dados.casas.length) { container.innerHTML = `<div class="empty-state"><i class="fa-regular fa-folder-open"></i><p>Nenhuma casa cadastrada</p></div>`; document.getElementById('aluguel-mensal-total').textContent = 'R$ 0,00'; return; }
+            let html = '', totalAluguel = 0;
             dados.casas.forEach(casa => {
-                total += casa.valor;
-                html += `<div class="item-card"><div class="item-header"><h4>🏠 ${casa.nome}</h4><span class="item-status">Dia ${casa.dia}</span></div><div class="item-value"><div>Valor: ${formatarMoeda(casa.valor)}</div></div><div class="item-actions"><button class="btn-action delete" onclick="deletarCasa(${casa.id})"><i class="fa-solid fa-trash"></i> Lixeira</button></div></div>`;
+                totalAluguel += casa.valor;
+                html += `
+                    <div class="item-card">
+                        <div class="item-header">
+                            <div><h4 class="item-title"><i class="fa-solid fa-house" style="color: #FF6B6B; margin-right: 8px;"></i>${casa.nome}</h4>
+                            <div class="item-meta"><div class="item-meta-item"><i class="fa-solid fa-user"></i> ${casa.inquilino}</div></div></div>
+                            <span class="item-status">Dia ${casa.dia}</span>
+                        </div>
+                        <div class="item-value">
+                            <div><span class="item-value-label">Aluguel</span><div class="item-value-amount">${formatarMoeda(casa.valor)}</div></div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn-action generate" onclick="gerarPNGCasa(${casa.id})"><i class="fa-solid fa-file-pdf"></i> Gerar Fatura</button>
+                            <button class="btn-action delete" onclick="deletarCasa(${casa.id})"><i class="fa-solid fa-trash"></i> Excluir</button>
+                        </div>
+                    </div>`;
             });
-            c.innerHTML = html; document.getElementById('aluguel-mensal-total').textContent = formatarMoeda(total);
+            container.innerHTML = html;
+            document.getElementById('total-casas').textContent = dados.casas.length;
+            document.getElementById('aluguel-mensal-total').textContent = formatarMoeda(totalAluguel);
+            document.getElementById('recebido-mes').textContent = formatarMoeda(totalAluguel);
         }
 
-        function deletarCasa(id) { if(confirm('Deletar?')) { dados.casas = dados.casas.filter(c => c.id !== id); localStorage.setItem('casas_data', JSON.stringify(dados.casas)); renderizarCasas(); atualizarDashboard(); } }
+        function deletarCasa(id) { if(confirm('Deseja deletar esta casa?')) { dados.casas = dados.casas.filter(c => c.id !== id); localStorage.setItem('casas_data', JSON.stringify(dados.casas)); renderizarCasas(); atualizarDashboard(); showToast('Casa deletada!'); } }
 
         function renderizarEnergiaSolar() {
-            const c = document.getElementById('listaEnergiaSolar');
-            if(!dados.energia.length) { c.innerHTML = `<div class="empty-state"><i class="fa-solid fa-sun"></i><p>Nenhum cliente</p></div>`; return;}
-            let html = '', t = 0;
-            dados.energia.forEach(e => {
-                t += e.valor_final;
-                html += `<div class="item-card"><div class="item-header"><h4>☀️ ${e.nome}</h4></div><div class="item-value"><div>Líquido: ${formatarMoeda(e.valor_final)}</div></div><div class="item-actions"><button class="btn-action delete" onclick="deletarEnergia(${e.id})"><i class="fa-solid fa-trash"></i> Lixeira</button></div></div>`;
+            const container = document.getElementById('listaEnergiaSolar');
+            if(!dados.energia.length) { container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-solar-panel"></i><p>Nenhum cliente</p></div>`; return; }
+            let html = '', totalFaturamento = 0;
+            dados.energia.forEach(energia => {
+                totalFaturamento += energia.valor_final;
+                html += `
+                    <div class="item-card">
+                        <div class="item-header">
+                            <div><h4 class="item-title"><i class="fa-solid fa-sun" style="color: #FFD700; margin-right: 8px;"></i>${energia.nome}</h4></div>
+                            <span class="item-status" style="background: rgba(34, 197, 94, 0.15); color: #22C55E;">Ativo</span>
+                        </div>
+                        <div class="item-value">
+                            <div><span class="item-value-label">Valor Original</span><div class="item-value-amount" style="font-size: 1.1rem;">${formatarMoeda(energia.valor_original)}</div></div>
+                            <div style="text-align: right;"><span class="item-value-label">A Receber (-20%)</span><div class="item-value-amount" style="font-size: 1.3rem;">${formatarMoeda(energia.valor_final)}</div></div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn-action delete" onclick="deletarEnergia(${energia.id})"><i class="fa-solid fa-trash"></i> Excluir</button>
+                        </div>
+                    </div>`;
             });
-            c.innerHTML = html; document.getElementById('faturamento-solar').textContent = formatarMoeda(t);
+            container.innerHTML = html;
+            document.getElementById('total-clientes-solar').textContent = dados.energia.length;
+            document.getElementById('faturamento-solar').textContent = formatarMoeda(totalFaturamento);
         }
-        function deletarEnergia(id) { if(confirm('Deletar?')) { dados.energia = dados.energia.filter(c => c.id !== id); localStorage.setItem('energia_data', JSON.stringify(dados.energia)); renderizarEnergiaSolar(); atualizarDashboard(); } }
+
+        function deletarEnergia(id) { if(confirm('Deseja deletar?')) { dados.energia = dados.energia.filter(e => e.id !== id); localStorage.setItem('energia_data', JSON.stringify(dados.energia)); renderizarEnergiaSolar(); atualizarDashboard(); } }
 
         function renderizarJuridico() {
-            const c = document.getElementById('listaJuridico');
-            if(!dados.juridico.length) { c.innerHTML = `<div class="empty-state"><i class="fa-solid fa-scale-balanced"></i><p>Nenhum processo</p></div>`; return;}
-            let html = '';
-            dados.juridico.forEach(j => {
-                html += `<div class="item-card"><div class="item-header"><h4>⚖️ ${j.nome}</h4></div><div class="item-value"><div>Valor: ${formatarMoeda(j.valor)}</div></div><div class="item-actions"><button class="btn-action delete" onclick="deletarJuridico(${j.id})"><i class="fa-solid fa-trash"></i> Lixeira</button></div></div>`;
+            const container = document.getElementById('listaJuridico');
+            if(!dados.juridico.length) { container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-scale-balanced"></i><p>Nenhum investimento</p></div>`; return; }
+            let html = '', totalInvestido = 0, totalRetorno = 0;
+            dados.juridico.forEach(jur => {
+                const lucro = jur.valor * (jur.investidor === 'Junior' ? 0.06 : 0.10);
+                totalInvestido += jur.valor; totalRetorno += lucro;
+                html += `
+                    <div class="item-card">
+                        <div class="item-header">
+                            <div><h4 class="item-title"><i class="fa-solid fa-scale-balanced" style="color: #6366F1; margin-right: 8px;"></i>${jur.nome}</h4>
+                            <div class="item-meta"><div class="item-meta-item"><i class="fa-solid fa-briefcase"></i> ${jur.tipo}</div></div></div>
+                            <span class="item-status" style="background: rgba(59, 130, 246, 0.15); color: #3B82F6;">${jur.status}</span>
+                        </div>
+                        <div class="item-value">
+                            <div><span class="item-value-label">Causa</span><div class="item-value-amount">${formatarMoeda(jur.valor)}</div></div>
+                            <div style="text-align: right;"><span class="item-value-label">Retorno</span><div class="item-value-amount" style="color: #22C55E;">${formatarMoeda(lucro)}</div></div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn-action delete" onclick="deletarJuridico(${jur.id})"><i class="fa-solid fa-trash"></i> Excluir</button>
+                        </div>
+                    </div>`;
             });
-            c.innerHTML = html;
+            container.innerHTML = html;
+            document.getElementById('total-investido-jur').textContent = formatarMoeda(totalInvestido);
+            document.getElementById('retorno-esperado-jur').textContent = formatarMoeda(totalRetorno);
+            document.getElementById('lucro-esperado-jur').textContent = formatarMoeda(totalRetorno);
         }
-        function deletarJuridico(id) { if(confirm('Deletar?')) { dados.juridico = dados.juridico.filter(c => c.id !== id); localStorage.setItem('juridico_data', JSON.stringify(dados.juridico)); renderizarJuridico(); atualizarDashboard(); } }
+
+        function deletarJuridico(id) { if(confirm('Deseja deletar?')) { dados.juridico = dados.juridico.filter(j => j.id !== id); localStorage.setItem('juridico_data', JSON.stringify(dados.juridico)); renderizarJuridico(); atualizarDashboard(); } }
 
         function renderizarEmprestimo() {
-            const c = document.getElementById('listaEmprestimo');
-            if(!dados.emprestimo.length) { c.innerHTML = `<div class="empty-state"><i class="fa-solid fa-hand-holding-dollar"></i><p>Nenhum empréstimo</p></div>`; return;}
+            const container = document.getElementById('listaEmprestimo');
+            if(!dados.emprestimo.length) { container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-hand-holding-dollar"></i><p>Nenhum empréstimo</p></div>`; return; }
             let html = '';
-            dados.emprestimo.forEach(e => {
-                html += `<div class="item-card"><div class="item-header"><h4>💸 ${e.nome}</h4></div><div class="item-value"><div>Valor: ${formatarMoeda(e.valor)}</div></div><div class="item-actions"><button class="btn-action delete" onclick="deletarEmprestimo(${e.id})"><i class="fa-solid fa-trash"></i> Lixeira</button></div></div>`;
+            dados.emprestimo.forEach(emp => {
+                html += `
+                    <div class="item-card">
+                        <div class="item-header">
+                            <div><h4 class="item-title"><i class="fa-solid fa-hand-holding-dollar" style="color: #10B981; margin-right: 8px;"></i>${emp.nome}</h4></div>
+                            <span class="item-status">${emp.parcelas} parcelas</span>
+                        </div>
+                        <div class="item-value">
+                            <div><span class="item-value-label">Emprestado</span><div class="item-value-amount">${formatarMoeda(emp.valor)}</div></div>
+                            <div style="text-align: right;"><span class="item-value-label">Mensal</span><div class="item-value-amount" style="font-size: 1.1rem;">${formatarMoeda(emp.valor_mensal)}</div></div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn-action generate" onclick="registrarPagamentoEmprestimo(${emp.id})"><i class="fa-solid fa-check"></i> Pagar</button>
+                            <button class="btn-action delete" onclick="deletarEmprestimo(${emp.id})"><i class="fa-solid fa-trash"></i> Excluir</button>
+                        </div>
+                    </div>`;
             });
-            c.innerHTML = html;
+            container.innerHTML = html;
         }
-        function deletarEmprestimo(id) { if(confirm('Deletar?')) { dados.emprestimo = dados.emprestimo.filter(c => c.id !== id); localStorage.setItem('emprestimo_data', JSON.stringify(dados.emprestimo)); renderizarEmprestimo(); atualizarDashboard(); } }
+
+        function registrarPagamentoEmprestimo(id) {
+            const emp = dados.emprestimo.find(e => e.id === id);
+            if(emp && emp.parcelas > 0) {
+                emp.parcelas--; localStorage.setItem('emprestimo_data', JSON.stringify(dados.emprestimo)); renderizarEmprestimo(); showToast('Pagamento registrado!');
+            }
+        }
+
+        function deletarEmprestimo(id) { if(confirm('Deseja deletar?')) { dados.emprestimo = dados.emprestimo.filter(e => e.id !== id); localStorage.setItem('emprestimo_data', JSON.stringify(dados.emprestimo)); renderizarEmprestimo(); atualizarDashboard(); } }
 
         function renderizarAcai() {
-            const c = document.getElementById('listaAcai');
-            if(!dados.acai.length) { c.innerHTML = `<div class="empty-state"><i class="fa-solid fa-bowl-food"></i><p>Nenhum registro</p></div>`; return;}
+            const container = document.getElementById('listaAcai');
+            if(!dados.acai.length) { container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-bowl-food"></i><p>Nenhum movimento</p></div>`; return; }
             let html = '';
-            dados.acai.forEach(a => {
-                html += `<div class="item-card"><div class="item-header"><h4>${a.tipo==='Entrada'?'📈':'📉'} ${a.descricao}</h4></div><div class="item-value"><div>Valor: ${formatarMoeda(a.valor)}</div></div><div class="item-actions"><button class="btn-action delete" onclick="deletarAcai(${a.id})"><i class="fa-solid fa-trash"></i> Lixeira</button></div></div>`;
+            dados.acai.forEach(acai => {
+                const isEntrada = acai.tipo === 'Entrada';
+                const cor = isEntrada ? '#22C55E' : '#EF4444';
+                const icon = isEntrada ? '📈' : '📉';
+                html += `
+                    <div class="item-card">
+                        <div class="item-header">
+                            <div><h4 class="item-title">${icon} ${acai.descricao}</h4>
+                            <div class="item-meta"><div class="item-meta-item"><i class="fa-solid fa-calendar"></i> ${new Date(acai.data).toLocaleDateString('pt-BR')}</div></div></div>
+                            <span class="item-status" style="background: ${isEntrada ? 'rgba(34, 197, 94, 0.15)' : 'rgba(239, 68, 68, 0.15)'}; color: ${cor};">${isEntrada ? 'Entrada' : 'Saída'}</span>
+                        </div>
+                        <div class="item-value">
+                            <div><span class="item-value-label">Valor</span><div class="item-value-amount" style="color: ${cor};">${isEntrada ? '+' : '-'} ${formatarMoeda(acai.valor)}</div></div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn-action delete" onclick="deletarAcai(${acai.id})"><i class="fa-solid fa-trash"></i> Excluir</button>
+                        </div>
+                    </div>`;
             });
-            c.innerHTML = html;
+            container.innerHTML = html;
         }
-        function deletarAcai(id) { if(confirm('Deletar?')) { dados.acai = dados.acai.filter(c => c.id !== id); localStorage.setItem('acai_data', JSON.stringify(dados.acai)); renderizarAcai(); atualizarDashboard(); } }
+
+        function deletarAcai(id) { if(confirm('Deseja deletar?')) { dados.acai = dados.acai.filter(a => a.id !== id); localStorage.setItem('acai_data', JSON.stringify(dados.acai)); renderizarAcai(); atualizarDashboard(); } }
 
         function renderizarBarbearia() {
-            const c = document.getElementById('listaBarbearia');
-            if(!dados.barbearia.length) { c.innerHTML = `<div class="empty-state"><i class="fa-solid fa-scissors"></i><p>Nenhum registro</p></div>`; return;}
+            const container = document.getElementById('listaBarbearia');
+            if(!dados.barbearia.length) { container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-scissors"></i><p>Nenhum registro</p></div>`; return; }
             let html = '';
-            dados.barbearia.forEach(b => {
-                html += `<div class="item-card"><div class="item-header"><h4>✂️ Dia ${b.data}</h4></div><div class="item-value"><div>Faturamento: ${formatarMoeda(b.faturamento)}</div></div><div class="item-actions"><button class="btn-action delete" onclick="deletarBarbearia(${b.id})"><i class="fa-solid fa-trash"></i> Lixeira</button></div></div>`;
+            dados.barbearia.forEach(barb => {
+                const lucro = barb.faturamento - (barb.bebidas + barb.pomadas);
+                html += `
+                    <div class="item-card">
+                        <div class="item-header">
+                            <div><h4 class="item-title">✂️ Dia ${new Date(barb.data).toLocaleDateString('pt-BR')}</h4></div>
+                        </div>
+                        <div class="item-value">
+                            <div><span class="item-value-label">Faturamento</span><div class="item-value-amount" style="color: #22C55E;">${formatarMoeda(barb.faturamento)}</div></div>
+                            <div style="text-align: right;"><span class="item-value-label">Lucro</span><div class="item-value-amount" style="color: #3B82F6;">${formatarMoeda(lucro)}</div></div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn-action delete" onclick="deletarBarbearia(${barb.id})"><i class="fa-solid fa-trash"></i> Excluir</button>
+                        </div>
+                    </div>`;
             });
-            c.innerHTML = html;
+            container.innerHTML = html;
         }
-        function deletarBarbearia(id) { if(confirm('Deletar?')) { dados.barbearia = dados.barbearia.filter(c => c.id !== id); localStorage.setItem('barbearia_data', JSON.stringify(dados.barbearia)); renderizarBarbearia(); atualizarDashboard(); } }
 
-        function formatarMoeda(valor) { return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
+        function deletarBarbearia(id) { if(confirm('Deseja deletar?')) { dados.barbearia = dados.barbearia.filter(b => b.id !== id); localStorage.setItem('barbearia_data', JSON.stringify(dados.barbearia)); renderizarBarbearia(); atualizarDashboard(); } }
 
+        // ========== UTILITÁRIOS ==========
+        function formatarMoeda(valor) {
+            return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        // ========== DASHBOARD GLOBAL ==========
         function atualizarDashboard() {
-            let totalAluguel = dados.casas.reduce((s,c)=>s+c.valor,0);
-            let totalEnergia = dados.energia.reduce((s,e)=>s+e.valor_final,0);
-            let totalJuridico = dados.juridico.reduce((s,j)=>s+(j.valor*(j.investidor==='Junior'?0.06:0.10)),0);
+            let totalAluguel = dados.casas.reduce((sum, c) => sum + c.valor, 0);
+            let totalEnergia = dados.energia.reduce((sum, e) => sum + e.valor_final, 0);
+            let totalJuridico = dados.juridico.reduce((sum, j) => sum + (j.valor * (j.investidor === 'Junior' ? 0.06 : 0.10)), 0);
 
             document.getElementById('total-aluguel').textContent = formatarMoeda(totalAluguel);
             document.getElementById('total-energia').textContent = formatarMoeda(totalEnergia);
             document.getElementById('total-juridico').textContent = formatarMoeda(totalJuridico);
             document.getElementById('total-geral').textContent = formatarMoeda(totalAluguel + totalEnergia + totalJuridico);
 
-            // AÇAÍ (REGRA BRUTA: trata-se como Faturamento Bruto e não líquido)
+            // AÇAÍ - AQUI SE APLICA A REGRA DO "BRUTO", as entradas somam-se juntas no card de lucro e faturamento bruto
             const faturamentoAcai = dados.acai.filter(a => a.tipo === 'Entrada').reduce((sum, a) => sum + a.valor, 0);
             const custosAcai = dados.acai.filter(a => a.tipo === 'Saida').reduce((sum, a) => sum + a.valor, 0);
             document.getElementById('faturamento-acai').textContent = formatarMoeda(faturamentoAcai);
             document.getElementById('custos-acai').textContent = formatarMoeda(custosAcai);
-            document.getElementById('lucro-acai').textContent = formatarMoeda(faturamentoAcai); 
+            document.getElementById('lucro-acai').textContent = formatarMoeda(faturamentoAcai); // Lucro visual exibe Faturamento Bruto como você pediu
 
             // BARBEARIA
-            document.getElementById('faturamento-barb').textContent = formatarMoeda(dados.barbearia.reduce((s,b)=>s+b.faturamento,0));
-            document.getElementById('lucro-barb').textContent = formatarMoeda(dados.barbearia.reduce((s,b)=>s+(b.faturamento-b.bebidas-b.pomadas),0));
+            const fatBarb = dados.barbearia.reduce((sum, b) => sum + b.faturamento, 0);
+            const lucroBarb = dados.barbearia.reduce((sum, b) => sum + (b.faturamento - b.bebidas - b.pomadas), 0);
+            document.getElementById('faturamento-barb').textContent = formatarMoeda(fatBarb);
+            document.getElementById('lucro-barb').textContent = formatarMoeda(lucroBarb);
+
+            atualizarGraficoDashboard();
+        }
+
+        // --- Gráficos (Dashboard Base) ---
+        let chartDashboard = null;
+        function atualizarGraficoDashboard() {
+            const ctx = document.getElementById('chartReceitasMensais');
+            if(!ctx) return;
+            const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            const dados_meses = new Array(12).fill(0);
+
+            dados.casas.forEach(c => {
+                const mes = new Date(c.data_inicio).getMonth();
+                if(mes >= 0 && mes < 12) dados_meses[mes] += c.valor;
+            });
+
+            if(chartDashboard) chartDashboard.destroy();
+            chartDashboard = new Chart(ctx, {
+                type: 'bar',
+                data: { labels: meses, datasets: [{ label: 'Receitas Mensais', data: dados_meses, backgroundColor: 'rgba(67, 24, 255, 0.8)', borderRadius: 8 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        }
+
+        let chartCasas = null;
+        function atualizarGraficoCasas() {
+            const ctx = document.getElementById('chartCasas');
+            if(!ctx) return;
+            const labels = dados.casas.map(c => c.nome);
+            const valores = dados.casas.map(c => c.valor);
+            if(chartCasas) chartCasas.destroy();
+            chartCasas = new Chart(ctx, {
+                type: 'doughnut',
+                data: { labels: labels, datasets: [{ data: valores, backgroundColor: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8'] }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+
+        let chartJuridico = null;
+        function atualizarGraficoJuridico() {
+            const ctx = document.getElementById('chartJuridico');
+            if(!ctx) return;
+            const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            const dados_retorno = new Array(12).fill(0);
+            dados.juridico.forEach(j => {
+                const mes = new Date(j.data).getMonth();
+                if(mes >= 0 && mes < 12) dados_retorno[mes] += j.valor * (j.investidor === 'Junior' ? 0.06 : 0.10);
+            });
+            if(chartJuridico) chartJuridico.destroy();
+            chartJuridico = new Chart(ctx, {
+                type: 'line',
+                data: { labels: meses, datasets: [{ label: 'Retorno Esperado', data: dados_retorno, borderColor: '#6366F1', backgroundColor: 'rgba(99, 102, 241, 0.1)', fill: true, tension: 0.4 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
         }
     </script>
 </body>
