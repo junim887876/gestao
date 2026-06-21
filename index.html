@@ -38,7 +38,9 @@
         .topbar { background: var(--bg-card); height: 70px; padding: 0 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); z-index: 10; box-shadow: var(--shadow-soft); flex-shrink: 0; }
         .topbar-logo { font-family: var(--font-title); font-size: 1.3rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
         .topbar-logo span { color: var(--primary); }
+        .user-controls { display: flex; gap: 10px; align-items: center; }
         .btn-theme { background: transparent; border: 1px solid var(--border-color); color: var(--text-dark); width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        .btn-theme:hover { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
         
         .layout-core { display: flex; flex: 1; overflow: hidden; }
         
@@ -117,6 +119,9 @@
             .fab-button { bottom: 95px; right: 20px; }
             .items-grid { grid-template-columns: 1fr; }
         }
+        
+        .loader-nuvem { animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -136,7 +141,10 @@
     <div class="main-container">
         <header class="topbar">
             <div class="topbar-logo"><i class="fa-solid fa-bolt"></i><span>Gestor</span></div>
-            <button class="btn-theme" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i></button>
+            <div class="user-controls">
+                <button class="btn-theme" onclick="sincronizarNuvem()" title="Puxar Dados da Nuvem" id="btn-sync"><i class="fa-solid fa-cloud-arrow-down"></i></button>
+                <button class="btn-theme" onclick="toggleTheme()" title="Modo Noturno"><i class="fa-solid fa-moon"></i></button>
+            </div>
         </header>
 
         <div class="layout-core">
@@ -203,17 +211,26 @@
     </div>
 
     <script>
-        const CONFIG = { formUrl: 'https://script.google.com/macros/s/AKfycbxb9j4YFCbRoLyUaKMnHvgvB7Y78XEBXgYOUKySNw1xC3T1r9_9SglljR9plYut90wl/exec' };
+        const URL_APP_SCRIPT = 'https://script.google.com/macros/s/AKfycbxb9j4YFCbRoLyUaKMnHvgvB7Y78XEBXgYOUKySNw1xC3T1r9_9SglljR9plYut90wl/exec';
+        const SHEET_ID = '18N_L_t9amEgOsjqNfiwUaTnSespPMqL5a15xxCzTGBE';
         
         let dados = { casas: [], energia: [], juridico: [], emprestimo: [], acai: [], barbearia: [] };
         let abaAtual = 'dashboard';
 
-        document.addEventListener('DOMContentLoaded', () => { initTheme(); loadDados(); });
+        document.addEventListener('DOMContentLoaded', () => { 
+            initTheme(); 
+            // Tenta puxar do cache local primeiro para carregar instantaneamente
+            Object.keys(dados).forEach(k => dados[k] = JSON.parse(localStorage.getItem(k+'_data')) || []);
+            renderAll();
+            // Após carregar local, força sincronização silenciosa com a nuvem
+            sincronizarNuvem(true);
+        });
 
         /* UI & NAVEGAÇÃO */
         function initTheme() { 
             document.documentElement.setAttribute('data-theme', localStorage.getItem('tema_fm') || 'light'); 
-            document.querySelector('.btn-theme i').className = document.documentElement.getAttribute('data-theme') === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            document.querySelector('.btn-theme[title="Modo Noturno"] i').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
         }
         function toggleTheme() { 
             const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
@@ -229,17 +246,71 @@
             abaAtual = aba; renderDashboard();
         }
 
-        /* LÓGICA DE DADOS & PLANILHA */
-        function loadDados() {
-            Object.keys(dados).forEach(k => dados[k] = JSON.parse(localStorage.getItem(k+'_data')) || []);
-            renderAll();
+        /* ================= SINCRONIZAÇÃO VIA CSV (LEITURA) ================= */
+        // Função universal para converter string CSV em Array
+        function parseCSV(str) {
+            const arr = []; let quote = false; let row = 0, col = 0;
+            for (let c = 0; c < str.length; c++) {
+                let cc = str[c], nc = str[c+1];
+                arr[row] = arr[row] || []; arr[row][col] = arr[row][col] || '';
+                if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
+                if (cc == '"') { quote = !quote; continue; }
+                if (cc == ',' && !quote) { ++col; continue; }
+                if (cc == '\r' && nc == '\n' && !quote) { ++row; col = 0; ++c; continue; }
+                if (cc == '\n' && !quote) { ++row; col = 0; continue; }
+                if (cc == '\r' && !quote) { ++row; col = 0; continue; }
+                arr[row][col] += cc;
+            }
+            return arr;
         }
+
+        async function sincronizarNuvem(silencioso = false) {
+            const btn = document.getElementById('btn-sync');
+            btn.innerHTML = '<i class="fa-solid fa-spinner loader-nuvem"></i>';
+            const abas = Object.keys(dados);
+            
+            try {
+                for (let aba of abas) {
+                    const urlCSV = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${aba}`;
+                    const response = await fetch(urlCSV);
+                    if (!response.ok) continue;
+                    
+                    const textCSV = await response.text();
+                    const linhas = parseCSV(textCSV);
+                    const novosDados = [];
+                    
+                    // Transforma Array em Objetos Mapeados (ignorando a primeira linha se não for ID válido)
+                    linhas.forEach(row => {
+                        if(row.length < 2 || !Number(row[0])) return;
+                        
+                        const id = Number(row[0]);
+                        if(aba === 'casas') novosDados.push({ id, nome: row[1], endereco: row[2], inquilino: row[3], celular: row[4], valor: Number(row[5]||0), dia: row[6], data_inicio: row[7] });
+                        if(aba === 'energia') novosDados.push({ id, nome: row[1], celular: row[2], valor_original: Number(row[3]||0), valor_final: Number(row[4]||0), data: row[5] });
+                        if(aba === 'juridico') novosDados.push({ id, nome: row[1], tipo: row[2], valor: Number(row[3]||0), data: row[4], investidor: row[5], status: row[6] });
+                        if(aba === 'emprestimo') novosDados.push({ id, nome: row[1], valor: Number(row[2]||0), parcelas_totais: Number(row[3]||0), parcelas_restantes: Number(row[4]||0), valor_mensal: Number(row[5]||0), data: row[6] });
+                        if(aba === 'acai') novosDados.push({ id, data: row[1], tipo: row[2], descricao: row[3], valor: Number(row[4]||0) });
+                        if(aba === 'barbearia') novosDados.push({ id, data: row[1], faturamento: Number(row[2]||0), bebidas: Number(row[3]||0), pomadas: Number(row[4]||0) });
+                    });
+                    
+                    dados[aba] = novosDados;
+                    localStorage.setItem(aba+'_data', JSON.stringify(dados[aba]));
+                }
+                renderAll();
+                if(!silencioso) showToast('Dados sincronizados da nuvem!');
+            } catch(e) {
+                console.error("Erro ao sincronizar", e);
+                if(!silencioso) showToast('Erro na sincronização');
+            }
+            btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-down"></i>';
+        }
+
+        /* COMUNICAÇÃO COM APPS SCRIPT (GRAVAR/DELETAR) */
         function saveLocal(key) { localStorage.setItem(key+'_data', JSON.stringify(dados[key])); renderAll(); }
         
         function callSheets(acao, tipo, payload) {
             const body = { acao, tipo };
             if(acao === 'salvar') body.valores = payload; else body.id = payload;
-            fetch(CONFIG.formUrl, { method: 'POST', body: JSON.stringify(body), headers:{'Content-Type':'text/plain;charset=utf-8'} })
+            fetch(URL_APP_SCRIPT, { method: 'POST', body: JSON.stringify(body), headers:{'Content-Type':'text/plain;charset=utf-8'} })
             .catch(e => console.error('Modo Offline'));
         }
 
@@ -259,7 +330,7 @@
             return Math.max(1, m + 1); 
         }
         function fMoeda(v) { return Number(v).toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
-        function fData(d) { if(!d) return '--'; const parts = d.split('-'); return `${parts[2]}/${parts[1]}/${parts[0]}`; }
+        function fData(d) { if(!d) return '--'; const parts = d.split('-'); return parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : d; }
         function fZap(num) { return num ? num.replace(/\D/g, '') : ''; }
 
         /* RENDERIZAÇÃO DAS TELAS */
@@ -311,9 +382,9 @@
         function renderJuridico() {
             document.getElementById('listaJuridico').innerHTML = dados.juridico.map(j => {
                 const ret = j.valor * (j.investidor === 'Junior' ? 0.06 : 0.10);
-                const isRecebido = j.status.includes('Recebido');
+                const isRecebido = j.status && j.status.includes('Recebido');
                 return `<div class="item-card">
-                    <div class="item-header"><div><h4 class="item-title">${j.nome}</h4><span class="item-status ${isRecebido ? 'recebido' : ''}">${j.status}</span></div></div>
+                    <div class="item-header"><div><h4 class="item-title">${j.nome}</h4><span class="item-status ${isRecebido ? 'recebido' : ''}">${j.status || 'Em Andamento'}</span></div></div>
                     <div style="margin-bottom: 10px;">
                         <div class="item-meta-info"><i class="fa-solid fa-scale-balanced"></i> Tipo: ${j.tipo}</div>
                         <div class="item-meta-info"><i class="fa-solid fa-user-tie"></i> Investidor: ${j.investidor}</div>
@@ -379,7 +450,14 @@
             const emp = dados.emprestimo.find(e => e.id === id); 
             if(emp && emp.parcelas_restantes > 0) { 
                 emp.parcelas_restantes--; 
-                saveLocal('emprestimo'); 
+                
+                // Atualiza na planilha (Deleta o antigo e cria um novo atualizado)
+                deletarItem('emprestimo', id, true);
+                emp.id = Date.now();
+                dados.emprestimo.push(emp);
+                saveLocal('emprestimo');
+                setTimeout(() => callSheets('salvar', 'emprestimo', [emp.id, emp.nome, emp.valor, emp.parcelas_totais, emp.parcelas_restantes, emp.valor_mensal, emp.data]), 1500);
+
                 showToast(emp.parcelas_totais > 100 ? 'Mês Recebido!' : 'Parcela Abatida!'); 
             } 
         }
@@ -447,7 +525,7 @@
             const d = document.createElement('div'); 
             d.style = "position:fixed;top:-9999px;background:#fff;padding:40px;width:400px;border-radius:15px;font-family:'Poppins',sans-serif;color:#2B3674;box-shadow:0 10px 30px rgba(0,0,0,0.1);";
             
-            d.innerHTML = `<div style="text-align:center;margin-bottom:20px;"><i class="fa-solid fa-scale-balanced" style="font-size:2.5rem;color:#6366F1;"></i><h2 style="margin:10px 0 5px;">Comprovante de Repasse</h2><p style="color:#A3AED0;font-size:0.9rem;margin:0;">Investimento Jurídico</p></div><hr style="border:none;border-top:2px dashed #E9EDF7;margin:20px 0;"><div style="font-size:1rem;line-height:1.6;"><p style="margin:5px 0;"><b>Processo/Causa:</b> ${j.nome}</p><p style="margin:5px 0;"><b>Investidor:</b> ${j.investidor}</p><p style="margin:5px 0;"><b>Status:</b> ${j.status}</p></div><div style="background:#F8FAFC;padding:20px;border-radius:10px;text-align:center;margin-top:20px;"><p style="margin:0;font-size:0.85rem;color:#A3AED0;text-transform:uppercase;font-weight:700;">Lucro Repassado</p><h1 style="color:#05CD99;margin:5px 0 0;font-size:2.2rem;">${fMoeda(ret)}</h1></div><p style="text-align:center;font-size:0.75rem;color:#A3AED0;margin-top:20px;">Emitido em ${new Date().toLocaleDateString('pt-BR')}</p>`;
+            d.innerHTML = `<div style="text-align:center;margin-bottom:20px;"><i class="fa-solid fa-scale-balanced" style="font-size:2.5rem;color:#6366F1;"></i><h2 style="margin:10px 0 5px;">Comprovante de Repasse</h2><p style="color:#A3AED0;font-size:0.9rem;margin:0;">Investimento Jurídico</p></div><hr style="border:none;border-top:2px dashed #E9EDF7;margin:20px 0;"><div style="font-size:1rem;line-height:1.6;"><p style="margin:5px 0;"><b>Processo/Causa:</b> ${j.nome}</p><p style="margin:5px 0;"><b>Investidor:</b> ${j.investidor}</p><p style="margin:5px 0;"><b>Status:</b> ${j.status || 'Em Andamento'}</p></div><div style="background:#F8FAFC;padding:20px;border-radius:10px;text-align:center;margin-top:20px;"><p style="margin:0;font-size:0.85rem;color:#A3AED0;text-transform:uppercase;font-weight:700;">Lucro Repassado</p><h1 style="color:#05CD99;margin:5px 0 0;font-size:2.2rem;">${fMoeda(ret)}</h1></div><p style="text-align:center;font-size:0.75rem;color:#A3AED0;margin-top:20px;">Emitido em ${new Date().toLocaleDateString('pt-BR')}</p>`;
             
             document.body.appendChild(d);
             setTimeout(() => html2canvas(d, {scale:2}).then(c => { const l = document.createElement('a'); l.download = `Repasse_${j.nome.replace(/\s+/g,'_')}.png`; l.href = c.toDataURL(); l.click(); d.remove(); }), 500);
