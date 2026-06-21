@@ -18,24 +18,21 @@
             --warning: #FFCE20; --danger: #EE5D50;
             --text-dark: #2B3674; --text-gray: #A3AED0; --border-color: #E9EDF7;
             --shadow-soft: 0px 18px 40px rgba(112, 144, 176, 0.12);
-            --shadow-hover: 0px 20px 50px rgba(67, 24, 255, 0.15);
             --font-title: 'Poppins', sans-serif; --font-body: 'DM Sans', sans-serif;
             --radius-lg: 20px; --radius-md: 12px;
         }
 
         [data-theme="dark"] {
             --bg-body: #0F172A; --bg-card: #1E293B; --bg-input: #334155;
-            --primary: #6366F1; --primary-hover: #818CF8; --primary-light: rgba(99, 102, 241, 0.1);
+            --primary: #6366F1; --primary-light: rgba(99, 102, 241, 0.1);
             --success: #34D399; --success-light: rgba(52, 211, 153, 0.1);
             --text-dark: #F8FAFC; --text-gray: #94A3B8; --border-color: #334155;
-            --shadow-soft: 0px 10px 30px rgba(0, 0, 0, 0.4); --shadow-hover: 0px 15px 40px rgba(99, 102, 241, 0.2);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s, border-color 0.3s, color 0.3s; }
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s, color 0.3s; }
         body { width: 100vw; height: 100vh; overflow: hidden; background-color: var(--bg-body); color: var(--text-dark); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
-        input, select, textarea { font-size: 16px !important; } /* Evita zoom no iOS */
-        ::-webkit-scrollbar { width: 5px; height: 5px; }
-        ::-webkit-scrollbar-thumb { background: var(--text-gray); border-radius: 10px; opacity: 0.5; }
+        input, select, textarea { font-size: 16px !important; } /* Evita zoom automático no iOS/Android */
+        ::-webkit-scrollbar { display: none; } /* Visual mais limpo estilo App */
 
         .main-container { display: flex; height: 100vh; flex-direction: column; }
         .topbar { background: var(--bg-card); height: 70px; padding: 0 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); z-index: 10; box-shadow: var(--shadow-soft); flex-shrink: 0; }
@@ -55,21 +52,20 @@
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .welcome-banner { background: linear-gradient(135deg, var(--primary) 0%, #1A0B6E 100%); border-radius: var(--radius-lg); padding: 25px 30px; color: #FFF; margin-bottom: 25px; position: relative; overflow: hidden; box-shadow: var(--shadow-soft); }
+        .welcome-banner { background: linear-gradient(135deg, var(--primary) 0%, #1A0B6E 100%); border-radius: var(--radius-lg); padding: 25px 30px; color: #FFF; margin-bottom: 25px; box-shadow: var(--shadow-soft); }
         .welcome-text h2 { font-family: var(--font-title); font-size: 1.5rem; margin-bottom: 4px; }
         
         .summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .summary-card { background: var(--bg-card); border-radius: var(--radius-lg); padding: 20px; display: flex; align-items: center; gap: 15px; border: 1px solid var(--border-color); box-shadow: var(--shadow-soft); }
-        .summary-icon { width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; flex-shrink: 0; }
         .summary-info span { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-gray); }
         .summary-info h3 { font-family: var(--font-title); font-size: 1.5rem; color: var(--text-dark); }
         
-        .fab-button { position: fixed; bottom: 25px; right: 25px; width: 56px; height: 56px; background: linear-gradient(135deg, var(--primary), var(--primary-hover)); border: none; border-radius: 50%; color: #FFF; font-size: 1.5rem; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: var(--shadow-hover); z-index: 100; }
+        .fab-button { position: fixed; bottom: 25px; right: 25px; width: 56px; height: 56px; background: linear-gradient(135deg, var(--primary), var(--primary-hover)); border: none; border-radius: 50%; color: #FFF; font-size: 1.5rem; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0px 10px 20px rgba(67, 24, 255, 0.4); z-index: 100; }
 
         /* MODAL */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; padding: 15px; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
         .modal-overlay.active { display: flex; }
-        .modal-content { background: var(--bg-card); border-radius: var(--radius-lg); padding: 25px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-hover); }
+        .modal-content { background: var(--bg-card); border-radius: var(--radius-lg); padding: 25px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
         .form-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 15px; }
         .form-grid.two-cols { grid-template-columns: 1fr 1fr; }
@@ -77,45 +73,48 @@
         .form-control { width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px; color: var(--text-dark); font-family: inherit; }
         .btn-primary { width: 100%; padding: 14px; background: var(--primary); color: #FFF; border: none; border-radius: var(--radius-md); font-family: var(--font-title); font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 10px; }
 
-        /* LISTAGEM FLUIDA */
-        .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
-        .item-card { background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); padding: 20px; display: flex; flex-direction: column; gap: 12px; position: relative; overflow: hidden; }
+        /* LISTAGEM FLUIDA & DETALHADA */
+        .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 15px; }
+        .item-card { background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); padding: 20px; display: flex; flex-direction: column; gap: 12px; position: relative; overflow: hidden; box-shadow: var(--shadow-soft); }
         .item-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--primary), var(--success)); }
-        .item-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        .item-title { font-family: var(--font-title); font-size: 1.1rem; font-weight: 700; color: var(--text-dark); }
-        .item-meta { font-size: 0.8rem; color: var(--text-gray); margin-top: 4px; }
-        .item-value { background: var(--bg-input); padding: 12px; border-radius: var(--radius-md); display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        .item-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px dashed var(--border-color); padding-bottom: 10px; margin-bottom: 5px; }
+        .item-title { font-family: var(--font-title); font-size: 1.1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 5px; }
+        .item-meta-info { font-size: 0.8rem; color: var(--text-gray); display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+        .item-meta-info i { color: var(--primary); width: 14px; text-align: center; }
+        .link-zap { color: #25D366; text-decoration: none; font-weight: 600; }
+        
+        .item-status { background: var(--primary-light); color: var(--primary); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        
+        .item-value { background: var(--bg-input); padding: 15px; border-radius: var(--radius-md); display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .val-box { display: flex; flex-direction: column; }
-        .val-box span { font-size: 0.7rem; font-weight: 700; color: var(--text-gray); text-transform: uppercase; }
-        .val-box strong { font-family: var(--font-title); font-size: 1.1rem; color: var(--primary); }
+        .val-box span { font-size: 0.7rem; font-weight: 700; color: var(--text-gray); text-transform: uppercase; margin-bottom: 4px; }
+        .val-box strong { font-family: var(--font-title); font-size: 1.2rem; color: var(--text-dark); }
+        
         .item-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: auto; }
-        .btn-action { padding: 10px; border: none; border-radius: var(--radius-md); font-weight: 600; font-size: 0.85rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; }
+        .btn-action { padding: 12px; border: none; border-radius: var(--radius-md); font-weight: 600; font-size: 0.85rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; }
         .btn-action.generate { background: var(--success-light); color: var(--success); }
         .btn-action.delete { background: rgba(238, 93, 80, 0.15); color: var(--danger); }
 
         .chart-container { position: relative; height: 250px; width: 100%; margin-top: 15px; }
-        #toast-container { position: fixed; bottom: 90px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        #toast-container { position: fixed; bottom: 100px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
         .toast { background: var(--bg-card); padding: 12px 20px; border-radius: 30px; box-shadow: var(--shadow-hover); display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.9rem; transform: translateX(120%); animation: slideIn 0.3s forwards; }
         @keyframes slideIn { to { transform: translateX(0); } }
 
-        /* ================= RESPONSIVO MOBILE ================= */
+        /* ================= RESPONSIVO MOBILE/APPLE STYLE ================= */
         @media (max-width: 768px) {
             .layout-core { flex-direction: column; }
-            /* App-like Bottom Tab Bar */
-            .sidebar { position: fixed; bottom: 0; left: 0; width: 100%; height: 75px; flex-direction: row; justify-content: space-between; border-top: 1px solid var(--border-color); border-right: none; padding: 5px 10px; z-index: 90; background: var(--bg-card); overflow-x: auto; scroll-snap-type: x mandatory; }
-            .sidebar::-webkit-scrollbar { display: none; }
-            .nav-item { flex: 0 0 auto; flex-direction: column; justify-content: center; gap: 4px; padding: 8px 12px; font-size: 0.7rem; scroll-snap-align: center; border-radius: var(--radius-lg); }
+            /* Bottom App Bar */
+            .sidebar { position: fixed; bottom: 0; left: 0; width: 100%; height: 80px; flex-direction: row; justify-content: space-between; border-top: 1px solid var(--border-color); border-right: none; padding: 5px 15px; padding-bottom: 20px; z-index: 90; background: var(--bg-card); overflow-x: auto; scroll-snap-type: x mandatory; }
+            .nav-item { flex: 0 0 auto; flex-direction: column; justify-content: center; gap: 4px; padding: 6px 10px; font-size: 0.65rem; scroll-snap-align: center; border-radius: var(--radius-lg); }
             .nav-item i { font-size: 1.3rem; }
             .nav-item.active { background: transparent; color: var(--primary); }
-            .nav-item.active i { background: var(--primary-light); padding: 8px 15px; border-radius: 20px; }
+            .nav-item.active i { background: var(--primary-light); padding: 6px 16px; border-radius: 20px; }
             
-            .content-wrapper { padding: 20px 15px; padding-bottom: 100px; }
+            .content-wrapper { padding: 15px; padding-bottom: 110px; }
             .form-grid.two-cols { grid-template-columns: 1fr; }
-            .fab-button { bottom: 90px; right: 20px; width: 50px; height: 50px; }
+            .fab-button { bottom: 95px; right: 20px; }
             .items-grid { grid-template-columns: 1fr; }
-            .item-value { grid-template-columns: 1fr; } /* Empilha valores no mobile pra não cortar */
-            .val-box { flex-direction: row; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--border-color); padding-bottom: 5px; }
-            .val-box:last-child { border-bottom: none; padding-bottom: 0; }
         }
     </style>
 </head>
@@ -127,7 +126,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTitle">Adicionar</h2>
-                <i class="fa-solid fa-xmark btn-close-modal" onclick="fecharModal()" style="font-size: 1.5rem; cursor: pointer;"></i>
+                <i class="fa-solid fa-xmark" onclick="fecharModal()" style="font-size: 1.5rem; cursor: pointer; color: var(--text-gray);"></i>
             </div>
             <div id="modalBody"></div>
         </div>
@@ -203,8 +202,7 @@
     </div>
 
     <script>
-        /* ================= CÓDIGO DE INTEGRAÇÃO ================= */
-        // COLE A URL DO SEU GOOGLE APPS SCRIPT AQUI (Substitua a string abaixo)
+        /* ================= CONFIGURAÇÃO ================= */
         const CONFIG = { formUrl: 'https://script.google.com/macros/s/AKfycbxb9j4YFCbRoLyUaKMnHvgvB7Y78XEBXgYOUKySNw1xC3T1r9_9SglljR9plYut90wl/exec' };
         
         let dados = { casas: [], energia: [], juridico: [], emprestimo: [], acai: [], barbearia: [] };
@@ -242,7 +240,7 @@
             const body = { acao, tipo };
             if(acao === 'salvar') body.valores = payload; else body.id = payload;
             fetch(CONFIG.formUrl, { method: 'POST', body: JSON.stringify(body), headers:{'Content-Type':'text/plain;charset=utf-8'} })
-            .then(r => r.json()).then(res => console.log('Sheets Sync:', res)).catch(e => console.error('Modo Offline', e));
+            .catch(e => console.error('Modo Offline'));
         }
 
         function deletarItem(tipo, id) {
@@ -252,72 +250,131 @@
             }
         }
 
-        /* INTELIGÊNCIA: CÁLCULO DE MESES (LTV) */
+        /* INTELIGÊNCIA: CÁLCULOS */
         function calcMeses(dataRef) {
             if(!dataRef) return 1;
             const d1 = new Date(dataRef), d2 = new Date();
             let m = (d2.getFullYear() - d1.getFullYear()) * 12 + (d2.getMonth() - d1.getMonth());
-            return Math.max(1, m + 1); // Garante no mínimo 1 mês (mês vigente)
+            return Math.max(1, m + 1); // Conta o mês atual
         }
         function fMoeda(v) { return Number(v).toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
+        function fData(d) { if(!d) return '--'; return new Date(d).toLocaleDateString('pt-BR'); }
+        function fZap(num) { return num ? num.replace(/\D/g, '') : ''; }
 
-        /* RENDERIZAÇÃO DAS TELAS */
-        function renderAll() { 
-            renderCasas(); renderEnergia(); renderJuridico(); renderEmprestimo(); renderAcai(); renderBarbearia(); renderDashboard(); 
-        }
+        /* RENDERIZAÇÃO DAS TELAS DETALHADAS */
+        function renderAll() { renderCasas(); renderEnergia(); renderJuridico(); renderEmprestimo(); renderAcai(); renderBarbearia(); renderDashboard(); }
 
         function renderCasas() {
             document.getElementById('listaCasas').innerHTML = dados.casas.map(c => {
-                const meses = calcMeses(c.data_inicio); const total = meses * c.valor;
-                return `<div class="item-card"><div class="item-header"><h4 class="item-title">${c.nome}</h4><span class="item-meta">Dia ${c.dia}</span></div>
-                <div class="item-value"><div class="val-box"><span>Aluguel</span><strong>${fMoeda(c.valor)}</strong></div><div class="val-box"><span>${meses} Meses (LTV)</span><strong style="color:var(--success)">${fMoeda(total)}</strong></div></div>
-                <div class="item-actions"><button class="btn-action generate" onclick="gerarFatura('${c.nome}', ${c.valor})"><i class="fa-solid fa-file-invoice"></i> Recibo</button><button class="btn-action delete" onclick="deletarItem('casas', ${c.id})"><i class="fa-solid fa-trash"></i></button></div></div>`;
+                const meses = calcMeses(c.data_inicio); const totalPago = meses * c.valor;
+                return `<div class="item-card">
+                    <div class="item-header">
+                        <div><h4 class="item-title">${c.nome}</h4><span class="item-status">Vence Dia ${c.dia}</span></div>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <div class="item-meta-info"><i class="fa-solid fa-map-pin"></i> ${c.endereco || 'S/N'}</div>
+                        <div class="item-meta-info"><i class="fa-solid fa-user"></i> ${c.inquilino}</div>
+                        <div class="item-meta-info"><i class="fa-brands fa-whatsapp"></i> <a href="https://wa.me/55${fZap(c.celular)}" target="_blank" class="link-zap">${c.celular}</a></div>
+                        <div class="item-meta-info"><i class="fa-solid fa-calendar-check"></i> Início: ${fData(c.data_inicio)}</div>
+                    </div>
+                    <div class="item-value">
+                        <div class="val-box"><span>Aluguel</span><strong style="color:var(--primary)">${fMoeda(c.valor)}</strong></div>
+                        <div class="val-box"><span>${meses} Meses (Já Pago)</span><strong style="color:var(--success)">${fMoeda(totalPago)}</strong></div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-action generate" onclick="gerarFatura('${c.nome}', ${c.valor})"><i class="fa-solid fa-file-invoice"></i> Recibo</button>
+                        <button class="btn-action delete" onclick="deletarItem('casas', ${c.id})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>`;
             }).join('') || '<p style="text-align:center; padding: 20px; color: var(--text-gray);">Nenhuma casa cadastrada</p>';
         }
 
         function renderEnergia() {
             document.getElementById('listaEnergia').innerHTML = dados.energia.map(e => {
-                const meses = calcMeses(e.data); const total = meses * e.valor_final;
-                return `<div class="item-card"><div class="item-header"><h4 class="item-title">${e.nome}</h4></div>
-                <div class="item-value"><div class="val-box"><span>Mensalidade</span><strong>${fMoeda(e.valor_final)}</strong></div><div class="val-box"><span>Cliente há ${meses}m</span><strong style="color:var(--success)">${fMoeda(total)}</strong></div></div>
-                <button class="btn-action delete" style="width:100%" onclick="deletarItem('energia', ${e.id})"><i class="fa-solid fa-trash"></i> Excluir Cliente</button></div>`;
+                const meses = calcMeses(e.data); const totalPago = meses * e.valor_final;
+                return `<div class="item-card">
+                    <div class="item-header"><div><h4 class="item-title">${e.nome}</h4><span class="item-status">Ativo</span></div></div>
+                    <div style="margin-bottom: 10px;">
+                        <div class="item-meta-info"><i class="fa-brands fa-whatsapp"></i> <a href="https://wa.me/55${fZap(e.celular)}" target="_blank" class="link-zap">${e.celular}</a></div>
+                        <div class="item-meta-info"><i class="fa-solid fa-calendar"></i> Data Ref: ${fData(e.data)}</div>
+                    </div>
+                    <div class="item-value">
+                        <div class="val-box"><span>Final (-20%)</span><strong style="color:var(--primary)">${fMoeda(e.valor_final)}</strong></div>
+                        <div class="val-box"><span>${meses} Meses (Já Pago)</span><strong style="color:var(--success)">${fMoeda(totalPago)}</strong></div>
+                    </div>
+                    <button class="btn-action delete" style="width:100%; margin-top: 10px;" onclick="deletarItem('energia', ${e.id})"><i class="fa-solid fa-trash"></i> Excluir Cliente</button>
+                </div>`;
             }).join('');
         }
 
         function renderJuridico() {
             document.getElementById('listaJuridico').innerHTML = dados.juridico.map(j => {
                 const ret = j.valor * (j.investidor === 'Junior' ? 0.06 : 0.10);
-                return `<div class="item-card"><div class="item-header"><h4 class="item-title">${j.nome}</h4><span style="font-size:0.7rem; color:var(--text-gray)">${j.status}</span></div>
-                <div class="item-value"><div class="val-box"><span>Causa</span><strong>${fMoeda(j.valor)}</strong></div><div class="val-box"><span>Expectativa</span><strong style="color:var(--primary)">${fMoeda(ret)}</strong></div></div>
-                <button class="btn-action delete" style="width:100%" onclick="deletarItem('juridico', ${j.id})"><i class="fa-solid fa-trash"></i></button></div>`;
+                const meses = calcMeses(j.data);
+                return `<div class="item-card">
+                    <div class="item-header"><div><h4 class="item-title">${j.nome}</h4><span class="item-status">${j.status}</span></div></div>
+                    <div style="margin-bottom: 10px;">
+                        <div class="item-meta-info"><i class="fa-solid fa-scale-balanced"></i> Causa/Tipo: ${j.tipo}</div>
+                        <div class="item-meta-info"><i class="fa-solid fa-user-tie"></i> Investidor: ${j.investidor}</div>
+                        <div class="item-meta-info"><i class="fa-solid fa-clock"></i> Tempo Correndo: ${meses} Meses</div>
+                    </div>
+                    <div class="item-value">
+                        <div class="val-box"><span>Valor Causa</span><strong>${fMoeda(j.valor)}</strong></div>
+                        <div class="val-box"><span>Expectativa Lucro</span><strong style="color:var(--success)">${fMoeda(ret)}</strong></div>
+                    </div>
+                    <button class="btn-action delete" style="width:100%; margin-top: 10px;" onclick="deletarItem('juridico', ${j.id})"><i class="fa-solid fa-trash"></i> Excluir Processo</button>
+                </div>`;
             }).join('');
         }
 
         function renderEmprestimo() {
-            document.getElementById('listaEmprestimo').innerHTML = dados.emprestimo.map(e => `
-                <div class="item-card"><div class="item-header"><h4 class="item-title">${e.nome}</h4></div>
-                <div class="item-value"><div class="val-box"><span>Restam</span><strong>${e.parcelas} Parc.</strong></div><div class="val-box"><span>Valor Mensal</span><strong>${fMoeda(e.valor_mensal)}</strong></div></div>
-                <div class="item-actions"><button class="btn-action generate" onclick="dados.emprestimo.find(x=>x.id==${e.id}).parcelas--; saveLocal('emprestimo'); showToast('Parcela Paga!');"><i class="fa-solid fa-check"></i> 1 Parc</button><button class="btn-action delete" onclick="deletarItem('emprestimo', ${e.id})"><i class="fa-solid fa-trash"></i></button></div></div>
-            `).join('');
+            document.getElementById('listaEmprestimo').innerHTML = dados.emprestimo.map(e => {
+                const totalEmprestado = e.valor;
+                const totalRecebido = (e.parcelas_totais - e.parcelas_restantes) * e.valor_mensal;
+                return `<div class="item-card">
+                    <div class="item-header"><div><h4 class="item-title">${e.nome}</h4><span class="item-status">Restam ${e.parcelas_restantes} parc.</span></div></div>
+                    <div style="margin-bottom: 10px;">
+                        <div class="item-meta-info"><i class="fa-solid fa-calendar"></i> Início: ${fData(e.data)}</div>
+                        <div class="item-meta-info"><i class="fa-solid fa-money-bill"></i> Parcela Mensal: ${fMoeda(e.valor_mensal)}</div>
+                    </div>
+                    <div class="item-value">
+                        <div class="val-box"><span>Emprestado</span><strong style="color:var(--danger)">${fMoeda(totalEmprestado)}</strong></div>
+                        <div class="val-box"><span>Já Recebido</span><strong style="color:var(--success)">${fMoeda(totalRecebido)}</strong></div>
+                    </div>
+                    <div class="item-actions" style="margin-top: 10px;">
+                        <button class="btn-action generate" onclick="abaterEmprestimo(${e.id})"><i class="fa-solid fa-check"></i> Pagar 1 Parc</button>
+                        <button class="btn-action delete" onclick="deletarItem('emprestimo', ${e.id})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function abaterEmprestimo(id) { 
+            const emp = dados.emprestimo.find(e => e.id === id); 
+            if(emp && emp.parcelas_restantes > 0) { 
+                emp.parcelas_restantes--; 
+                saveLocal('emprestimo'); 
+                showToast('Parcela Abatida!'); 
+            } 
         }
 
         function renderAcai() {
             const faturamentoBruto = dados.acai.filter(a => a.tipo === 'Entrada').reduce((s,a) => s+a.valor, 0);
-            document.getElementById('bruto-acai').textContent = fMoeda(faturamentoBruto); // Refletindo a regra do bruto
+            document.getElementById('bruto-acai').textContent = fMoeda(faturamentoBruto); // Apenas Bruto como solicitado
             document.getElementById('listaAcai').innerHTML = dados.acai.map(a => {
                 const c = a.tipo === 'Entrada' ? 'var(--success)' : 'var(--danger)';
-                return `<div class="item-card"><div class="item-header"><h4 class="item-title">${a.descricao}</h4><span style="font-size:0.7rem">${a.data}</span></div>
-                <div class="item-value" style="grid-template-columns:1fr"><div class="val-box" style="flex-direction:row; justify-content:space-between"><span>${a.tipo}</span><strong style="color:${c}">${fMoeda(a.valor)}</strong></div></div>
-                <button class="btn-action delete" style="width:100%" onclick="deletarItem('acai', ${a.id})"><i class="fa-solid fa-trash"></i> Excluir</button></div>`;
+                return `<div class="item-card"><div class="item-header"><div><h4 class="item-title">${a.descricao}</h4><span style="font-size:0.75rem">${fData(a.data)}</span></div><span class="item-status" style="background:${a.tipo==='Entrada'?'rgba(34,197,94,0.15)':'rgba(239,68,68,0.15)'}; color:${c}">${a.tipo}</span></div>
+                <div class="item-value" style="grid-template-columns:1fr"><div class="val-box" style="flex-direction:row; justify-content:space-between"><span>Valor</span><strong style="color:${c}">${fMoeda(a.valor)}</strong></div></div>
+                <button class="btn-action delete" style="width:100%; margin-top: 10px;" onclick="deletarItem('acai', ${a.id})"><i class="fa-solid fa-trash"></i> Excluir</button></div>`;
             }).join('');
         }
 
         function renderBarbearia() {
             document.getElementById('listaBarbearia').innerHTML = dados.barbearia.map(b => {
                 const lucro = b.faturamento - (b.bebidas + b.pomadas);
-                return `<div class="item-card"><div class="item-header"><h4 class="item-title">Dia ${b.data}</h4></div>
+                return `<div class="item-card"><div class="item-header"><div><h4 class="item-title">Dia ${fData(b.data)}</h4></div></div>
                 <div class="item-value"><div class="val-box"><span>Faturamento</span><strong style="color:var(--success)">${fMoeda(b.faturamento)}</strong></div><div class="val-box"><span>Lucro Liquido</span><strong style="color:var(--primary)">${fMoeda(lucro)}</strong></div></div>
-                <button class="btn-action delete" style="width:100%" onclick="deletarItem('barbearia', ${b.id})"><i class="fa-solid fa-trash"></i> Excluir Dia</button></div>`;
+                <button class="btn-action delete" style="width:100%; margin-top: 10px;" onclick="deletarItem('barbearia', ${b.id})"><i class="fa-solid fa-trash"></i> Excluir Dia</button></div>`;
             }).join('');
         }
 
@@ -333,7 +390,7 @@
             chart = new Chart(ctx, { type: 'bar', data: { labels: ['Fixo (Casas+Energia)', 'Giro Bruto', 'Jurídico'], datasets: [{ data: [fixo, giro, jur], backgroundColor: ['#4318FF', '#05CD99', '#FFCE20'], borderRadius: 6 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
         }
 
-        /* GERAÇÃO DE RECIBO SIMPLES */
+        /* GERAÇÃO DE RECIBO */
         function gerarFatura(nome, valor) {
             const d = document.createElement('div'); d.style = "position:fixed;top:-2000px;background:#fff;padding:30px;width:350px;border-radius:10px;text-align:center;font-family:sans-serif;color:#333;";
             d.innerHTML = `<h2 style="color:#4318FF;margin-bottom:5px;">Recibo Pagamento</h2><hr><p style="margin:20px 0;font-size:1.2rem;">Imóvel: <b>${nome}</b></p><h1 style="color:#05CD99;">${fMoeda(valor)}</h1><hr><p style="font-size:0.8rem;color:#999;margin-top:20px;">Data: ${new Date().toLocaleDateString('pt-BR')}</p>`;
@@ -341,15 +398,20 @@
             setTimeout(() => html2canvas(d).then(c => { const l = document.createElement('a'); l.download = `Recibo_${nome}.png`; l.href = c.toDataURL(); l.click(); d.remove(); }), 300);
         }
 
-        /* GESTÃO DE MODAIS E FORMULÁRIOS COMPACTA */
+        /* FORMULÁRIOS COMPLETOS E ROBUSTOS */
         function abrirModalAtual() {
             const tmpl = {
-                'casas': `<div class="form-grid two-cols"><div><label class="form-label">Nome</label><input type="text" id="m_c_n" class="form-control"></div><div><label class="form-label">Data Início</label><input type="date" id="m_c_d" class="form-control"></div></div><div class="form-grid"><label class="form-label">Valor Aluguel (R$)</label><input type="number" id="m_c_v" class="form-control"></div>`,
-                'energia': `<div class="form-grid two-cols"><div><label class="form-label">Cliente</label><input type="text" id="m_e_n" class="form-control"></div><div><label class="form-label">Data Ref.</label><input type="date" id="m_e_d" class="form-control"></div></div><div class="form-grid"><label class="form-label">Valor Original (Sem desc.)</label><input type="number" id="m_e_v" class="form-control"></div>`,
-                'juridico': `<div class="form-grid"><div><label class="form-label">Nome/Causa</label><input type="text" id="m_j_n" class="form-control"></div><div><label class="form-label">Valor Causa</label><input type="number" id="m_j_v" class="form-control"></div></div><select id="m_j_i" class="form-control"><option value="Junior">Junior (6%)</option><option value="Fernanda">Fernanda (10%)</option></select>`,
-                'emprestimo': `<div class="form-grid"><div><label class="form-label">Nome</label><input type="text" id="m_em_n" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Parcelas</label><input type="number" id="m_em_p" class="form-control"></div><div><label class="form-label">Valor Mensal</label><input type="number" id="m_em_v" class="form-control"></div></div>`,
-                'acai': `<div class="form-grid two-cols"><div><label class="form-label">Data</label><input type="date" id="m_a_d" class="form-control"></div><select id="m_a_t" class="form-control"><option value="Entrada">Entrada</option><option value="Saida">Saída</option></select></div><div class="form-grid"><label class="form-label">Descrição</label><input type="text" id="m_a_desc" class="form-control"></div><div class="form-grid"><label class="form-label">Valor (R$)</label><input type="number" id="m_a_v" class="form-control"></div>`,
-                'barbearia': `<div class="form-grid"><label class="form-label">Data</label><input type="date" id="m_b_d" class="form-control"></div><div class="form-grid"><label class="form-label">Faturamento Total</label><input type="number" id="m_b_f" class="form-control"></div><div class="form-grid two-cols"><div><label class="form-label">Bebidas</label><input type="number" id="m_b_b" class="form-control" value="0"></div><div><label class="form-label">Pomadas</label><input type="number" id="m_b_p" class="form-control" value="0"></div></div>`
+                'casas': `<div class="form-grid two-cols"><div><label class="form-label">Nome Imóvel</label><input type="text" id="m_c_n" class="form-control"></div><div><label class="form-label">Endereço</label><input type="text" id="m_c_e" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Inquilino</label><input type="text" id="m_c_i" class="form-control"></div><div><label class="form-label">Celular (WhatsApp)</label><input type="tel" id="m_c_cel" class="form-control" placeholder="62999999999"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Aluguel</label><input type="number" id="m_c_v" class="form-control"></div><div><label class="form-label">Dia Vencimento</label><input type="number" id="m_c_dia" class="form-control"></div></div><div class="form-grid"><label class="form-label">Data Início Contrato</label><input type="date" id="m_c_d" class="form-control"></div>`,
+                
+                'energia': `<div class="form-grid two-cols"><div><label class="form-label">Cliente</label><input type="text" id="m_e_n" class="form-control"></div><div><label class="form-label">Celular (WhatsApp)</label><input type="tel" id="m_e_cel" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Original (Sem desc.)</label><input type="number" id="m_e_v" class="form-control"></div><div><label class="form-label">Data Ref.</label><input type="date" id="m_e_d" class="form-control"></div></div>`,
+                
+                'juridico': `<div class="form-grid two-cols"><div><label class="form-label">Nome Cliente</label><input type="text" id="m_j_n" class="form-control"></div><div><label class="form-label">Tipo Causa</label><input type="text" id="m_j_t" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Causa</label><input type="number" id="m_j_v" class="form-control"></div><div><label class="form-label">Data Início</label><input type="date" id="m_j_d" class="form-control"></div></div><div class="form-grid"><label class="form-label">Investidor</label><select id="m_j_i" class="form-control"><option value="Junior">Junior (6%)</option><option value="Fernanda">Fernanda (10%)</option></select></div>`,
+                
+                'emprestimo': `<div class="form-grid"><div><label class="form-label">Nome da Pessoa</label><input type="text" id="m_em_n" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Total Emprestado</label><input type="number" id="m_em_vt" class="form-control"></div><div><label class="form-label">Qtd Parcelas Totais</label><input type="number" id="m_em_p" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor da Parcela</label><input type="number" id="m_em_v" class="form-control"></div><div><label class="form-label">Data do Empréstimo</label><input type="date" id="m_em_d" class="form-control"></div></div>`,
+                
+                'acai': `<div class="form-grid two-cols"><div><label class="form-label">Data</label><input type="date" id="m_a_d" class="form-control"></div><div><label class="form-label">Tipo</label><select id="m_a_t" class="form-control"><option value="Entrada">📈 Entrada</option><option value="Saida">📉 Saída</option></select></div></div><div class="form-grid"><label class="form-label">Descrição</label><input type="text" id="m_a_desc" class="form-control"></div><div class="form-grid"><label class="form-label">Valor Total (R$)</label><input type="number" id="m_a_v" class="form-control"></div>`,
+                
+                'barbearia': `<div class="form-grid"><label class="form-label">Data</label><input type="date" id="m_b_d" class="form-control"></div><div class="form-grid"><label class="form-label">Faturamento Total do Dia</label><input type="number" id="m_b_f" class="form-control"></div><div class="form-grid two-cols"><div><label class="form-label">Custo Bebidas</label><input type="number" id="m_b_b" class="form-control" value="0"></div><div><label class="form-label">Custo Pomadas</label><input type="number" id="m_b_p" class="form-control" value="0"></div></div>`
             };
             document.getElementById('modalTitle').textContent = "Adicionar " + abaAtual.toUpperCase();
             document.getElementById('modalBody').innerHTML = tmpl[abaAtual] + `<button class="btn-primary" onclick="salvarItem()"><i class="fa-solid fa-save"></i> Salvar</button>`;
@@ -359,25 +421,32 @@
 
         function salvarItem() {
             const id = Date.now(); let obj = {id}, arr = [];
+            
             if(abaAtual === 'casas'){ 
-                obj.nome = document.getElementById('m_c_n').value; obj.valor = Number(document.getElementById('m_c_v').value); obj.data_inicio = document.getElementById('m_c_d').value;
-                arr = [id, obj.nome, obj.valor, obj.data_inicio];
-            } else if(abaAtual === 'energia'){
-                const v = Number(document.getElementById('m_e_v').value); obj.nome = document.getElementById('m_e_n').value; obj.valor_original = v; obj.valor_final = v*0.80; obj.data = document.getElementById('m_e_d').value;
-                arr = [id, obj.nome, obj.valor_original, obj.valor_final, obj.data];
-            } else if(abaAtual === 'juridico'){
-                obj.nome = document.getElementById('m_j_n').value; obj.valor = Number(document.getElementById('m_j_v').value); obj.investidor = document.getElementById('m_j_i').value; obj.status = 'Ativo';
-                arr = [id, obj.nome, obj.valor, obj.investidor];
-            } else if(abaAtual === 'emprestimo'){
-                obj.nome = document.getElementById('m_em_n').value; obj.parcelas = Number(document.getElementById('m_em_p').value); obj.valor_mensal = Number(document.getElementById('m_em_v').value);
-                arr = [id, obj.nome, obj.parcelas, obj.valor_mensal];
-            } else if(abaAtual === 'acai'){
+                obj.nome = document.getElementById('m_c_n').value; obj.endereco = document.getElementById('m_c_e').value; obj.inquilino = document.getElementById('m_c_i').value; obj.celular = document.getElementById('m_c_cel').value; obj.valor = Number(document.getElementById('m_c_v').value); obj.dia = document.getElementById('m_c_dia').value; obj.data_inicio = document.getElementById('m_c_d').value;
+                arr = [id, obj.nome, obj.endereco, obj.inquilino, obj.celular, obj.valor, obj.dia, obj.data_inicio];
+            } 
+            else if(abaAtual === 'energia'){
+                const v = Number(document.getElementById('m_e_v').value); obj.nome = document.getElementById('m_e_n').value; obj.celular = document.getElementById('m_e_cel').value; obj.valor_original = v; obj.valor_final = v*0.80; obj.data = document.getElementById('m_e_d').value;
+                arr = [id, obj.nome, obj.celular, obj.valor_original, obj.valor_final, obj.data];
+            } 
+            else if(abaAtual === 'juridico'){
+                obj.nome = document.getElementById('m_j_n').value; obj.tipo = document.getElementById('m_j_t').value; obj.valor = Number(document.getElementById('m_j_v').value); obj.data = document.getElementById('m_j_d').value; obj.investidor = document.getElementById('m_j_i').value; obj.status = 'Ativo';
+                arr = [id, obj.nome, obj.tipo, obj.valor, obj.data, obj.investidor, obj.status];
+            } 
+            else if(abaAtual === 'emprestimo'){
+                obj.nome = document.getElementById('m_em_n').value; obj.valor = Number(document.getElementById('m_em_vt').value); obj.parcelas_totais = Number(document.getElementById('m_em_p').value); obj.parcelas_restantes = obj.parcelas_totais; obj.valor_mensal = Number(document.getElementById('m_em_v').value); obj.data = document.getElementById('m_em_d').value;
+                arr = [id, obj.nome, obj.valor, obj.parcelas_totais, obj.parcelas_restantes, obj.valor_mensal, obj.data];
+            } 
+            else if(abaAtual === 'acai'){
                 obj.data = document.getElementById('m_a_d').value; obj.tipo = document.getElementById('m_a_t').value; obj.descricao = document.getElementById('m_a_desc').value; obj.valor = Number(document.getElementById('m_a_v').value);
                 arr = [id, obj.data, obj.tipo, obj.descricao, obj.valor];
-            } else if(abaAtual === 'barbearia'){
+            } 
+            else if(abaAtual === 'barbearia'){
                 obj.data = document.getElementById('m_b_d').value; obj.faturamento = Number(document.getElementById('m_b_f').value); obj.bebidas = Number(document.getElementById('m_b_b').value); obj.pomadas = Number(document.getElementById('m_b_p').value);
                 arr = [id, obj.data, obj.faturamento, obj.bebidas, obj.pomadas];
             }
+            
             dados[abaAtual].push(obj); saveLocal(abaAtual); callSheets('salvar', abaAtual, arr);
             showToast('Salvo com sucesso!'); fecharModal();
         }
