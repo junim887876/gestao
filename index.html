@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Gestor Financeiro Premium</title>
+    <title>Gestor Financeiro Premium | Invest & MRR</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
@@ -14,110 +14,128 @@
         :root {
             --bg-body: #F4F7FE; --bg-card: #FFFFFF; --bg-input: #F8FAFC;
             --primary: #4318FF; --primary-hover: #3311DB; --primary-light: rgba(67, 24, 255, 0.1);
-            --success: #05CD99; --success-light: rgba(5, 205, 153, 0.1);
-            --warning: #FFCE20; --danger: #EE5D50;
-            --text-dark: #2B3674; --text-gray: #A3AED0; --border-color: #E9EDF7;
+            --success: #05CD99; --success-light: rgba(5, 205, 153, 0.15);
+            --warning: #FFCE20; --danger: #EE5D50; --danger-light: rgba(238, 93, 80, 0.15);
+            --text-dark: #1B2559; --text-gray: #A3AED0; --border-color: #E9EDF7;
             --shadow-soft: 0px 18px 40px rgba(112, 144, 176, 0.12);
+            --shadow-float: 0px 10px 20px rgba(67, 24, 255, 0.3);
             --font-title: 'Poppins', sans-serif; --font-body: 'DM Sans', sans-serif;
-            --radius-lg: 20px; --radius-md: 12px;
+            --radius-lg: 24px; --radius-md: 14px;
         }
 
         [data-theme="dark"] {
-            --bg-body: #0F172A; --bg-card: #1E293B; --bg-input: #334155;
-            --primary: #6366F1; --primary-light: rgba(99, 102, 241, 0.1);
-            --success: #34D399; --success-light: rgba(52, 211, 153, 0.1);
-            --text-dark: #F8FAFC; --text-gray: #94A3B8; --border-color: #334155;
+            --bg-body: #0B1437; --bg-card: #111C44; --bg-input: #1A2753;
+            --primary: #7551FF; --primary-light: rgba(117, 81, 255, 0.15);
+            --success: #01B574; --success-light: rgba(1, 181, 116, 0.15);
+            --text-dark: #FFFFFF; --text-gray: #8F9BBA; --border-color: #2B3674;
+            --shadow-soft: 0px 18px 40px rgba(0, 0, 0, 0.4);
+            --shadow-float: 0px 10px 20px rgba(117, 81, 255, 0.3);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s, color 0.3s; }
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s, color 0.3s; -webkit-tap-highlight-color: transparent; }
         body { width: 100vw; height: 100vh; overflow: hidden; background-color: var(--bg-body); color: var(--text-dark); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
         input, select, textarea { font-size: 16px !important; } 
         ::-webkit-scrollbar { display: none; } 
 
         .main-container { display: flex; height: 100vh; flex-direction: column; }
-        .topbar { background: var(--bg-card); height: 70px; padding: 0 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); z-index: 10; box-shadow: var(--shadow-soft); flex-shrink: 0; }
-        .topbar-logo { font-family: var(--font-title); font-size: 1.3rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .topbar { background: var(--bg-card); height: 75px; padding: 0 5%; display: flex; justify-content: space-between; align-items: center; z-index: 10; box-shadow: var(--shadow-soft); flex-shrink: 0; border-bottom: 1px solid var(--border-color); }
+        .topbar-logo { font-family: var(--font-title); font-size: 1.4rem; font-weight: 800; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
         .topbar-logo span { color: var(--primary); }
-        .user-controls { display: flex; gap: 10px; align-items: center; }
-        .btn-theme { background: transparent; border: 1px solid var(--border-color); color: var(--text-dark); width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; }
-        .btn-theme:hover { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+        .user-controls { display: flex; gap: 12px; align-items: center; }
+        .btn-theme { background: var(--bg-input); border: none; color: var(--text-dark); width: 44px; height: 44px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.1rem; }
+        .btn-theme:active { transform: scale(0.95); }
         
         .layout-core { display: flex; flex: 1; overflow: hidden; }
         
         .sidebar { width: 260px; background: var(--bg-card); border-right: 1px solid var(--border-color); padding: 20px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
-        .nav-item { padding: 12px 15px; border-radius: var(--radius-md); cursor: pointer; font-weight: 500; display: flex; align-items: center; gap: 12px; color: var(--text-gray); }
-        .nav-item.active { background: var(--primary-light); color: var(--primary); font-weight: 700; }
-        .nav-item i { font-size: 1.2rem; width: 24px; text-align: center; }
+        .nav-item { padding: 14px 18px; border-radius: var(--radius-md); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 14px; color: var(--text-gray); font-family: var(--font-title); }
+        .nav-item.active { background: var(--primary-light); color: var(--primary); }
+        .nav-item i { font-size: 1.3rem; width: 24px; text-align: center; }
 
         .content-wrapper { flex: 1; overflow-y: auto; padding: 30px 5%; width: 100%; scroll-behavior: smooth; }
-        .section { display: none; animation: fadeIn 0.3s ease; padding-bottom: 90px; }
+        .section { display: none; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); padding-bottom: 100px; }
         .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        .welcome-banner { background: linear-gradient(135deg, var(--primary) 0%, #1A0B6E 100%); border-radius: var(--radius-lg); padding: 25px 30px; color: #FFF; margin-bottom: 25px; box-shadow: var(--shadow-soft); }
-        .welcome-text h2 { font-family: var(--font-title); font-size: 1.5rem; margin-bottom: 4px; }
+        /* MARKETER BANNER */
+        .welcome-banner { background: linear-gradient(135deg, var(--primary) 0%, #1A0B6E 100%); border-radius: var(--radius-lg); padding: 30px; color: #FFF; margin-bottom: 25px; box-shadow: var(--shadow-soft); position: relative; overflow: hidden; }
+        .welcome-banner::after { content: ''; position: absolute; right: -20px; top: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%); border-radius: 50%; }
+        .welcome-text h2 { font-family: var(--font-title); font-size: 1.6rem; margin-bottom: 4px; font-weight: 800; letter-spacing: -0.5px; }
+        .welcome-text p { font-size: 0.9rem; opacity: 0.85; }
         
-        .summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .summary-card { background: var(--bg-card); border-radius: var(--radius-lg); padding: 20px; display: flex; align-items: center; gap: 15px; border: 1px solid var(--border-color); box-shadow: var(--shadow-soft); }
-        .summary-info span { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-gray); }
-        .summary-info h3 { font-family: var(--font-title); font-size: 1.5rem; color: var(--text-dark); }
+        .summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .summary-card { background: var(--bg-card); border-radius: var(--radius-lg); padding: 22px; display: flex; align-items: center; gap: 18px; border: 1px solid var(--border-color); box-shadow: var(--shadow-soft); }
+        .summary-info span { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-gray); letter-spacing: 0.5px; margin-bottom: 5px; display: block; }
+        .summary-info h3 { font-family: var(--font-title); font-size: 1.7rem; color: var(--text-dark); font-weight: 700; line-height: 1; }
         
-        .fab-button { position: fixed; bottom: 25px; right: 25px; width: 56px; height: 56px; background: linear-gradient(135deg, var(--primary), var(--primary-hover)); border: none; border-radius: 50%; color: #FFF; font-size: 1.5rem; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0px 10px 20px rgba(67, 24, 255, 0.4); z-index: 100; }
+        .fab-button { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--primary-hover)); border: none; border-radius: 50%; color: #FFF; font-size: 1.6rem; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: var(--shadow-float); z-index: 100; transition: transform 0.2s; }
+        .fab-button:active { transform: scale(0.9); }
 
-        /* MODAL */
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; padding: 15px; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
-        .modal-overlay.active { display: flex; }
-        .modal-content { background: var(--bg-card); border-radius: var(--radius-lg); padding: 25px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+        /* MODAL NATIVO */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(11, 20, 55, 0.6); z-index: 1000; padding: 15px; align-items: center; justify-content: center; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+        .modal-overlay.active { display: flex; animation: fadeModal 0.3s; }
+        @keyframes fadeModal { from { opacity: 0; } to { opacity: 1; } }
+        .modal-content { background: var(--bg-card); border-radius: var(--radius-lg); padding: 25px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-soft); animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-header h2 { font-family: var(--font-title); font-size: 1.4rem; font-weight: 700; }
         .form-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 15px; }
         .form-grid.two-cols { grid-template-columns: 1fr 1fr; }
-        .form-label { font-size: 0.8rem; font-weight: 600; color: var(--text-dark); margin-bottom: 4px; display: block; }
-        .form-control { width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px; color: var(--text-dark); font-family: inherit; }
-        .btn-primary { width: 100%; padding: 14px; background: var(--primary); color: #FFF; border: none; border-radius: var(--radius-md); font-family: var(--font-title); font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 10px; }
+        .form-label { font-size: 0.8rem; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; display: block; }
+        .form-control { width: 100%; background: var(--bg-input); border: 2px solid transparent; border-radius: var(--radius-md); padding: 14px; color: var(--text-dark); font-family: inherit; font-weight: 500; outline: none; transition: 0.2s; }
+        .form-control:focus { border-color: var(--primary); background: var(--bg-card); }
+        .btn-primary { width: 100%; padding: 16px; background: var(--primary); color: #FFF; border: none; border-radius: var(--radius-md); font-family: var(--font-title); font-weight: 700; font-size: 1.05rem; cursor: pointer; margin-top: 10px; box-shadow: var(--shadow-float); }
+        .btn-primary:active { transform: scale(0.98); }
 
-        /* LISTAGEM FLUIDA & DETALHADA */
-        .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 15px; }
-        .item-card { background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); padding: 20px; display: flex; flex-direction: column; gap: 12px; position: relative; overflow: hidden; box-shadow: var(--shadow-soft); }
-        .item-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--primary), var(--success)); }
+        /* CARDS APP NATIVO */
+        .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
+        .item-card { background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); padding: 22px; display: flex; flex-direction: column; gap: 15px; position: relative; overflow: hidden; box-shadow: var(--shadow-soft); }
+        .item-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .item-title { font-family: var(--font-title); font-size: 1.2rem; font-weight: 800; color: var(--text-dark); margin-bottom: 2px; }
+        .item-meta-info { font-size: 0.85rem; color: var(--text-gray); display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-weight: 500; }
+        .item-meta-info i { color: var(--primary); width: 16px; text-align: center; }
+        .link-zap { color: #01B574; text-decoration: none; font-weight: 700; }
         
-        .item-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px dashed var(--border-color); padding-bottom: 10px; margin-bottom: 5px; }
-        .item-title { font-family: var(--font-title); font-size: 1.1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 5px; }
-        .item-meta-info { font-size: 0.8rem; color: var(--text-gray); display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
-        .item-meta-info i { color: var(--primary); width: 14px; text-align: center; }
-        .link-zap { color: #25D366; text-decoration: none; font-weight: 600; }
+        .badge { padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 5px; }
+        .badge.primary { background: var(--primary-light); color: var(--primary); }
+        .badge.success { background: var(--success-light); color: var(--success); }
+        .badge.danger { background: var(--danger-light); color: var(--danger); }
         
-        .item-status { background: var(--primary-light); color: var(--primary); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; gap: 5px; }
-        .item-status.recebido { background: var(--success-light); color: var(--success); }
-        
-        .item-value { background: var(--bg-input); padding: 15px; border-radius: var(--radius-md); display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .item-value { background: var(--bg-input); padding: 16px; border-radius: var(--radius-md); display: grid; grid-template-columns: 1fr 1fr; gap: 15px; border-left: 4px solid var(--primary); }
         .val-box { display: flex; flex-direction: column; }
         .val-box span { font-size: 0.7rem; font-weight: 700; color: var(--text-gray); text-transform: uppercase; margin-bottom: 4px; }
-        .val-box strong { font-family: var(--font-title); font-size: 1.2rem; color: var(--text-dark); }
+        .val-box strong { font-family: var(--font-title); font-size: 1.2rem; font-weight: 700; color: var(--text-dark); }
         
-        .item-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: auto; }
-        .btn-action { padding: 12px; border: none; border-radius: var(--radius-md); font-weight: 600; font-size: 0.85rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; }
+        .item-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: auto; }
+        .btn-action { padding: 12px; border: none; border-radius: var(--radius-md); font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: transform 0.1s; font-family: var(--font-title); }
+        .btn-action:active { transform: scale(0.95); }
         .btn-action.generate { background: var(--success-light); color: var(--success); }
         .btn-action.action { background: var(--primary-light); color: var(--primary); }
-        .btn-action.delete { background: rgba(238, 93, 80, 0.15); color: var(--danger); }
+        .btn-action.delete { background: var(--danger-light); color: var(--danger); }
 
-        .chart-container { position: relative; height: 250px; width: 100%; margin-top: 15px; }
-        #toast-container { position: fixed; bottom: 100px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-        .toast { background: var(--bg-card); padding: 12px 20px; border-radius: 30px; box-shadow: var(--shadow-hover); display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.9rem; transform: translateX(120%); animation: slideIn 0.3s forwards; }
+        .chart-container { position: relative; height: 260px; width: 100%; margin-top: 20px; }
+        #toast-container { position: fixed; bottom: 110px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast { background: var(--text-dark); color: var(--bg-card); padding: 14px 24px; border-radius: 30px; box-shadow: var(--shadow-float); display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 0.95rem; font-family: var(--font-title); transform: translateX(120%); animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes slideIn { to { transform: translateX(0); } }
 
-        /* ================= RESPONSIVO ================= */
+        /* ================= APP NATIVO MOBILE UI ================= */
         @media (max-width: 768px) {
             .layout-core { flex-direction: column; }
-            .sidebar { position: fixed; bottom: 0; left: 0; width: 100%; height: 80px; flex-direction: row; justify-content: space-between; border-top: 1px solid var(--border-color); border-right: none; padding: 5px 15px; padding-bottom: 20px; z-index: 90; background: var(--bg-card); overflow-x: auto; scroll-snap-type: x mandatory; }
-            .nav-item { flex: 0 0 auto; flex-direction: column; justify-content: center; gap: 4px; padding: 6px 10px; font-size: 0.65rem; scroll-snap-align: center; border-radius: var(--radius-lg); }
-            .nav-item i { font-size: 1.3rem; }
-            .nav-item.active { background: transparent; color: var(--primary); }
-            .nav-item.active i { background: var(--primary-light); padding: 6px 16px; border-radius: 20px; }
             
-            .content-wrapper { padding: 15px; padding-bottom: 110px; }
+            /* Bottom Tab Bar estilo iOS Glassmorphism */
+            .sidebar { position: fixed; bottom: 0; left: 0; width: 100%; height: 85px; flex-direction: row; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.1); border-right: none; padding: 8px 15px 25px 15px; z-index: 90; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); overflow-x: auto; scroll-snap-type: x mandatory; }
+            [data-theme="dark"] .sidebar { background: rgba(17, 28, 68, 0.85); }
+            
+            .nav-item { flex: 0 0 auto; flex-direction: column; justify-content: center; gap: 6px; padding: 6px 12px; font-size: 0.65rem; scroll-snap-align: center; border-radius: var(--radius-lg); font-weight: 700; color: var(--text-gray); }
+            .nav-item i { font-size: 1.4rem; }
+            .nav-item.active { background: transparent; color: var(--primary); }
+            .nav-item.active i { background: var(--primary-light); padding: 8px 18px; border-radius: 20px; }
+            
+            .content-wrapper { padding: 20px 15px 120px 15px; }
             .form-grid.two-cols { grid-template-columns: 1fr; }
-            .fab-button { bottom: 95px; right: 20px; }
+            .fab-button { bottom: 105px; right: 20px; }
             .items-grid { grid-template-columns: 1fr; }
+            .welcome-banner { padding: 25px 20px; }
         }
         
         .loader-nuvem { animation: spin 1s linear infinite; }
@@ -132,7 +150,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTitle">Adicionar</h2>
-                <i class="fa-solid fa-xmark" onclick="fecharModal()" style="font-size: 1.5rem; cursor: pointer; color: var(--text-gray);"></i>
+                <div class="btn-theme" onclick="fecharModal()"><i class="fa-solid fa-xmark"></i></div>
             </div>
             <div id="modalBody"></div>
         </div>
@@ -142,8 +160,8 @@
         <header class="topbar">
             <div class="topbar-logo"><i class="fa-solid fa-bolt"></i><span>Gestor</span></div>
             <div class="user-controls">
-                <button class="btn-theme" onclick="sincronizarNuvem()" title="Puxar Dados da Nuvem" id="btn-sync"><i class="fa-solid fa-cloud-arrow-down"></i></button>
-                <button class="btn-theme" onclick="toggleTheme()" title="Modo Noturno"><i class="fa-solid fa-moon"></i></button>
+                <button class="btn-theme" onclick="sincronizarNuvem()" title="Puxar Nuvem" id="btn-sync"><i class="fa-solid fa-cloud-arrow-down"></i></button>
+                <button class="btn-theme" onclick="toggleTheme()" title="Tema"><i class="fa-solid fa-moon"></i></button>
             </div>
         </header>
 
@@ -152,8 +170,8 @@
                 <div class="nav-item active" onclick="mudarAba('dashboard')"><i class="fa-solid fa-chart-pie"></i><span>Início</span></div>
                 <div class="nav-item" onclick="mudarAba('casas')"><i class="fa-solid fa-house"></i><span>Casas</span></div>
                 <div class="nav-item" onclick="mudarAba('energia')"><i class="fa-solid fa-sun"></i><span>Energia</span></div>
+                <div class="nav-item" onclick="mudarAba('emprestimo')"><i class="fa-solid fa-hand-holding-dollar"></i><span>MRR / Emp.</span></div>
                 <div class="nav-item" onclick="mudarAba('juridico')"><i class="fa-solid fa-scale-balanced"></i><span>Jurídico</span></div>
-                <div class="nav-item" onclick="mudarAba('emprestimo')"><i class="fa-solid fa-hand-holding-dollar"></i><span>Renda/Emp.</span></div>
                 <div class="nav-item" onclick="mudarAba('acai')"><i class="fa-solid fa-bowl-food"></i><span>Açaí</span></div>
                 <div class="nav-item" onclick="mudarAba('barbearia')"><i class="fa-solid fa-scissors"></i><span>Barbearia</span></div>
             </div>
@@ -161,51 +179,31 @@
             <div class="content-wrapper">
                 <section id="dashboard" class="section active">
                     <div class="welcome-banner">
-                        <div class="welcome-text"><h2>Resumo Financeiro</h2><p>Visão integrada de todas as frentes de negócio.</p></div>
+                        <div class="welcome-text"><h2>Cockpit Financeiro</h2><p>Controle absoluto de MRR, Giro e Alocação de Capital.</p></div>
                     </div>
                     <div class="summary-cards">
-                        <div class="summary-card" style="border-left: 4px solid var(--primary)"><div class="summary-info"><span>Entradas Fixas (Mês)</span><h3 id="total-fixo">R$ 0,00</h3></div></div>
-                        <div class="summary-card" style="border-left: 4px solid var(--success)"><div class="summary-info"><span>Giro Bruto (Açaí/Barb)</span><h3 id="total-giro">R$ 0,00</h3></div></div>
-                        <div class="summary-card" style="border-left: 4px solid var(--warning)"><div class="summary-info"><span>Expectativa Jurídica</span><h3 id="total-juridico">R$ 0,00</h3></div></div>
+                        <div class="summary-card" style="border-left: 4px solid var(--primary)">
+                            <div class="summary-info"><span>MRR (Receita Fixa Mensal)</span><h3 id="total-mrr">R$ 0,00</h3></div>
+                        </div>
+                        <div class="summary-card" style="border-left: 4px solid var(--success)">
+                            <div class="summary-info"><span>Giro Bruto (Açaí/Barb)</span><h3 id="total-giro">R$ 0,00</h3></div>
+                        </div>
+                        <div class="summary-card" style="border-left: 4px solid var(--warning)">
+                            <div class="summary-info"><span>Capital Alocado & ROI</span><h3 id="total-capital">R$ 0,00</h3><span id="roi-projetado" style="color:var(--success); font-size:0.85rem; margin-top:4px;"><i class="fa-solid fa-arrow-trend-up"></i> +0%</span></div>
+                        </div>
                     </div>
-                    <div style="background: var(--bg-card); padding: 20px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft);">
-                        <h4 style="margin-bottom: 15px; font-family: var(--font-title);">Evolução de Receitas</h4>
+                    <div style="background: var(--bg-card); padding: 25px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft);">
+                        <h4 style="margin-bottom: 15px; font-family: var(--font-title); font-weight:800; color: var(--text-dark);">Fluxo de Receitas</h4>
                         <div class="chart-container"><canvas id="chartGeral"></canvas></div>
                     </div>
                 </section>
 
-                <section id="casas" class="section">
-                    <div class="welcome-banner" style="background: linear-gradient(135deg, #FF6B6B, #C92A2A);"><h2>Casas de Aluguel</h2></div>
-                    <div class="items-grid" id="listaCasas"></div>
-                </section>
-
-                <section id="energia" class="section">
-                    <div class="welcome-banner" style="background: linear-gradient(135deg, #F59E0B, #D97706);"><h2>SolarInvest - Energia</h2></div>
-                    <div class="items-grid" id="listaEnergia"></div>
-                </section>
-
-                <section id="juridico" class="section">
-                    <div class="welcome-banner" style="background: linear-gradient(135deg, #6366F1, #4338CA);"><h2>Investimento Jurídico</h2></div>
-                    <div class="items-grid" id="listaJuridico"></div>
-                </section>
-
-                <section id="emprestimo" class="section">
-                    <div class="welcome-banner" style="background: linear-gradient(135deg, #10B981, #047857);"><h2>Renda Fixa & Empréstimos</h2></div>
-                    <div class="items-grid" id="listaEmprestimo"></div>
-                </section>
-
-                <section id="acai" class="section">
-                    <div class="welcome-banner" style="background: linear-gradient(135deg, #EC4899, #BE185D);"><h2>UrbanAçaí & Picolés</h2></div>
-                    <div class="summary-cards">
-                        <div class="summary-card"><div class="summary-info"><span>Faturamento Bruto</span><h3 id="bruto-acai" style="color:#EC4899;">R$ 0,00</h3></div></div>
-                    </div>
-                    <div class="items-grid" id="listaAcai"></div>
-                </section>
-
-                <section id="barbearia" class="section">
-                    <div class="welcome-banner" style="background: linear-gradient(135deg, #F97316, #C2410C);"><h2>Barbearia</h2></div>
-                    <div class="items-grid" id="listaBarbearia"></div>
-                </section>
+                <section id="casas" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #FF6B6B, #C92A2A);"><h2>Casas de Aluguel</h2><p>Receita passiva imobiliária.</p></div><div class="items-grid" id="listaCasas"></div></section>
+                <section id="energia" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #F59E0B, #D97706);"><h2>SolarInvest</h2><p>Aluguel de energia com desconto integrado.</p></div><div class="items-grid" id="listaEnergia"></div></section>
+                <section id="emprestimo" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #10B981, #047857);"><h2>MRR & Empréstimos</h2><p>Operações de crédito com 100% de lucro contabilizado.</p></div><div class="items-grid" id="listaEmprestimo"></div></section>
+                <section id="juridico" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #6366F1, #4338CA);"><h2>Investimento Jurídico</h2><p>Acompanhamento de Capital e Rentabilidade.</p></div><div class="items-grid" id="listaJuridico"></div></section>
+                <section id="acai" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #EC4899, #BE185D);"><h2>UrbanAçaí & Picolés</h2><p>Visão focada 100% no faturamento bruto.</p></div><div class="summary-cards"><div class="summary-card"><div class="summary-info"><span>Faturamento Bruto</span><h3 id="bruto-acai" style="color:#EC4899;">R$ 0,00</h3></div></div></div><div class="items-grid" id="listaAcai"></div></section>
+                <section id="barbearia" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #F97316, #C2410C);"><h2>Barbearia Junim</h2><p>Giro de caixa e margem líquida diária.</p></div><div class="items-grid" id="listaBarbearia"></div></section>
             </div>
         </div>
     </div>
@@ -219,10 +217,8 @@
 
         document.addEventListener('DOMContentLoaded', () => { 
             initTheme(); 
-            // Tenta puxar do cache local primeiro para carregar instantaneamente
             Object.keys(dados).forEach(k => dados[k] = JSON.parse(localStorage.getItem(k+'_data')) || []);
             renderAll();
-            // Após carregar local, força sincronização silenciosa com a nuvem
             sincronizarNuvem(true);
         });
 
@@ -230,7 +226,7 @@
         function initTheme() { 
             document.documentElement.setAttribute('data-theme', localStorage.getItem('tema_fm') || 'light'); 
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            document.querySelector('.btn-theme[title="Modo Noturno"] i').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            document.querySelector('.btn-theme[title="Tema"] i').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
         }
         function toggleTheme() { 
             const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
@@ -246,8 +242,7 @@
             abaAtual = aba; renderDashboard();
         }
 
-        /* ================= SINCRONIZAÇÃO VIA CSV (LEITURA) ================= */
-        // Função universal para converter string CSV em Array
+        /* SINCRONIZAÇÃO NUVEM */
         function parseCSV(str) {
             const arr = []; let quote = false; let row = 0, col = 0;
             for (let c = 0; c < str.length; c++) {
@@ -267,152 +262,80 @@
         async function sincronizarNuvem(silencioso = false) {
             const btn = document.getElementById('btn-sync');
             btn.innerHTML = '<i class="fa-solid fa-spinner loader-nuvem"></i>';
-            const abas = Object.keys(dados);
-            
             try {
-                for (let aba of abas) {
-                    const urlCSV = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${aba}`;
-                    const response = await fetch(urlCSV);
-                    if (!response.ok) continue;
-                    
-                    const textCSV = await response.text();
-                    const linhas = parseCSV(textCSV);
-                    const novosDados = [];
-                    
-                    // Transforma Array em Objetos Mapeados (ignorando a primeira linha se não for ID válido)
+                for (let aba of Object.keys(dados)) {
+                    const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${aba}`);
+                    if (!res.ok) continue;
+                    const linhas = parseCSV(await res.text());
+                    const nDados = [];
                     linhas.forEach(row => {
                         if(row.length < 2 || !Number(row[0])) return;
-                        
                         const id = Number(row[0]);
-                        if(aba === 'casas') novosDados.push({ id, nome: row[1], endereco: row[2], inquilino: row[3], celular: row[4], valor: Number(row[5]||0), dia: row[6], data_inicio: row[7] });
-                        if(aba === 'energia') novosDados.push({ id, nome: row[1], celular: row[2], valor_original: Number(row[3]||0), valor_final: Number(row[4]||0), data: row[5] });
-                        if(aba === 'juridico') novosDados.push({ id, nome: row[1], tipo: row[2], valor: Number(row[3]||0), data: row[4], investidor: row[5], status: row[6] });
-                        if(aba === 'emprestimo') novosDados.push({ id, nome: row[1], valor: Number(row[2]||0), parcelas_totais: Number(row[3]||0), parcelas_restantes: Number(row[4]||0), valor_mensal: Number(row[5]||0), data: row[6] });
-                        if(aba === 'acai') novosDados.push({ id, data: row[1], tipo: row[2], descricao: row[3], valor: Number(row[4]||0) });
-                        if(aba === 'barbearia') novosDados.push({ id, data: row[1], faturamento: Number(row[2]||0), bebidas: Number(row[3]||0), pomadas: Number(row[4]||0) });
+                        if(aba === 'casas') nDados.push({ id, nome: row[1], endereco: row[2], inquilino: row[3], celular: row[4], valor: Number(row[5]||0), dia: row[6], data_inicio: row[7] });
+                        if(aba === 'energia') nDados.push({ id, nome: row[1], celular: row[2], valor_original: Number(row[3]||0), valor_final: Number(row[4]||0), data: row[5] });
+                        if(aba === 'juridico') nDados.push({ id, nome: row[1], tipo: row[2], valor: Number(row[3]||0), data: row[4], investidor: row[5], status: row[6] });
+                        if(aba === 'emprestimo') nDados.push({ id, nome: row[1], valor: Number(row[2]||0), parcelas_totais: Number(row[3]||0), parcelas_restantes: Number(row[4]||0), valor_mensal: Number(row[5]||0), data: row[6] });
+                        if(aba === 'acai') nDados.push({ id, data: row[1], tipo: row[2], descricao: row[3], valor: Number(row[4]||0) });
+                        if(aba === 'barbearia') nDados.push({ id, data: row[1], faturamento: Number(row[2]||0), bebidas: Number(row[3]||0), pomadas: Number(row[4]||0) });
                     });
-                    
-                    dados[aba] = novosDados;
-                    localStorage.setItem(aba+'_data', JSON.stringify(dados[aba]));
+                    dados[aba] = nDados; localStorage.setItem(aba+'_data', JSON.stringify(dados[aba]));
                 }
-                renderAll();
-                if(!silencioso) showToast('Dados sincronizados da nuvem!');
-            } catch(e) {
-                console.error("Erro ao sincronizar", e);
-                if(!silencioso) showToast('Erro na sincronização');
-            }
+                renderAll(); if(!silencioso) showToast('App atualizado!');
+            } catch(e) { if(!silencioso) showToast('Erro ao atualizar.'); }
             btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-down"></i>';
         }
 
-        /* COMUNICAÇÃO COM APPS SCRIPT (GRAVAR/DELETAR) */
-        function saveLocal(key) { localStorage.setItem(key+'_data', JSON.stringify(dados[key])); renderAll(); }
-        
+        /* COMUNICAÇÃO SHEETS */
         function callSheets(acao, tipo, payload) {
             const body = { acao, tipo };
             if(acao === 'salvar') body.valores = payload; else body.id = payload;
-            fetch(URL_APP_SCRIPT, { method: 'POST', body: JSON.stringify(body), headers:{'Content-Type':'text/plain;charset=utf-8'} })
-            .catch(e => console.error('Modo Offline'));
+            fetch(URL_APP_SCRIPT, { method: 'POST', body: JSON.stringify(body), headers:{'Content-Type':'text/plain;charset=utf-8'} }).catch(e=>{});
         }
-
-        function deletarItem(tipo, id, semAviso = false) {
-            if(semAviso || confirm('Excluir permanentemente?')) {
+        function saveLocal(key) { localStorage.setItem(key+'_data', JSON.stringify(dados[key])); renderAll(); }
+        function deletarItem(tipo, id, semAviso=false) {
+            if(semAviso || confirm('Excluir ativo permanentemente?')) {
                 dados[tipo] = dados[tipo].filter(i => i.id !== id);
                 saveLocal(tipo); callSheets('deletar', tipo, id);
-                if(!semAviso) showToast('Deletado com sucesso');
+                if(!semAviso) showToast('Ativo liquidado.');
             }
         }
 
-        /* INTELIGÊNCIA E FORMATAÇÃO */
+        /* REGRAS & FORMATAÇÃO */
         function calcMeses(dataRef) {
             if(!dataRef) return 1;
             const d1 = new Date(dataRef), d2 = new Date();
-            let m = (d2.getFullYear() - d1.getFullYear()) * 12 + (d2.getMonth() - d1.getMonth());
-            return Math.max(1, m + 1); 
+            return Math.max(1, (d2.getFullYear() - d1.getFullYear()) * 12 + (d2.getMonth() - d1.getMonth()) + 1); 
         }
         function fMoeda(v) { return Number(v).toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
-        function fData(d) { if(!d) return '--'; const parts = d.split('-'); return parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : d; }
+        function fData(d) { if(!d) return '--'; const p = d.split('-'); return p.length===3 ? `${p[2]}/${p[1]}/${p[0]}` : d; }
         function fZap(num) { return num ? num.replace(/\D/g, '') : ''; }
 
-        /* RENDERIZAÇÃO DAS TELAS */
+        /* RENDERIZAÇÃO */
         function renderAll() { renderCasas(); renderEnergia(); renderJuridico(); renderEmprestimo(); renderAcai(); renderBarbearia(); renderDashboard(); }
 
         function renderCasas() {
             document.getElementById('listaCasas').innerHTML = dados.casas.map(c => {
                 const meses = calcMeses(c.data_inicio); const totalPago = meses * c.valor;
-                return `<div class="item-card">
-                    <div class="item-header"><div><h4 class="item-title">${c.nome}</h4><span class="item-status">Vence Dia ${c.dia}</span></div></div>
-                    <div style="margin-bottom: 10px;">
-                        <div class="item-meta-info"><i class="fa-solid fa-map-pin"></i> ${c.endereco || 'S/N'}</div>
-                        <div class="item-meta-info"><i class="fa-solid fa-user"></i> ${c.inquilino}</div>
-                        <div class="item-meta-info"><i class="fa-brands fa-whatsapp"></i> <a href="https://wa.me/55${fZap(c.celular)}" target="_blank" class="link-zap">${c.celular}</a></div>
-                    </div>
-                    <div class="item-value">
-                        <div class="val-box"><span>Aluguel Mensal</span><strong style="color:var(--primary)">${fMoeda(c.valor)}</strong></div>
-                        <div class="val-box"><span>${meses} Meses (Já Pago)</span><strong style="color:var(--success)">${fMoeda(totalPago)}</strong></div>
-                    </div>
-                    <div class="item-actions">
-                        <button class="btn-action generate" onclick="gerarFaturaCliente('${c.inquilino}')"><i class="fa-solid fa-file-invoice"></i> Fatura Integrada</button>
-                        <button class="btn-action delete" onclick="deletarItem('casas', ${c.id})"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                </div>`;
-            }).join('') || '<p style="text-align:center; padding: 20px; color: var(--text-gray);">Nenhuma casa cadastrada</p>';
+                return `<div class="item-card"><div class="item-header"><div><h4 class="item-title">${c.nome}</h4><span class="badge primary">Vence Dia ${c.dia}</span></div></div><div style="margin-bottom: 5px;"><div class="item-meta-info"><i class="fa-solid fa-user"></i> ${c.inquilino}</div><div class="item-meta-info"><i class="fa-brands fa-whatsapp"></i> <a href="https://wa.me/55${fZap(c.celular)}" target="_blank" class="link-zap">${c.celular}</a></div></div><div class="item-value"><div class="val-box"><span>Mensalidade</span><strong style="color:var(--primary)">${fMoeda(c.valor)}</strong></div><div class="val-box"><span>LTV (${meses} Meses)</span><strong style="color:var(--success)">${fMoeda(totalPago)}</strong></div></div><div class="item-actions"><button class="btn-action generate" onclick="gerarFaturaCliente('${c.inquilino}')"><i class="fa-solid fa-file-invoice"></i> Fatura Integrada</button><button class="btn-action delete" onclick="deletarItem('casas', ${c.id})"><i class="fa-solid fa-trash"></i></button></div></div>`;
+            }).join('');
         }
 
         function renderEnergia() {
             document.getElementById('listaEnergia').innerHTML = dados.energia.map(e => {
                 const meses = calcMeses(e.data); const totalPago = meses * e.valor_final;
-                return `<div class="item-card">
-                    <div class="item-header"><div><h4 class="item-title">${e.nome}</h4><span class="item-status">Ativo</span></div></div>
-                    <div style="margin-bottom: 10px;">
-                        <div class="item-meta-info"><i class="fa-brands fa-whatsapp"></i> <a href="https://wa.me/55${fZap(e.celular)}" target="_blank" class="link-zap">${e.celular}</a></div>
-                        <div class="item-meta-info"><i class="fa-solid fa-calendar"></i> Data Ref: ${fData(e.data)}</div>
-                    </div>
-                    <div class="item-value">
-                        <div class="val-box"><span>Fatura Solar (-20%)</span><strong style="color:var(--primary)">${fMoeda(e.valor_final)}</strong></div>
-                        <div class="val-box"><span>${meses} Meses (Já Pago)</span><strong style="color:var(--success)">${fMoeda(totalPago)}</strong></div>
-                    </div>
-                    <div class="item-actions">
-                        <button class="btn-action generate" onclick="gerarFaturaCliente('${e.nome}')"><i class="fa-solid fa-file-invoice"></i> Fatura Integrada</button>
-                        <button class="btn-action delete" onclick="deletarItem('energia', ${e.id})"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                </div>`;
+                return `<div class="item-card"><div class="item-header"><div><h4 class="item-title">${e.nome}</h4><span class="badge success">Ativo</span></div></div><div style="margin-bottom: 5px;"><div class="item-meta-info"><i class="fa-brands fa-whatsapp"></i> <a href="https://wa.me/55${fZap(e.celular)}" target="_blank" class="link-zap">${e.celular}</a></div></div><div class="item-value"><div class="val-box"><span>Fatura (-20%)</span><strong style="color:var(--primary)">${fMoeda(e.valor_final)}</strong></div><div class="val-box"><span>LTV (${meses} Meses)</span><strong style="color:var(--success)">${fMoeda(totalPago)}</strong></div></div><div class="item-actions"><button class="btn-action generate" onclick="gerarFaturaCliente('${e.nome}')"><i class="fa-solid fa-file-invoice"></i> Fatura Integrada</button><button class="btn-action delete" onclick="deletarItem('energia', ${e.id})"><i class="fa-solid fa-trash"></i></button></div></div>`;
             }).join('');
         }
 
         function renderJuridico() {
             document.getElementById('listaJuridico').innerHTML = dados.juridico.map(j => {
+                const isRecebido = j.status.includes('Recebido');
                 const ret = j.valor * (j.investidor === 'Junior' ? 0.06 : 0.10);
-                const isRecebido = j.status && j.status.includes('Recebido');
-                return `<div class="item-card">
-                    <div class="item-header"><div><h4 class="item-title">${j.nome}</h4><span class="item-status ${isRecebido ? 'recebido' : ''}">${j.status || 'Em Andamento'}</span></div></div>
-                    <div style="margin-bottom: 10px;">
-                        <div class="item-meta-info"><i class="fa-solid fa-scale-balanced"></i> Tipo: ${j.tipo}</div>
-                        <div class="item-meta-info"><i class="fa-solid fa-user-tie"></i> Investidor: ${j.investidor}</div>
-                    </div>
-                    <div class="item-value">
-                        <div class="val-box"><span>Valor Causa</span><strong>${fMoeda(j.valor)}</strong></div>
-                        <div class="val-box"><span>Expectativa Lucro</span><strong style="color:var(--success)">${fMoeda(ret)}</strong></div>
-                    </div>
-                    <div class="item-actions" style="margin-top: 10px; grid-template-columns: ${isRecebido ? '1fr 1fr' : '1fr 1fr 1fr'};">
-                        ${!isRecebido ? `<button class="btn-action action" onclick="marcarRecebidoJuridico(${j.id})"><i class="fa-solid fa-check-double"></i> Receber</button>` : ''}
-                        <button class="btn-action generate" onclick="gerarReciboJuridico(${j.id})"><i class="fa-solid fa-file-pdf"></i> Recibo</button>
-                        <button class="btn-action delete" onclick="deletarItem('juridico', ${j.id})"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                </div>`;
+                const percROI = ((ret / j.valor) * 100).toFixed(1);
+                return `<div class="item-card"><div class="item-header"><div><h4 class="item-title">${j.nome}</h4><span class="badge ${isRecebido?'success':'primary'}">${j.status}</span></div></div><div style="margin-bottom: 5px;"><div class="item-meta-info"><i class="fa-solid fa-scale-balanced"></i> ${j.tipo} | ${j.investidor}</div></div><div class="item-value"><div class="val-box"><span>Custo (Capital)</span><strong style="color:var(--danger)">${fMoeda(j.valor)}</strong></div><div class="val-box"><span>Rentabilidade (${percROI}%)</span><strong style="color:var(--success)">+${fMoeda(ret)}</strong></div></div><div class="item-actions" style="grid-template-columns: ${isRecebido?'1fr 1fr':'1fr 1fr 1fr'};">${!isRecebido?`<button class="btn-action action" onclick="marcarRecebidoJuridico(${j.id})"><i class="fa-solid fa-check-double"></i> Receber</button>`:''}<button class="btn-action generate" onclick="gerarReciboJuridico(${j.id})"><i class="fa-solid fa-file-pdf"></i> Repasse</button><button class="btn-action delete" onclick="deletarItem('juridico', ${j.id})"><i class="fa-solid fa-trash"></i></button></div></div>`;
             }).join('');
         }
-
-        window.marcarRecebidoJuridico = function(id) {
-            const j = dados.juridico.find(x => x.id === id);
-            if(j && confirm("Marcar como recebido?")) {
-                deletarItem('juridico', id, true);
-                j.status = 'Recebido ✅';
-                j.id = Date.now();
-                dados.juridico.push(j); saveLocal('juridico');
-                setTimeout(() => callSheets('salvar', 'juridico', [j.id, j.nome, j.tipo, j.valor, j.data, j.investidor, j.status]), 1500);
-                showToast('Status atualizado!');
-            }
-        }
+        window.marcarRecebidoJuridico = function(id) { const j = dados.juridico.find(x=>x.id===id); if(j && confirm("Marcar Recebido?")){ deletarItem('juridico',id,true); j.status='Recebido ✅'; j.id=Date.now(); dados.juridico.push(j); saveLocal('juridico'); setTimeout(()=>callSheets('salvar','juridico',[j.id,j.nome,j.tipo,j.valor,j.data,j.investidor,j.status]),1000); showToast('Liquidado!'); } }
 
         function renderEmprestimo() {
             document.getElementById('listaEmprestimo').innerHTML = dados.emprestimo.map(e => {
@@ -420,173 +343,95 @@
                 const parcelasPagas = e.parcelas_totais - e.parcelas_restantes;
                 const totalRecebido = parcelasPagas * e.valor_mensal;
                 
-                const statusBadge = isRendaFixa 
-                    ? `<span class="item-status" style="background: rgba(67, 24, 255, 0.15); color: var(--primary);"><i class="fa-solid fa-infinity"></i> Renda Fixa</span>`
-                    : `<span class="item-status">Restam ${e.parcelas_restantes} parc.</span>`;
-                    
-                const btnPagar = isRendaFixa
-                    ? `<button class="btn-action generate" onclick="abaterEmprestimo(${e.id})"><i class="fa-solid fa-hand-holding-dollar"></i> Receber Mês</button>`
-                    : `<button class="btn-action generate" onclick="abaterEmprestimo(${e.id})"><i class="fa-solid fa-check"></i> Pagar 1 Parc</button>`;
-
-                return `<div class="item-card">
-                    <div class="item-header"><div><h4 class="item-title">${e.nome}</h4>${statusBadge}</div></div>
-                    <div style="margin-bottom: 10px;">
-                        <div class="item-meta-info"><i class="fa-solid fa-calendar"></i> Início: ${fData(e.data)}</div>
-                        <div class="item-meta-info"><i class="fa-solid fa-money-bill"></i> Parcela Mensal: ${fMoeda(e.valor_mensal)}</div>
-                    </div>
-                    <div class="item-value">
-                        <div class="val-box"><span>${isRendaFixa ? 'Investimento' : 'Emprestado'}</span><strong style="color:${isRendaFixa ? 'var(--primary)' : 'var(--danger)'}">${fMoeda(e.valor)}</strong></div>
-                        <div class="val-box"><span>Já Recebido (${parcelasPagas}m)</span><strong style="color:var(--success)">${fMoeda(totalRecebido)}</strong></div>
-                    </div>
-                    <div class="item-actions" style="margin-top: 10px;">
-                        ${btnPagar}
-                        <button class="btn-action delete" onclick="deletarItem('emprestimo', ${e.id})"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                </div>`;
+                // Emprestimos: Custo = Valor. Rentabilidade projetada total = (parcelas * mensal) - Custo (Mas vc disse Lucro 100%, então recebimento é lucro)
+                const percROI = ((e.valor_mensal / e.valor) * 100).toFixed(1); // ROI MENSAL
+                
+                return `<div class="item-card"><div class="item-header"><div><h4 class="item-title">${e.nome}</h4><span class="badge ${isRendaFixa?'primary':'warning'}">${isRendaFixa?'<i class="fa-solid fa-infinity"></i> Renda Fixa':`Restam ${e.parcelas_restantes} parc`}</span></div><span class="badge success">LUCRO 100% Mensal</span></div><div style="margin-bottom: 5px;"><div class="item-meta-info"><i class="fa-solid fa-calendar"></i> Início: ${fData(e.data)}</div></div><div class="item-value"><div class="val-box"><span>Custo (Capital)</span><strong style="color:var(--danger)">${fMoeda(e.valor)}</strong></div><div class="val-box"><span>MRR (${percROI}% ao mês)</span><strong style="color:var(--success)">+${fMoeda(e.valor_mensal)}</strong></div></div><div class="item-actions"><button class="btn-action generate" onclick="abaterEmprestimo(${e.id})"><i class="fa-solid fa-hand-holding-dollar"></i> Receber Mensalidade</button><button class="btn-action delete" onclick="deletarItem('emprestimo', ${e.id})"><i class="fa-solid fa-trash"></i></button></div></div>`;
             }).join('');
         }
-
-        window.abaterEmprestimo = function(id) { 
-            const emp = dados.emprestimo.find(e => e.id === id); 
-            if(emp && emp.parcelas_restantes > 0) { 
-                emp.parcelas_restantes--; 
-                
-                // Atualiza na planilha (Deleta o antigo e cria um novo atualizado)
-                deletarItem('emprestimo', id, true);
-                emp.id = Date.now();
-                dados.emprestimo.push(emp);
-                saveLocal('emprestimo');
-                setTimeout(() => callSheets('salvar', 'emprestimo', [emp.id, emp.nome, emp.valor, emp.parcelas_totais, emp.parcelas_restantes, emp.valor_mensal, emp.data]), 1500);
-
-                showToast(emp.parcelas_totais > 100 ? 'Mês Recebido!' : 'Parcela Abatida!'); 
-            } 
-        }
+        window.abaterEmprestimo = function(id) { const e = dados.emprestimo.find(x=>x.id===id); if(e && e.parcelas_restantes>0) { e.parcelas_restantes--; deletarItem('emprestimo',id,true); e.id=Date.now(); dados.emprestimo.push(e); saveLocal('emprestimo'); setTimeout(()=>callSheets('salvar','emprestimo',[e.id,e.nome,e.valor,e.parcelas_totais,e.parcelas_restantes,e.valor_mensal,e.data]),1000); showToast('Mensalidade Computada no MRR!'); } }
 
         function renderAcai() {
-            const faturamentoBruto = dados.acai.filter(a => a.tipo === 'Entrada').reduce((s,a) => s+a.valor, 0);
-            document.getElementById('bruto-acai').textContent = fMoeda(faturamentoBruto);
-            document.getElementById('listaAcai').innerHTML = dados.acai.map(a => `<div class="item-card"><div class="item-header"><div><h4 class="item-title">${a.descricao}</h4><span style="font-size:0.75rem">${fData(a.data)}</span></div><span class="item-status" style="background:${a.tipo==='Entrada'?'rgba(34,197,94,0.15)':'rgba(239,68,68,0.15)'}; color:${a.tipo==='Entrada'?'var(--success)':'var(--danger)'}">${a.tipo}</span></div><div class="item-value" style="grid-template-columns:1fr"><div class="val-box" style="flex-direction:row; justify-content:space-between"><span>Valor</span><strong style="color:${a.tipo==='Entrada'?'var(--success)':'var(--danger)'}">${fMoeda(a.valor)}</strong></div></div><button class="btn-action delete" style="width:100%; margin-top: 10px;" onclick="deletarItem('acai', ${a.id})"><i class="fa-solid fa-trash"></i> Excluir</button></div>`).join('');
+            const fb = dados.acai.filter(a=>a.tipo==='Entrada').reduce((s,a)=>s+a.valor,0); document.getElementById('bruto-acai').textContent=fMoeda(fb);
+            document.getElementById('listaAcai').innerHTML = dados.acai.map(a=>`<div class="item-card"><div class="item-header"><div><h4 class="item-title">${a.descricao}</h4><span class="badge ${a.tipo==='Entrada'?'success':'danger'}">${a.tipo}</span></div></div><div class="item-value" style="grid-template-columns:1fr"><div class="val-box" style="flex-direction:row;justify-content:space-between"><span>Valor Bruto</span><strong style="color:var(--${a.tipo==='Entrada'?'success':'danger'})">${fMoeda(a.valor)}</strong></div></div><button class="btn-action delete" style="width:100%;margin-top:10px;" onclick="deletarItem('acai',${a.id})"><i class="fa-solid fa-trash"></i> Excluir Registro</button></div>`).join('');
         }
 
         function renderBarbearia() {
-            document.getElementById('listaBarbearia').innerHTML = dados.barbearia.map(b => `<div class="item-card"><div class="item-header"><div><h4 class="item-title">Dia ${fData(b.data)}</h4></div></div><div class="item-value"><div class="val-box"><span>Faturamento</span><strong style="color:var(--success)">${fMoeda(b.faturamento)}</strong></div><div class="val-box"><span>Lucro Liquido</span><strong style="color:var(--primary)">${fMoeda(b.faturamento - (b.bebidas + b.pomadas))}</strong></div></div><button class="btn-action delete" style="width:100%; margin-top: 10px;" onclick="deletarItem('barbearia', ${b.id})"><i class="fa-solid fa-trash"></i> Excluir Dia</button></div>`).join('');
+            document.getElementById('listaBarbearia').innerHTML = dados.barbearia.map(b=>`<div class="item-card"><div class="item-header"><div><h4 class="item-title">Operação ${fData(b.data)}</h4></div></div><div class="item-value"><div class="val-box"><span>Faturamento</span><strong style="color:var(--success)">${fMoeda(b.faturamento)}</strong></div><div class="val-box"><span>Margem Líquida</span><strong style="color:var(--primary)">${fMoeda(b.faturamento-(b.bebidas+b.pomadas))}</strong></div></div><button class="btn-action delete" style="width:100%;margin-top:10px;" onclick="deletarItem('barbearia',${b.id})"><i class="fa-solid fa-trash"></i> Excluir Caixa</button></div>`).join('');
         }
 
+        /* ESTRATÉGIA DO DASHBOARD (MRR & ROI) */
         let chart = null;
         function renderDashboard() {
-            const fixo = dados.casas.reduce((s,c)=>s+c.valor,0) + dados.energia.reduce((s,e)=>s+e.valor_final,0);
+            // MRR: Entradas Fixas de Aluguel + Energia + MENSALIDADE de Empréstimos (Lucro 100%)
+            const mrrCasas = dados.casas.reduce((s,c)=>s+c.valor,0);
+            const mrrEnergia = dados.energia.reduce((s,e)=>s+e.valor_final,0);
+            const mrrEmprestimo = dados.emprestimo.reduce((s,e)=>s+e.valor_mensal,0);
+            const totalMRR = mrrCasas + mrrEnergia + mrrEmprestimo;
+
             const giro = dados.acai.filter(a=>a.tipo==='Entrada').reduce((s,a)=>s+a.valor,0) + dados.barbearia.reduce((s,b)=>s+b.faturamento,0);
-            const jur = dados.juridico.reduce((s,j)=>s+(j.valor*(j.investidor==='Junior'?0.06:0.10)),0);
-            document.getElementById('total-fixo').textContent = fMoeda(fixo); document.getElementById('total-giro').textContent = fMoeda(giro); document.getElementById('total-juridico').textContent = fMoeda(jur);
+            
+            // Capital Alocado (Custo Real)
+            const custoJuridico = dados.juridico.reduce((s,j)=>s+j.valor,0);
+            const custoEmprestimo = dados.emprestimo.reduce((s,e)=>s+e.valor,0);
+            const capitalTotal = custoJuridico + custoEmprestimo;
+
+            // Retorno (Lucro projetado)
+            const retornoJuridico = dados.juridico.reduce((s,j)=>s+(j.valor*(j.investidor==='Junior'?0.06:0.10)),0);
+            // Para empréstimos, a rentabilidade já mostrada no card é o Mensal, mas o global projetado seria o total final menos custo? "Lucro 100%":
+            const lucroEmprestimoProjetado = dados.emprestimo.reduce((s,e)=>s+((e.parcelas_totais * e.valor_mensal) - e.valor),0); 
+            const roiPercent = capitalTotal > 0 ? (((retornoJuridico + lucroEmprestimoProjetado) / capitalTotal) * 100).toFixed(1) : 0;
+
+            document.getElementById('total-mrr').textContent = fMoeda(totalMRR); 
+            document.getElementById('total-giro').textContent = fMoeda(giro); 
+            document.getElementById('total-capital').textContent = fMoeda(capitalTotal);
+            document.getElementById('roi-projetado').innerHTML = `<i class="fa-solid fa-arrow-trend-up"></i> +${roiPercent}% ROI Projetado`;
             
             const ctx = document.getElementById('chartGeral'); if(!ctx) return;
             if(chart) chart.destroy();
-            chart = new Chart(ctx, { type: 'bar', data: { labels: ['Fixo (Casas+Energia)', 'Giro Bruto', 'Jurídico'], datasets: [{ data: [fixo, giro, jur], backgroundColor: ['#4318FF', '#05CD99', '#FFCE20'], borderRadius: 6 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+            chart = new Chart(ctx, { type: 'bar', data: { labels: ['MRR (Fixos+Emp)', 'Giro Bruto', 'Capital Alocado'], datasets: [{ data: [totalMRR, giro, capitalTotal], backgroundColor: ['#4318FF', '#05CD99', '#FFCE20'], borderRadius: 10 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
         }
 
-        /* GERADORES DE PNG INTELIGENTES */
+        /* FATURAS & RECIBOS */
         window.gerarFaturaCliente = function(nome) {
-            const infCasa = dados.casas.filter(c => c.inquilino === nome);
-            const infEnergia = dados.energia.filter(e => e.nome === nome);
-            if(infCasa.length === 0 && infEnergia.length === 0) return;
-
-            showToast('Processando fatura...', 'success');
-            const d = document.createElement('div'); 
-            d.style = "position:fixed;top:-9999px;background:#fff;padding:40px;width:400px;border-radius:15px;font-family:'Poppins',sans-serif;color:#2B3674;box-shadow:0 10px 30px rgba(0,0,0,0.1);";
-            
-            let html = `<div style="text-align:center;margin-bottom:20px;"><i class="fa-solid fa-file-invoice" style="font-size:2rem;color:#4318FF;"></i><h2 style="margin:10px 0 5px;">Fatura Integrada</h2><p style="color:#A3AED0;font-size:0.9rem;margin:0;">Cliente: <b>${nome}</b></p></div>`;
+            const cL = dados.casas.filter(c => c.inquilino === nome); const eL = dados.energia.filter(e => e.nome === nome);
+            if(cL.length===0 && eL.length===0) return; showToast('Emitindo Fatura Integrada...');
+            const d = document.createElement('div'); d.style = "position:fixed;top:-9999px;background:#fff;padding:40px;width:400px;border-radius:15px;font-family:'Poppins',sans-serif;color:#1B2559;";
+            let html = `<div style="text-align:center;margin-bottom:20px;"><i class="fa-solid fa-file-invoice" style="font-size:2.2rem;color:#4318FF;"></i><h2 style="margin:10px 0 5px;font-weight:800;">Fatura Mensal</h2><p style="color:#A3AED0;font-size:0.95rem;margin:0;">Cliente: <b>${nome}</b></p></div>`;
             let total = 0;
-
-            if(infCasa.length > 0) {
-                infCasa.forEach(c => {
-                    html += `<div style="border-top:2px dashed #E9EDF7;padding:15px 0;"><h4 style="margin:0 0 5px;color:#FF6B6B;"><i class="fa-solid fa-house"></i> Aluguel de Imóvel</h4><p style="margin:0;font-size:0.9rem;">Imóvel: ${c.nome}<br>Vencimento: Dia ${c.dia}</p><h3 style="margin:10px 0 0;color:#2B3674;">${fMoeda(c.valor)}</h3></div>`;
-                    total += c.valor;
-                });
-            }
-
-            if(infEnergia.length > 0) {
-                infEnergia.forEach(e => {
-                    html += `<div style="border-top:2px dashed #E9EDF7;padding:15px 0;"><h4 style="margin:0 0 5px;color:#F59E0B;"><i class="fa-solid fa-sun"></i> SolarInvest - Energia</h4><p style="margin:0;font-size:0.9rem;">Fatura Original: <s style="color:#A3AED0;">${fMoeda(e.valor_original)}</s><br>Referência: ${fData(e.data)}</p><div style="display:inline-block;background:rgba(5,205,153,0.15);color:#05CD99;padding:4px 8px;border-radius:4px;font-size:0.75rem;font-weight:bold;margin-top:5px;">Desconto Aplicado (20%)</div><h3 style="margin:10px 0 0;color:#2B3674;">${fMoeda(e.valor_final)}</h3></div>`;
-                    total += e.valor_final;
-                });
-            }
-
-            html += `<div style="background:#F4F7FE;padding:20px;border-radius:10px;text-align:center;margin-top:20px;"><p style="margin:0;font-size:0.85rem;color:#A3AED0;text-transform:uppercase;font-weight:700;">Total a Pagar</p><h1 style="color:#4318FF;margin:5px 0 0;font-size:2.2rem;">${fMoeda(total)}</h1></div><p style="text-align:center;font-size:0.75rem;color:#A3AED0;margin-top:20px;">Emitido em ${new Date().toLocaleDateString('pt-BR')}</p>`;
-            
+            if(cL.length>0) cL.forEach(c => { html += `<div style="border-top:2px dashed #E9EDF7;padding:15px 0;"><h4 style="margin:0 0 5px;color:#FF6B6B;"><i class="fa-solid fa-house"></i> Locação Imobiliária</h4><p style="margin:0;font-size:0.85rem;">Imóvel: ${c.nome}<br>Vencimento: Dia ${c.dia}</p><h3 style="margin:10px 0 0;">${fMoeda(c.valor)}</h3></div>`; total+=c.valor; });
+            if(eL.length>0) eL.forEach(e => { html += `<div style="border-top:2px dashed #E9EDF7;padding:15px 0;"><h4 style="margin:0 0 5px;color:#F59E0B;"><i class="fa-solid fa-sun"></i> SolarInvest Flex</h4><p style="margin:0;font-size:0.85rem;">Fatura Bruta: <s>${fMoeda(e.valor_original)}</s><br>Referência: ${fData(e.data)}</p><div style="display:inline-block;background:#E6F9F1;color:#01B574;padding:4px 8px;border-radius:4px;font-size:0.75rem;font-weight:bold;margin-top:5px;">20% de Desconto Garantido</div><h3 style="margin:10px 0 0;">${fMoeda(e.valor_final)}</h3></div>`; total+=e.valor_final; });
+            html += `<div style="background:#F4F7FE;padding:20px;border-radius:12px;text-align:center;margin-top:20px;"><p style="margin:0;font-size:0.8rem;color:#A3AED0;font-weight:700;">TOTAL A PAGAR</p><h1 style="color:#4318FF;margin:5px 0 0;font-size:2.2rem;">${fMoeda(total)}</h1></div><p style="text-align:center;font-size:0.75rem;color:#A3AED0;margin-top:20px;">Emissão Automatizada - ${new Date().toLocaleDateString('pt-BR')}</p>`;
             d.innerHTML = html; document.body.appendChild(d);
             setTimeout(() => html2canvas(d, {scale:2}).then(c => { const l = document.createElement('a'); l.download = `Fatura_${nome.replace(/\s+/g,'_')}.png`; l.href = c.toDataURL(); l.click(); d.remove(); }), 500);
         }
 
-        window.gerarReciboJuridico = function(id) {
-            const j = dados.juridico.find(x => x.id === id); if(!j) return;
-            const ret = j.valor * (j.investidor === 'Junior' ? 0.06 : 0.10);
-            
-            showToast('Gerando recibo jurídico...', 'success');
-            const d = document.createElement('div'); 
-            d.style = "position:fixed;top:-9999px;background:#fff;padding:40px;width:400px;border-radius:15px;font-family:'Poppins',sans-serif;color:#2B3674;box-shadow:0 10px 30px rgba(0,0,0,0.1);";
-            
-            d.innerHTML = `<div style="text-align:center;margin-bottom:20px;"><i class="fa-solid fa-scale-balanced" style="font-size:2.5rem;color:#6366F1;"></i><h2 style="margin:10px 0 5px;">Comprovante de Repasse</h2><p style="color:#A3AED0;font-size:0.9rem;margin:0;">Investimento Jurídico</p></div><hr style="border:none;border-top:2px dashed #E9EDF7;margin:20px 0;"><div style="font-size:1rem;line-height:1.6;"><p style="margin:5px 0;"><b>Processo/Causa:</b> ${j.nome}</p><p style="margin:5px 0;"><b>Investidor:</b> ${j.investidor}</p><p style="margin:5px 0;"><b>Status:</b> ${j.status || 'Em Andamento'}</p></div><div style="background:#F8FAFC;padding:20px;border-radius:10px;text-align:center;margin-top:20px;"><p style="margin:0;font-size:0.85rem;color:#A3AED0;text-transform:uppercase;font-weight:700;">Lucro Repassado</p><h1 style="color:#05CD99;margin:5px 0 0;font-size:2.2rem;">${fMoeda(ret)}</h1></div><p style="text-align:center;font-size:0.75rem;color:#A3AED0;margin-top:20px;">Emitido em ${new Date().toLocaleDateString('pt-BR')}</p>`;
-            
-            document.body.appendChild(d);
-            setTimeout(() => html2canvas(d, {scale:2}).then(c => { const l = document.createElement('a'); l.download = `Repasse_${j.nome.replace(/\s+/g,'_')}.png`; l.href = c.toDataURL(); l.click(); d.remove(); }), 500);
-        }
-
-        /* IMPORTAÇÃO DE DADOS (CASAS -> ENERGIA) */
-        window.importarInquilino = function(val) {
-            if(val) {
-                const [n, c] = val.split('|');
-                document.getElementById('m_e_n').value = n || '';
-                document.getElementById('m_e_cel').value = c || '';
-            } else {
-                document.getElementById('m_e_n').value = '';
-                document.getElementById('m_e_cel').value = '';
-            }
-        }
-
-        /* FORMULÁRIOS */
+        /* FORMULÁRIOS & MODAL */
+        window.importarInquilino = function(val) { if(val) { const [n, c] = val.split('|'); document.getElementById('m_e_n').value = n; document.getElementById('m_e_cel').value = c; } }
         function abrirModalAtual() {
             const tmpl = {
-                'casas': `<div class="form-grid two-cols"><div><label class="form-label">Nome Imóvel</label><input type="text" id="m_c_n" class="form-control"></div><div><label class="form-label">Endereço</label><input type="text" id="m_c_e" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Inquilino</label><input type="text" id="m_c_i" class="form-control"></div><div><label class="form-label">Celular (WhatsApp)</label><input type="tel" id="m_c_cel" class="form-control" placeholder="62999999999"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Aluguel</label><input type="number" id="m_c_v" class="form-control"></div><div><label class="form-label">Dia Vencimento</label><input type="number" id="m_c_dia" class="form-control"></div></div><div class="form-grid"><label class="form-label">Data Início Contrato</label><input type="date" id="m_c_d" class="form-control"></div>`,
-                
-                'energia': `<div class="form-grid"><label class="form-label" style="color:var(--primary);"><i class="fa-solid fa-magic"></i> Importar do Aluguel</label><select class="form-control" onchange="importarInquilino(this.value)"><option value="">-- Novo Cliente (Preencher abaixo) --</option>${dados.casas.map(c => `<option value="${c.inquilino}|${c.celular}">${c.inquilino}</option>`).join('')}</select></div><div class="form-grid two-cols"><div><label class="form-label">Cliente</label><input type="text" id="m_e_n" class="form-control"></div><div><label class="form-label">Celular (WhatsApp)</label><input type="tel" id="m_e_cel" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Original (Sem desc.)</label><input type="number" id="m_e_v" class="form-control"></div><div><label class="form-label">Data Ref.</label><input type="date" id="m_e_d" class="form-control"></div></div>`,
-                
-                'juridico': `<div class="form-grid two-cols"><div><label class="form-label">Nome Cliente/Causa</label><input type="text" id="m_j_n" class="form-control"></div><div><label class="form-label">Tipo Causa</label><input type="text" id="m_j_t" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Causa</label><input type="number" id="m_j_v" class="form-control"></div><div><label class="form-label">Data Início</label><input type="date" id="m_j_d" class="form-control"></div></div><div class="form-grid"><label class="form-label">Investidor</label><select id="m_j_i" class="form-control"><option value="Junior">Junior (6%)</option><option value="Fernanda">Fernanda (10%)</option></select></div>`,
-                
-                'emprestimo': `<div class="form-grid"><div><label class="form-label">Nome da Pessoa</label><input type="text" id="m_em_n" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Emprestado/Investido</label><input type="number" id="m_em_vt" class="form-control"></div><div><label class="form-label">Qtd Parcelas (Mais de 100 = Renda Fixa)</label><input type="number" id="m_em_p" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor da Parcela/Mês</label><input type="number" id="m_em_v" class="form-control"></div><div><label class="form-label">Data de Início</label><input type="date" id="m_em_d" class="form-control"></div></div>`,
-                
-                'acai': `<div class="form-grid two-cols"><div><label class="form-label">Data</label><input type="date" id="m_a_d" class="form-control"></div><div><label class="form-label">Tipo</label><select id="m_a_t" class="form-control"><option value="Entrada">📈 Entrada</option><option value="Saida">📉 Saída</option></select></div></div><div class="form-grid"><label class="form-label">Descrição</label><input type="text" id="m_a_desc" class="form-control"></div><div class="form-grid"><label class="form-label">Valor Total (R$)</label><input type="number" id="m_a_v" class="form-control"></div>`,
-                
-                'barbearia': `<div class="form-grid"><label class="form-label">Data</label><input type="date" id="m_b_d" class="form-control"></div><div class="form-grid"><label class="form-label">Faturamento Total do Dia</label><input type="number" id="m_b_f" class="form-control"></div><div class="form-grid two-cols"><div><label class="form-label">Custo Bebidas</label><input type="number" id="m_b_b" class="form-control" value="0"></div><div><label class="form-label">Custo Pomadas</label><input type="number" id="m_b_p" class="form-control" value="0"></div></div>`
+                'casas': `<div class="form-grid two-cols"><div><label class="form-label">Nome Imóvel</label><input type="text" id="m_c_n" class="form-control"></div><div><label class="form-label">Endereço</label><input type="text" id="m_c_e" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Inquilino</label><input type="text" id="m_c_i" class="form-control"></div><div><label class="form-label">WhatsApp</label><input type="tel" id="m_c_cel" class="form-control" placeholder="62999999999"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Locação</label><input type="number" id="m_c_v" class="form-control"></div><div><label class="form-label">Vencimento (Dia)</label><input type="number" id="m_c_dia" class="form-control"></div></div><div class="form-grid"><label class="form-label">Início de Contrato</label><input type="date" id="m_c_d" class="form-control"></div>`,
+                'energia': `<div class="form-grid"><label class="form-label" style="color:var(--primary);"><i class="fa-solid fa-magic"></i> Puxar Inquilino</label><select class="form-control" onchange="importarInquilino(this.value)"><option value="">Novo Cliente</option>${dados.casas.map(c => `<option value="${c.inquilino}|${c.celular}">${c.inquilino}</option>`).join('')}</select></div><div class="form-grid two-cols"><div><label class="form-label">Cliente</label><input type="text" id="m_e_n" class="form-control"></div><div><label class="form-label">WhatsApp</label><input type="tel" id="m_e_cel" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Fatura Bruta (Sem desc.)</label><input type="number" id="m_e_v" class="form-control"></div><div><label class="form-label">Ref.</label><input type="date" id="m_e_d" class="form-control"></div></div>`,
+                'juridico': `<div class="form-grid two-cols"><div><label class="form-label">Processo/Causa</label><input type="text" id="m_j_n" class="form-control"></div><div><label class="form-label">Natureza</label><input type="text" id="m_j_t" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Custo do Capital</label><input type="number" id="m_j_v" class="form-control"></div><div><label class="form-label">Data Início</label><input type="date" id="m_j_d" class="form-control"></div></div><div class="form-grid"><label class="form-label">Agente</label><select id="m_j_i" class="form-control"><option value="Junior">Junior (6% ROI)</option><option value="Fernanda">Fernanda (10% ROI)</option></select></div>`,
+                'emprestimo': `<div class="form-grid"><div><label class="form-label">Tomador</label><input type="text" id="m_em_n" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Custo do Capital</label><input type="number" id="m_em_vt" class="form-control"></div><div><label class="form-label">Prazo (>100 = Renda Fixa)</label><input type="number" id="m_em_p" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">MRR (Lucro 100% Mensal)</label><input type="number" id="m_em_v" class="form-control"></div><div><label class="form-label">Lançamento</label><input type="date" id="m_em_d" class="form-control"></div></div>`,
+                'acai': `<div class="form-grid two-cols"><div><label class="form-label">Data</label><input type="date" id="m_a_d" class="form-control"></div><div><label class="form-label">Fluxo</label><select id="m_a_t" class="form-control"><option value="Entrada">Entrada (Giro)</option><option value="Saida">Saída (Custo)</option></select></div></div><div class="form-grid"><label class="form-label">Referência</label><input type="text" id="m_a_desc" class="form-control"></div><div class="form-grid"><label class="form-label">Valor</label><input type="number" id="m_a_v" class="form-control"></div>`,
+                'barbearia': `<div class="form-grid"><label class="form-label">Data de Fechamento</label><input type="date" id="m_b_d" class="form-control"></div><div class="form-grid"><label class="form-label">Giro Bruto</label><input type="number" id="m_b_f" class="form-control"></div><div class="form-grid two-cols"><div><label class="form-label">Bebidas (Custo)</label><input type="number" id="m_b_b" class="form-control" value="0"></div><div><label class="form-label">Pomadas (Custo)</label><input type="number" id="m_b_p" class="form-control" value="0"></div></div>`
             };
-            document.getElementById('modalTitle').textContent = "Adicionar " + abaAtual.toUpperCase();
-            document.getElementById('modalBody').innerHTML = tmpl[abaAtual] + `<button class="btn-primary" onclick="salvarItem()"><i class="fa-solid fa-save"></i> Salvar</button>`;
+            document.getElementById('modalTitle').textContent = "Novo Ativo | " + abaAtual.toUpperCase();
+            document.getElementById('modalBody').innerHTML = tmpl[abaAtual] + `<button class="btn-primary" onclick="salvarItem()">Confirmar Operação</button>`;
             document.getElementById('modalOverlay').classList.add('active');
         }
         function fecharModal() { document.getElementById('modalOverlay').classList.remove('active'); }
 
-        function salvarItem() {
+        window.salvarItem = function() {
             const id = Date.now(); let obj = {id}, arr = [];
-            if(abaAtual === 'casas'){ 
-                obj.nome = document.getElementById('m_c_n').value; obj.endereco = document.getElementById('m_c_e').value; obj.inquilino = document.getElementById('m_c_i').value; obj.celular = document.getElementById('m_c_cel').value; obj.valor = Number(document.getElementById('m_c_v').value); obj.dia = document.getElementById('m_c_dia').value; obj.data_inicio = document.getElementById('m_c_d').value;
-                arr = [id, obj.nome, obj.endereco, obj.inquilino, obj.celular, obj.valor, obj.dia, obj.data_inicio];
-            } else if(abaAtual === 'energia'){
-                const v = Number(document.getElementById('m_e_v').value); obj.nome = document.getElementById('m_e_n').value; obj.celular = document.getElementById('m_e_cel').value; obj.valor_original = v; obj.valor_final = v*0.80; obj.data = document.getElementById('m_e_d').value;
-                arr = [id, obj.nome, obj.celular, obj.valor_original, obj.valor_final, obj.data];
-            } else if(abaAtual === 'juridico'){
-                obj.nome = document.getElementById('m_j_n').value; obj.tipo = document.getElementById('m_j_t').value; obj.valor = Number(document.getElementById('m_j_v').value); obj.data = document.getElementById('m_j_d').value; obj.investidor = document.getElementById('m_j_i').value; obj.status = 'Em Andamento';
-                arr = [id, obj.nome, obj.tipo, obj.valor, obj.data, obj.investidor, obj.status];
-            } else if(abaAtual === 'emprestimo'){
-                obj.nome = document.getElementById('m_em_n').value; obj.valor = Number(document.getElementById('m_em_vt').value); obj.parcelas_totais = Number(document.getElementById('m_em_p').value); obj.parcelas_restantes = obj.parcelas_totais; obj.valor_mensal = Number(document.getElementById('m_em_v').value); obj.data = document.getElementById('m_em_d').value;
-                arr = [id, obj.nome, obj.valor, obj.parcelas_totais, obj.parcelas_restantes, obj.valor_mensal, obj.data];
-            } else if(abaAtual === 'acai'){
-                obj.data = document.getElementById('m_a_d').value; obj.tipo = document.getElementById('m_a_t').value; obj.descricao = document.getElementById('m_a_desc').value; obj.valor = Number(document.getElementById('m_a_v').value);
-                arr = [id, obj.data, obj.tipo, obj.descricao, obj.valor];
-            } else if(abaAtual === 'barbearia'){
-                obj.data = document.getElementById('m_b_d').value; obj.faturamento = Number(document.getElementById('m_b_f').value); obj.bebidas = Number(document.getElementById('m_b_b').value); obj.pomadas = Number(document.getElementById('m_b_p').value);
-                arr = [id, obj.data, obj.faturamento, obj.bebidas, obj.pomadas];
-            }
-            dados[abaAtual].push(obj); saveLocal(abaAtual); callSheets('salvar', abaAtual, arr);
-            showToast('Salvo com sucesso!'); fecharModal();
+            if(abaAtual === 'casas'){ obj.nome = document.getElementById('m_c_n').value; obj.endereco = document.getElementById('m_c_e').value; obj.inquilino = document.getElementById('m_c_i').value; obj.celular = document.getElementById('m_c_cel').value; obj.valor = Number(document.getElementById('m_c_v').value); obj.dia = document.getElementById('m_c_dia').value; obj.data_inicio = document.getElementById('m_c_d').value; arr = [id, obj.nome, obj.endereco, obj.inquilino, obj.celular, obj.valor, obj.dia, obj.data_inicio]; }
+            else if(abaAtual === 'energia'){ const v = Number(document.getElementById('m_e_v').value); obj.nome = document.getElementById('m_e_n').value; obj.celular = document.getElementById('m_e_cel').value; obj.valor_original = v; obj.valor_final = v*0.80; obj.data = document.getElementById('m_e_d').value; arr = [id, obj.nome, obj.celular, obj.valor_original, obj.valor_final, obj.data]; }
+            else if(abaAtual === 'juridico'){ obj.nome = document.getElementById('m_j_n').value; obj.tipo = document.getElementById('m_j_t').value; obj.valor = Number(document.getElementById('m_j_v').value); obj.data = document.getElementById('m_j_d').value; obj.investidor = document.getElementById('m_j_i').value; obj.status = 'Em Andamento'; arr = [id, obj.nome, obj.tipo, obj.valor, obj.data, obj.investidor, obj.status]; }
+            else if(abaAtual === 'emprestimo'){ obj.nome = document.getElementById('m_em_n').value; obj.valor = Number(document.getElementById('m_em_vt').value); obj.parcelas_totais = Number(document.getElementById('m_em_p').value); obj.parcelas_restantes = obj.parcelas_totais; obj.valor_mensal = Number(document.getElementById('m_em_v').value); obj.data = document.getElementById('m_em_d').value; arr = [id, obj.nome, obj.valor, obj.parcelas_totais, obj.parcelas_restantes, obj.valor_mensal, obj.data]; }
+            else if(abaAtual === 'acai'){ obj.data = document.getElementById('m_a_d').value; obj.tipo = document.getElementById('m_a_t').value; obj.descricao = document.getElementById('m_a_desc').value; obj.valor = Number(document.getElementById('m_a_v').value); arr = [id, obj.data, obj.tipo, obj.descricao, obj.valor]; }
+            else if(abaAtual === 'barbearia'){ obj.data = document.getElementById('m_b_d').value; obj.faturamento = Number(document.getElementById('m_b_f').value); obj.bebidas = Number(document.getElementById('m_b_b').value); obj.pomadas = Number(document.getElementById('m_b_p').value); arr = [id, obj.data, obj.faturamento, obj.bebidas, obj.pomadas]; }
+            dados[abaAtual].push(obj); saveLocal(abaAtual); callSheets('salvar', abaAtual, arr); showToast('Ativo Registrado!'); fecharModal();
         }
     </script>
 </body>
