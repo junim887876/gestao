@@ -84,7 +84,7 @@
         .item-meta-info i { color: var(--primary); width: 14px; text-align: center; }
         .link-zap { color: #25D366; text-decoration: none; font-weight: 600; }
         
-        .item-status { background: var(--primary-light); color: var(--primary); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .item-status { background: var(--primary-light); color: var(--primary); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; gap: 5px; }
         .item-status.recebido { background: var(--success-light); color: var(--success); }
         
         .item-value { background: var(--bg-input); padding: 15px; border-radius: var(--radius-md); display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
@@ -145,13 +145,12 @@
                 <div class="nav-item" onclick="mudarAba('casas')"><i class="fa-solid fa-house"></i><span>Casas</span></div>
                 <div class="nav-item" onclick="mudarAba('energia')"><i class="fa-solid fa-sun"></i><span>Energia</span></div>
                 <div class="nav-item" onclick="mudarAba('juridico')"><i class="fa-solid fa-scale-balanced"></i><span>Jurídico</span></div>
-                <div class="nav-item" onclick="mudarAba('emprestimo')"><i class="fa-solid fa-hand-holding-dollar"></i><span>Empréstimo</span></div>
+                <div class="nav-item" onclick="mudarAba('emprestimo')"><i class="fa-solid fa-hand-holding-dollar"></i><span>Renda/Emp.</span></div>
                 <div class="nav-item" onclick="mudarAba('acai')"><i class="fa-solid fa-bowl-food"></i><span>Açaí</span></div>
                 <div class="nav-item" onclick="mudarAba('barbearia')"><i class="fa-solid fa-scissors"></i><span>Barbearia</span></div>
             </div>
 
             <div class="content-wrapper">
-                <!-- DASHBOARD -->
                 <section id="dashboard" class="section active">
                     <div class="welcome-banner">
                         <div class="welcome-text"><h2>Resumo Financeiro</h2><p>Visão integrada de todas as frentes de negócio.</p></div>
@@ -183,7 +182,7 @@
                 </section>
 
                 <section id="emprestimo" class="section">
-                    <div class="welcome-banner" style="background: linear-gradient(135deg, #10B981, #047857);"><h2>Empréstimos Ativos</h2></div>
+                    <div class="welcome-banner" style="background: linear-gradient(135deg, #10B981, #047857);"><h2>Renda Fixa & Empréstimos</h2></div>
                     <div class="items-grid" id="listaEmprestimo"></div>
                 </section>
 
@@ -204,7 +203,6 @@
     </div>
 
     <script>
-        /* ================= CONFIGURAÇÃO ================= */
         const CONFIG = { formUrl: 'https://script.google.com/macros/s/AKfycbxb9j4YFCbRoLyUaKMnHvgvB7Y78XEBXgYOUKySNw1xC3T1r9_9SglljR9plYut90wl/exec' };
         
         let dados = { casas: [], energia: [], juridico: [], emprestimo: [], acai: [], barbearia: [] };
@@ -336,9 +334,9 @@
         window.marcarRecebidoJuridico = function(id) {
             const j = dados.juridico.find(x => x.id === id);
             if(j && confirm("Marcar como recebido?")) {
-                deletarItem('juridico', id, true); // Deleta silenciosamente na planilha
+                deletarItem('juridico', id, true);
                 j.status = 'Recebido ✅';
-                j.id = Date.now(); // Novo ID pra subir no fim
+                j.id = Date.now();
                 dados.juridico.push(j); saveLocal('juridico');
                 setTimeout(() => callSheets('salvar', 'juridico', [j.id, j.nome, j.tipo, j.valor, j.data, j.investidor, j.status]), 1500);
                 showToast('Status atualizado!');
@@ -347,11 +345,43 @@
 
         function renderEmprestimo() {
             document.getElementById('listaEmprestimo').innerHTML = dados.emprestimo.map(e => {
-                const totalRecebido = (e.parcelas_totais - e.parcelas_restantes) * e.valor_mensal;
-                return `<div class="item-card"><div class="item-header"><div><h4 class="item-title">${e.nome}</h4><span class="item-status">Restam ${e.parcelas_restantes} parc.</span></div></div>
-                <div class="item-value"><div class="val-box"><span>Emprestado</span><strong style="color:var(--danger)">${fMoeda(e.valor)}</strong></div><div class="val-box"><span>Já Recebido</span><strong style="color:var(--success)">${fMoeda(totalRecebido)}</strong></div></div>
-                <div class="item-actions"><button class="btn-action generate" onclick="dados.emprestimo.find(x=>x.id==${e.id}).parcelas_restantes--; saveLocal('emprestimo'); showToast('Parcela Paga!');"><i class="fa-solid fa-check"></i> 1 Parc</button><button class="btn-action delete" onclick="deletarItem('emprestimo', ${e.id})"><i class="fa-solid fa-trash"></i></button></div></div>`;
+                const isRendaFixa = e.parcelas_totais > 100;
+                const parcelasPagas = e.parcelas_totais - e.parcelas_restantes;
+                const totalRecebido = parcelasPagas * e.valor_mensal;
+                
+                const statusBadge = isRendaFixa 
+                    ? `<span class="item-status" style="background: rgba(67, 24, 255, 0.15); color: var(--primary);"><i class="fa-solid fa-infinity"></i> Renda Fixa</span>`
+                    : `<span class="item-status">Restam ${e.parcelas_restantes} parc.</span>`;
+                    
+                const btnPagar = isRendaFixa
+                    ? `<button class="btn-action generate" onclick="abaterEmprestimo(${e.id})"><i class="fa-solid fa-hand-holding-dollar"></i> Receber Mês</button>`
+                    : `<button class="btn-action generate" onclick="abaterEmprestimo(${e.id})"><i class="fa-solid fa-check"></i> Pagar 1 Parc</button>`;
+
+                return `<div class="item-card">
+                    <div class="item-header"><div><h4 class="item-title">${e.nome}</h4>${statusBadge}</div></div>
+                    <div style="margin-bottom: 10px;">
+                        <div class="item-meta-info"><i class="fa-solid fa-calendar"></i> Início: ${fData(e.data)}</div>
+                        <div class="item-meta-info"><i class="fa-solid fa-money-bill"></i> Parcela Mensal: ${fMoeda(e.valor_mensal)}</div>
+                    </div>
+                    <div class="item-value">
+                        <div class="val-box"><span>${isRendaFixa ? 'Investimento' : 'Emprestado'}</span><strong style="color:${isRendaFixa ? 'var(--primary)' : 'var(--danger)'}">${fMoeda(e.valor)}</strong></div>
+                        <div class="val-box"><span>Já Recebido (${parcelasPagas}m)</span><strong style="color:var(--success)">${fMoeda(totalRecebido)}</strong></div>
+                    </div>
+                    <div class="item-actions" style="margin-top: 10px;">
+                        ${btnPagar}
+                        <button class="btn-action delete" onclick="deletarItem('emprestimo', ${e.id})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>`;
             }).join('');
+        }
+
+        window.abaterEmprestimo = function(id) { 
+            const emp = dados.emprestimo.find(e => e.id === id); 
+            if(emp && emp.parcelas_restantes > 0) { 
+                emp.parcelas_restantes--; 
+                saveLocal('emprestimo'); 
+                showToast(emp.parcelas_totais > 100 ? 'Mês Recebido!' : 'Parcela Abatida!'); 
+            } 
         }
 
         function renderAcai() {
@@ -440,11 +470,11 @@
             const tmpl = {
                 'casas': `<div class="form-grid two-cols"><div><label class="form-label">Nome Imóvel</label><input type="text" id="m_c_n" class="form-control"></div><div><label class="form-label">Endereço</label><input type="text" id="m_c_e" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Inquilino</label><input type="text" id="m_c_i" class="form-control"></div><div><label class="form-label">Celular (WhatsApp)</label><input type="tel" id="m_c_cel" class="form-control" placeholder="62999999999"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Aluguel</label><input type="number" id="m_c_v" class="form-control"></div><div><label class="form-label">Dia Vencimento</label><input type="number" id="m_c_dia" class="form-control"></div></div><div class="form-grid"><label class="form-label">Data Início Contrato</label><input type="date" id="m_c_d" class="form-control"></div>`,
                 
-                'energia': `<div class="form-grid"><label class="form-label" style="color:var(--primary);"><i class="fa-solid fa-magic"></i> Importar do Aluguel (Opcional)</label><select class="form-control" onchange="importarInquilino(this.value)"><option value="">-- Novo Cliente (Preencher abaixo) --</option>${dados.casas.map(c => `<option value="${c.inquilino}|${c.celular}">${c.inquilino}</option>`).join('')}</select></div><div class="form-grid two-cols"><div><label class="form-label">Cliente</label><input type="text" id="m_e_n" class="form-control"></div><div><label class="form-label">Celular (WhatsApp)</label><input type="tel" id="m_e_cel" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Original (Sem desc.)</label><input type="number" id="m_e_v" class="form-control"></div><div><label class="form-label">Data Ref.</label><input type="date" id="m_e_d" class="form-control"></div></div>`,
+                'energia': `<div class="form-grid"><label class="form-label" style="color:var(--primary);"><i class="fa-solid fa-magic"></i> Importar do Aluguel</label><select class="form-control" onchange="importarInquilino(this.value)"><option value="">-- Novo Cliente (Preencher abaixo) --</option>${dados.casas.map(c => `<option value="${c.inquilino}|${c.celular}">${c.inquilino}</option>`).join('')}</select></div><div class="form-grid two-cols"><div><label class="form-label">Cliente</label><input type="text" id="m_e_n" class="form-control"></div><div><label class="form-label">Celular (WhatsApp)</label><input type="tel" id="m_e_cel" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Original (Sem desc.)</label><input type="number" id="m_e_v" class="form-control"></div><div><label class="form-label">Data Ref.</label><input type="date" id="m_e_d" class="form-control"></div></div>`,
                 
                 'juridico': `<div class="form-grid two-cols"><div><label class="form-label">Nome Cliente/Causa</label><input type="text" id="m_j_n" class="form-control"></div><div><label class="form-label">Tipo Causa</label><input type="text" id="m_j_t" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Causa</label><input type="number" id="m_j_v" class="form-control"></div><div><label class="form-label">Data Início</label><input type="date" id="m_j_d" class="form-control"></div></div><div class="form-grid"><label class="form-label">Investidor</label><select id="m_j_i" class="form-control"><option value="Junior">Junior (6%)</option><option value="Fernanda">Fernanda (10%)</option></select></div>`,
                 
-                'emprestimo': `<div class="form-grid"><div><label class="form-label">Nome da Pessoa</label><input type="text" id="m_em_n" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Total Emprestado</label><input type="number" id="m_em_vt" class="form-control"></div><div><label class="form-label">Qtd Parcelas Totais</label><input type="number" id="m_em_p" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor da Parcela</label><input type="number" id="m_em_v" class="form-control"></div><div><label class="form-label">Data do Empréstimo</label><input type="date" id="m_em_d" class="form-control"></div></div>`,
+                'emprestimo': `<div class="form-grid"><div><label class="form-label">Nome da Pessoa</label><input type="text" id="m_em_n" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Emprestado/Investido</label><input type="number" id="m_em_vt" class="form-control"></div><div><label class="form-label">Qtd Parcelas (Mais de 100 = Renda Fixa)</label><input type="number" id="m_em_p" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor da Parcela/Mês</label><input type="number" id="m_em_v" class="form-control"></div><div><label class="form-label">Data de Início</label><input type="date" id="m_em_d" class="form-control"></div></div>`,
                 
                 'acai': `<div class="form-grid two-cols"><div><label class="form-label">Data</label><input type="date" id="m_a_d" class="form-control"></div><div><label class="form-label">Tipo</label><select id="m_a_t" class="form-control"><option value="Entrada">📈 Entrada</option><option value="Saida">📉 Saída</option></select></div></div><div class="form-grid"><label class="form-label">Descrição</label><input type="text" id="m_a_desc" class="form-control"></div><div class="form-grid"><label class="form-label">Valor Total (R$)</label><input type="number" id="m_a_v" class="form-control"></div>`,
                 
