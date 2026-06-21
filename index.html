@@ -31,8 +31,8 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s, color 0.3s; }
         body { width: 100vw; height: 100vh; overflow: hidden; background-color: var(--bg-body); color: var(--text-dark); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
-        input, select, textarea { font-size: 16px !important; } /* Evita zoom automático no iOS/Android */
-        ::-webkit-scrollbar { display: none; } /* Visual mais limpo estilo App */
+        input, select, textarea { font-size: 16px !important; } 
+        ::-webkit-scrollbar { display: none; } 
 
         .main-container { display: flex; height: 100vh; flex-direction: column; }
         .topbar { background: var(--bg-card); height: 70px; padding: 0 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); z-index: 10; box-shadow: var(--shadow-soft); flex-shrink: 0; }
@@ -85,6 +85,7 @@
         .link-zap { color: #25D366; text-decoration: none; font-weight: 600; }
         
         .item-status { background: var(--primary-light); color: var(--primary); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .item-status.recebido { background: var(--success-light); color: var(--success); }
         
         .item-value { background: var(--bg-input); padding: 15px; border-radius: var(--radius-md); display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .val-box { display: flex; flex-direction: column; }
@@ -94,6 +95,7 @@
         .item-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: auto; }
         .btn-action { padding: 12px; border: none; border-radius: var(--radius-md); font-weight: 600; font-size: 0.85rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; }
         .btn-action.generate { background: var(--success-light); color: var(--success); }
+        .btn-action.action { background: var(--primary-light); color: var(--primary); }
         .btn-action.delete { background: rgba(238, 93, 80, 0.15); color: var(--danger); }
 
         .chart-container { position: relative; height: 250px; width: 100%; margin-top: 15px; }
@@ -101,10 +103,9 @@
         .toast { background: var(--bg-card); padding: 12px 20px; border-radius: 30px; box-shadow: var(--shadow-hover); display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.9rem; transform: translateX(120%); animation: slideIn 0.3s forwards; }
         @keyframes slideIn { to { transform: translateX(0); } }
 
-        /* ================= RESPONSIVO MOBILE/APPLE STYLE ================= */
+        /* ================= RESPONSIVO ================= */
         @media (max-width: 768px) {
             .layout-core { flex-direction: column; }
-            /* Bottom App Bar */
             .sidebar { position: fixed; bottom: 0; left: 0; width: 100%; height: 80px; flex-direction: row; justify-content: space-between; border-top: 1px solid var(--border-color); border-right: none; padding: 5px 15px; padding-bottom: 20px; z-index: 90; background: var(--bg-card); overflow-x: auto; scroll-snap-type: x mandatory; }
             .nav-item { flex: 0 0 auto; flex-direction: column; justify-content: center; gap: 4px; padding: 6px 10px; font-size: 0.65rem; scroll-snap-align: center; border-radius: var(--radius-lg); }
             .nav-item i { font-size: 1.3rem; }
@@ -150,6 +151,7 @@
             </div>
 
             <div class="content-wrapper">
+                <!-- DASHBOARD -->
                 <section id="dashboard" class="section active">
                     <div class="welcome-banner">
                         <div class="welcome-text"><h2>Resumo Financeiro</h2><p>Visão integrada de todas as frentes de negócio.</p></div>
@@ -171,7 +173,7 @@
                 </section>
 
                 <section id="energia" class="section">
-                    <div class="welcome-banner" style="background: linear-gradient(135deg, #F59E0B, #D97706);"><h2>Energia Solar</h2></div>
+                    <div class="welcome-banner" style="background: linear-gradient(135deg, #F59E0B, #D97706);"><h2>SolarInvest - Energia</h2></div>
                     <div class="items-grid" id="listaEnergia"></div>
                 </section>
 
@@ -243,46 +245,44 @@
             .catch(e => console.error('Modo Offline'));
         }
 
-        function deletarItem(tipo, id) {
-            if(confirm('Excluir permanentemente?')) {
+        function deletarItem(tipo, id, semAviso = false) {
+            if(semAviso || confirm('Excluir permanentemente?')) {
                 dados[tipo] = dados[tipo].filter(i => i.id !== id);
-                saveLocal(tipo); callSheets('deletar', tipo, id); showToast('Deletado com sucesso');
+                saveLocal(tipo); callSheets('deletar', tipo, id);
+                if(!semAviso) showToast('Deletado com sucesso');
             }
         }
 
-        /* INTELIGÊNCIA: CÁLCULOS */
+        /* INTELIGÊNCIA E FORMATAÇÃO */
         function calcMeses(dataRef) {
             if(!dataRef) return 1;
             const d1 = new Date(dataRef), d2 = new Date();
             let m = (d2.getFullYear() - d1.getFullYear()) * 12 + (d2.getMonth() - d1.getMonth());
-            return Math.max(1, m + 1); // Conta o mês atual
+            return Math.max(1, m + 1); 
         }
         function fMoeda(v) { return Number(v).toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
-        function fData(d) { if(!d) return '--'; return new Date(d).toLocaleDateString('pt-BR'); }
+        function fData(d) { if(!d) return '--'; const parts = d.split('-'); return `${parts[2]}/${parts[1]}/${parts[0]}`; }
         function fZap(num) { return num ? num.replace(/\D/g, '') : ''; }
 
-        /* RENDERIZAÇÃO DAS TELAS DETALHADAS */
+        /* RENDERIZAÇÃO DAS TELAS */
         function renderAll() { renderCasas(); renderEnergia(); renderJuridico(); renderEmprestimo(); renderAcai(); renderBarbearia(); renderDashboard(); }
 
         function renderCasas() {
             document.getElementById('listaCasas').innerHTML = dados.casas.map(c => {
                 const meses = calcMeses(c.data_inicio); const totalPago = meses * c.valor;
                 return `<div class="item-card">
-                    <div class="item-header">
-                        <div><h4 class="item-title">${c.nome}</h4><span class="item-status">Vence Dia ${c.dia}</span></div>
-                    </div>
+                    <div class="item-header"><div><h4 class="item-title">${c.nome}</h4><span class="item-status">Vence Dia ${c.dia}</span></div></div>
                     <div style="margin-bottom: 10px;">
                         <div class="item-meta-info"><i class="fa-solid fa-map-pin"></i> ${c.endereco || 'S/N'}</div>
                         <div class="item-meta-info"><i class="fa-solid fa-user"></i> ${c.inquilino}</div>
                         <div class="item-meta-info"><i class="fa-brands fa-whatsapp"></i> <a href="https://wa.me/55${fZap(c.celular)}" target="_blank" class="link-zap">${c.celular}</a></div>
-                        <div class="item-meta-info"><i class="fa-solid fa-calendar-check"></i> Início: ${fData(c.data_inicio)}</div>
                     </div>
                     <div class="item-value">
-                        <div class="val-box"><span>Aluguel</span><strong style="color:var(--primary)">${fMoeda(c.valor)}</strong></div>
+                        <div class="val-box"><span>Aluguel Mensal</span><strong style="color:var(--primary)">${fMoeda(c.valor)}</strong></div>
                         <div class="val-box"><span>${meses} Meses (Já Pago)</span><strong style="color:var(--success)">${fMoeda(totalPago)}</strong></div>
                     </div>
                     <div class="item-actions">
-                        <button class="btn-action generate" onclick="gerarFatura('${c.nome}', ${c.valor})"><i class="fa-solid fa-file-invoice"></i> Recibo</button>
+                        <button class="btn-action generate" onclick="gerarFaturaCliente('${c.inquilino}')"><i class="fa-solid fa-file-invoice"></i> Fatura Integrada</button>
                         <button class="btn-action delete" onclick="deletarItem('casas', ${c.id})"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>`;
@@ -299,10 +299,13 @@
                         <div class="item-meta-info"><i class="fa-solid fa-calendar"></i> Data Ref: ${fData(e.data)}</div>
                     </div>
                     <div class="item-value">
-                        <div class="val-box"><span>Final (-20%)</span><strong style="color:var(--primary)">${fMoeda(e.valor_final)}</strong></div>
+                        <div class="val-box"><span>Fatura Solar (-20%)</span><strong style="color:var(--primary)">${fMoeda(e.valor_final)}</strong></div>
                         <div class="val-box"><span>${meses} Meses (Já Pago)</span><strong style="color:var(--success)">${fMoeda(totalPago)}</strong></div>
                     </div>
-                    <button class="btn-action delete" style="width:100%; margin-top: 10px;" onclick="deletarItem('energia', ${e.id})"><i class="fa-solid fa-trash"></i> Excluir Cliente</button>
+                    <div class="item-actions">
+                        <button class="btn-action generate" onclick="gerarFaturaCliente('${e.nome}')"><i class="fa-solid fa-file-invoice"></i> Fatura Integrada</button>
+                        <button class="btn-action delete" onclick="deletarItem('energia', ${e.id})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
                 </div>`;
             }).join('');
         }
@@ -310,72 +313,55 @@
         function renderJuridico() {
             document.getElementById('listaJuridico').innerHTML = dados.juridico.map(j => {
                 const ret = j.valor * (j.investidor === 'Junior' ? 0.06 : 0.10);
-                const meses = calcMeses(j.data);
+                const isRecebido = j.status.includes('Recebido');
                 return `<div class="item-card">
-                    <div class="item-header"><div><h4 class="item-title">${j.nome}</h4><span class="item-status">${j.status}</span></div></div>
+                    <div class="item-header"><div><h4 class="item-title">${j.nome}</h4><span class="item-status ${isRecebido ? 'recebido' : ''}">${j.status}</span></div></div>
                     <div style="margin-bottom: 10px;">
-                        <div class="item-meta-info"><i class="fa-solid fa-scale-balanced"></i> Causa/Tipo: ${j.tipo}</div>
+                        <div class="item-meta-info"><i class="fa-solid fa-scale-balanced"></i> Tipo: ${j.tipo}</div>
                         <div class="item-meta-info"><i class="fa-solid fa-user-tie"></i> Investidor: ${j.investidor}</div>
-                        <div class="item-meta-info"><i class="fa-solid fa-clock"></i> Tempo Correndo: ${meses} Meses</div>
                     </div>
                     <div class="item-value">
                         <div class="val-box"><span>Valor Causa</span><strong>${fMoeda(j.valor)}</strong></div>
                         <div class="val-box"><span>Expectativa Lucro</span><strong style="color:var(--success)">${fMoeda(ret)}</strong></div>
                     </div>
-                    <button class="btn-action delete" style="width:100%; margin-top: 10px;" onclick="deletarItem('juridico', ${j.id})"><i class="fa-solid fa-trash"></i> Excluir Processo</button>
+                    <div class="item-actions" style="margin-top: 10px; grid-template-columns: ${isRecebido ? '1fr 1fr' : '1fr 1fr 1fr'};">
+                        ${!isRecebido ? `<button class="btn-action action" onclick="marcarRecebidoJuridico(${j.id})"><i class="fa-solid fa-check-double"></i> Receber</button>` : ''}
+                        <button class="btn-action generate" onclick="gerarReciboJuridico(${j.id})"><i class="fa-solid fa-file-pdf"></i> Recibo</button>
+                        <button class="btn-action delete" onclick="deletarItem('juridico', ${j.id})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
                 </div>`;
             }).join('');
+        }
+
+        window.marcarRecebidoJuridico = function(id) {
+            const j = dados.juridico.find(x => x.id === id);
+            if(j && confirm("Marcar como recebido?")) {
+                deletarItem('juridico', id, true); // Deleta silenciosamente na planilha
+                j.status = 'Recebido ✅';
+                j.id = Date.now(); // Novo ID pra subir no fim
+                dados.juridico.push(j); saveLocal('juridico');
+                setTimeout(() => callSheets('salvar', 'juridico', [j.id, j.nome, j.tipo, j.valor, j.data, j.investidor, j.status]), 1500);
+                showToast('Status atualizado!');
+            }
         }
 
         function renderEmprestimo() {
             document.getElementById('listaEmprestimo').innerHTML = dados.emprestimo.map(e => {
-                const totalEmprestado = e.valor;
                 const totalRecebido = (e.parcelas_totais - e.parcelas_restantes) * e.valor_mensal;
-                return `<div class="item-card">
-                    <div class="item-header"><div><h4 class="item-title">${e.nome}</h4><span class="item-status">Restam ${e.parcelas_restantes} parc.</span></div></div>
-                    <div style="margin-bottom: 10px;">
-                        <div class="item-meta-info"><i class="fa-solid fa-calendar"></i> Início: ${fData(e.data)}</div>
-                        <div class="item-meta-info"><i class="fa-solid fa-money-bill"></i> Parcela Mensal: ${fMoeda(e.valor_mensal)}</div>
-                    </div>
-                    <div class="item-value">
-                        <div class="val-box"><span>Emprestado</span><strong style="color:var(--danger)">${fMoeda(totalEmprestado)}</strong></div>
-                        <div class="val-box"><span>Já Recebido</span><strong style="color:var(--success)">${fMoeda(totalRecebido)}</strong></div>
-                    </div>
-                    <div class="item-actions" style="margin-top: 10px;">
-                        <button class="btn-action generate" onclick="abaterEmprestimo(${e.id})"><i class="fa-solid fa-check"></i> Pagar 1 Parc</button>
-                        <button class="btn-action delete" onclick="deletarItem('emprestimo', ${e.id})"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                </div>`;
+                return `<div class="item-card"><div class="item-header"><div><h4 class="item-title">${e.nome}</h4><span class="item-status">Restam ${e.parcelas_restantes} parc.</span></div></div>
+                <div class="item-value"><div class="val-box"><span>Emprestado</span><strong style="color:var(--danger)">${fMoeda(e.valor)}</strong></div><div class="val-box"><span>Já Recebido</span><strong style="color:var(--success)">${fMoeda(totalRecebido)}</strong></div></div>
+                <div class="item-actions"><button class="btn-action generate" onclick="dados.emprestimo.find(x=>x.id==${e.id}).parcelas_restantes--; saveLocal('emprestimo'); showToast('Parcela Paga!');"><i class="fa-solid fa-check"></i> 1 Parc</button><button class="btn-action delete" onclick="deletarItem('emprestimo', ${e.id})"><i class="fa-solid fa-trash"></i></button></div></div>`;
             }).join('');
-        }
-
-        function abaterEmprestimo(id) { 
-            const emp = dados.emprestimo.find(e => e.id === id); 
-            if(emp && emp.parcelas_restantes > 0) { 
-                emp.parcelas_restantes--; 
-                saveLocal('emprestimo'); 
-                showToast('Parcela Abatida!'); 
-            } 
         }
 
         function renderAcai() {
             const faturamentoBruto = dados.acai.filter(a => a.tipo === 'Entrada').reduce((s,a) => s+a.valor, 0);
-            document.getElementById('bruto-acai').textContent = fMoeda(faturamentoBruto); // Apenas Bruto como solicitado
-            document.getElementById('listaAcai').innerHTML = dados.acai.map(a => {
-                const c = a.tipo === 'Entrada' ? 'var(--success)' : 'var(--danger)';
-                return `<div class="item-card"><div class="item-header"><div><h4 class="item-title">${a.descricao}</h4><span style="font-size:0.75rem">${fData(a.data)}</span></div><span class="item-status" style="background:${a.tipo==='Entrada'?'rgba(34,197,94,0.15)':'rgba(239,68,68,0.15)'}; color:${c}">${a.tipo}</span></div>
-                <div class="item-value" style="grid-template-columns:1fr"><div class="val-box" style="flex-direction:row; justify-content:space-between"><span>Valor</span><strong style="color:${c}">${fMoeda(a.valor)}</strong></div></div>
-                <button class="btn-action delete" style="width:100%; margin-top: 10px;" onclick="deletarItem('acai', ${a.id})"><i class="fa-solid fa-trash"></i> Excluir</button></div>`;
-            }).join('');
+            document.getElementById('bruto-acai').textContent = fMoeda(faturamentoBruto);
+            document.getElementById('listaAcai').innerHTML = dados.acai.map(a => `<div class="item-card"><div class="item-header"><div><h4 class="item-title">${a.descricao}</h4><span style="font-size:0.75rem">${fData(a.data)}</span></div><span class="item-status" style="background:${a.tipo==='Entrada'?'rgba(34,197,94,0.15)':'rgba(239,68,68,0.15)'}; color:${a.tipo==='Entrada'?'var(--success)':'var(--danger)'}">${a.tipo}</span></div><div class="item-value" style="grid-template-columns:1fr"><div class="val-box" style="flex-direction:row; justify-content:space-between"><span>Valor</span><strong style="color:${a.tipo==='Entrada'?'var(--success)':'var(--danger)'}">${fMoeda(a.valor)}</strong></div></div><button class="btn-action delete" style="width:100%; margin-top: 10px;" onclick="deletarItem('acai', ${a.id})"><i class="fa-solid fa-trash"></i> Excluir</button></div>`).join('');
         }
 
         function renderBarbearia() {
-            document.getElementById('listaBarbearia').innerHTML = dados.barbearia.map(b => {
-                const lucro = b.faturamento - (b.bebidas + b.pomadas);
-                return `<div class="item-card"><div class="item-header"><div><h4 class="item-title">Dia ${fData(b.data)}</h4></div></div>
-                <div class="item-value"><div class="val-box"><span>Faturamento</span><strong style="color:var(--success)">${fMoeda(b.faturamento)}</strong></div><div class="val-box"><span>Lucro Liquido</span><strong style="color:var(--primary)">${fMoeda(lucro)}</strong></div></div>
-                <button class="btn-action delete" style="width:100%; margin-top: 10px;" onclick="deletarItem('barbearia', ${b.id})"><i class="fa-solid fa-trash"></i> Excluir Dia</button></div>`;
-            }).join('');
+            document.getElementById('listaBarbearia').innerHTML = dados.barbearia.map(b => `<div class="item-card"><div class="item-header"><div><h4 class="item-title">Dia ${fData(b.data)}</h4></div></div><div class="item-value"><div class="val-box"><span>Faturamento</span><strong style="color:var(--success)">${fMoeda(b.faturamento)}</strong></div><div class="val-box"><span>Lucro Liquido</span><strong style="color:var(--primary)">${fMoeda(b.faturamento - (b.bebidas + b.pomadas))}</strong></div></div><button class="btn-action delete" style="width:100%; margin-top: 10px;" onclick="deletarItem('barbearia', ${b.id})"><i class="fa-solid fa-trash"></i> Excluir Dia</button></div>`).join('');
         }
 
         let chart = null;
@@ -390,22 +376,73 @@
             chart = new Chart(ctx, { type: 'bar', data: { labels: ['Fixo (Casas+Energia)', 'Giro Bruto', 'Jurídico'], datasets: [{ data: [fixo, giro, jur], backgroundColor: ['#4318FF', '#05CD99', '#FFCE20'], borderRadius: 6 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
         }
 
-        /* GERAÇÃO DE RECIBO */
-        function gerarFatura(nome, valor) {
-            const d = document.createElement('div'); d.style = "position:fixed;top:-2000px;background:#fff;padding:30px;width:350px;border-radius:10px;text-align:center;font-family:sans-serif;color:#333;";
-            d.innerHTML = `<h2 style="color:#4318FF;margin-bottom:5px;">Recibo Pagamento</h2><hr><p style="margin:20px 0;font-size:1.2rem;">Imóvel: <b>${nome}</b></p><h1 style="color:#05CD99;">${fMoeda(valor)}</h1><hr><p style="font-size:0.8rem;color:#999;margin-top:20px;">Data: ${new Date().toLocaleDateString('pt-BR')}</p>`;
-            document.body.appendChild(d);
-            setTimeout(() => html2canvas(d).then(c => { const l = document.createElement('a'); l.download = `Recibo_${nome}.png`; l.href = c.toDataURL(); l.click(); d.remove(); }), 300);
+        /* GERADORES DE PNG INTELIGENTES */
+        window.gerarFaturaCliente = function(nome) {
+            const infCasa = dados.casas.filter(c => c.inquilino === nome);
+            const infEnergia = dados.energia.filter(e => e.nome === nome);
+            if(infCasa.length === 0 && infEnergia.length === 0) return;
+
+            showToast('Processando fatura...', 'success');
+            const d = document.createElement('div'); 
+            d.style = "position:fixed;top:-9999px;background:#fff;padding:40px;width:400px;border-radius:15px;font-family:'Poppins',sans-serif;color:#2B3674;box-shadow:0 10px 30px rgba(0,0,0,0.1);";
+            
+            let html = `<div style="text-align:center;margin-bottom:20px;"><i class="fa-solid fa-file-invoice" style="font-size:2rem;color:#4318FF;"></i><h2 style="margin:10px 0 5px;">Fatura Integrada</h2><p style="color:#A3AED0;font-size:0.9rem;margin:0;">Cliente: <b>${nome}</b></p></div>`;
+            let total = 0;
+
+            if(infCasa.length > 0) {
+                infCasa.forEach(c => {
+                    html += `<div style="border-top:2px dashed #E9EDF7;padding:15px 0;"><h4 style="margin:0 0 5px;color:#FF6B6B;"><i class="fa-solid fa-house"></i> Aluguel de Imóvel</h4><p style="margin:0;font-size:0.9rem;">Imóvel: ${c.nome}<br>Vencimento: Dia ${c.dia}</p><h3 style="margin:10px 0 0;color:#2B3674;">${fMoeda(c.valor)}</h3></div>`;
+                    total += c.valor;
+                });
+            }
+
+            if(infEnergia.length > 0) {
+                infEnergia.forEach(e => {
+                    html += `<div style="border-top:2px dashed #E9EDF7;padding:15px 0;"><h4 style="margin:0 0 5px;color:#F59E0B;"><i class="fa-solid fa-sun"></i> SolarInvest - Energia</h4><p style="margin:0;font-size:0.9rem;">Fatura Original: <s style="color:#A3AED0;">${fMoeda(e.valor_original)}</s><br>Referência: ${fData(e.data)}</p><div style="display:inline-block;background:rgba(5,205,153,0.15);color:#05CD99;padding:4px 8px;border-radius:4px;font-size:0.75rem;font-weight:bold;margin-top:5px;">Desconto Aplicado (20%)</div><h3 style="margin:10px 0 0;color:#2B3674;">${fMoeda(e.valor_final)}</h3></div>`;
+                    total += e.valor_final;
+                });
+            }
+
+            html += `<div style="background:#F4F7FE;padding:20px;border-radius:10px;text-align:center;margin-top:20px;"><p style="margin:0;font-size:0.85rem;color:#A3AED0;text-transform:uppercase;font-weight:700;">Total a Pagar</p><h1 style="color:#4318FF;margin:5px 0 0;font-size:2.2rem;">${fMoeda(total)}</h1></div><p style="text-align:center;font-size:0.75rem;color:#A3AED0;margin-top:20px;">Emitido em ${new Date().toLocaleDateString('pt-BR')}</p>`;
+            
+            d.innerHTML = html; document.body.appendChild(d);
+            setTimeout(() => html2canvas(d, {scale:2}).then(c => { const l = document.createElement('a'); l.download = `Fatura_${nome.replace(/\s+/g,'_')}.png`; l.href = c.toDataURL(); l.click(); d.remove(); }), 500);
         }
 
-        /* FORMULÁRIOS COMPLETOS E ROBUSTOS */
+        window.gerarReciboJuridico = function(id) {
+            const j = dados.juridico.find(x => x.id === id); if(!j) return;
+            const ret = j.valor * (j.investidor === 'Junior' ? 0.06 : 0.10);
+            
+            showToast('Gerando recibo jurídico...', 'success');
+            const d = document.createElement('div'); 
+            d.style = "position:fixed;top:-9999px;background:#fff;padding:40px;width:400px;border-radius:15px;font-family:'Poppins',sans-serif;color:#2B3674;box-shadow:0 10px 30px rgba(0,0,0,0.1);";
+            
+            d.innerHTML = `<div style="text-align:center;margin-bottom:20px;"><i class="fa-solid fa-scale-balanced" style="font-size:2.5rem;color:#6366F1;"></i><h2 style="margin:10px 0 5px;">Comprovante de Repasse</h2><p style="color:#A3AED0;font-size:0.9rem;margin:0;">Investimento Jurídico</p></div><hr style="border:none;border-top:2px dashed #E9EDF7;margin:20px 0;"><div style="font-size:1rem;line-height:1.6;"><p style="margin:5px 0;"><b>Processo/Causa:</b> ${j.nome}</p><p style="margin:5px 0;"><b>Investidor:</b> ${j.investidor}</p><p style="margin:5px 0;"><b>Status:</b> ${j.status}</p></div><div style="background:#F8FAFC;padding:20px;border-radius:10px;text-align:center;margin-top:20px;"><p style="margin:0;font-size:0.85rem;color:#A3AED0;text-transform:uppercase;font-weight:700;">Lucro Repassado</p><h1 style="color:#05CD99;margin:5px 0 0;font-size:2.2rem;">${fMoeda(ret)}</h1></div><p style="text-align:center;font-size:0.75rem;color:#A3AED0;margin-top:20px;">Emitido em ${new Date().toLocaleDateString('pt-BR')}</p>`;
+            
+            document.body.appendChild(d);
+            setTimeout(() => html2canvas(d, {scale:2}).then(c => { const l = document.createElement('a'); l.download = `Repasse_${j.nome.replace(/\s+/g,'_')}.png`; l.href = c.toDataURL(); l.click(); d.remove(); }), 500);
+        }
+
+        /* IMPORTAÇÃO DE DADOS (CASAS -> ENERGIA) */
+        window.importarInquilino = function(val) {
+            if(val) {
+                const [n, c] = val.split('|');
+                document.getElementById('m_e_n').value = n || '';
+                document.getElementById('m_e_cel').value = c || '';
+            } else {
+                document.getElementById('m_e_n').value = '';
+                document.getElementById('m_e_cel').value = '';
+            }
+        }
+
+        /* FORMULÁRIOS */
         function abrirModalAtual() {
             const tmpl = {
                 'casas': `<div class="form-grid two-cols"><div><label class="form-label">Nome Imóvel</label><input type="text" id="m_c_n" class="form-control"></div><div><label class="form-label">Endereço</label><input type="text" id="m_c_e" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Inquilino</label><input type="text" id="m_c_i" class="form-control"></div><div><label class="form-label">Celular (WhatsApp)</label><input type="tel" id="m_c_cel" class="form-control" placeholder="62999999999"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Aluguel</label><input type="number" id="m_c_v" class="form-control"></div><div><label class="form-label">Dia Vencimento</label><input type="number" id="m_c_dia" class="form-control"></div></div><div class="form-grid"><label class="form-label">Data Início Contrato</label><input type="date" id="m_c_d" class="form-control"></div>`,
                 
-                'energia': `<div class="form-grid two-cols"><div><label class="form-label">Cliente</label><input type="text" id="m_e_n" class="form-control"></div><div><label class="form-label">Celular (WhatsApp)</label><input type="tel" id="m_e_cel" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Original (Sem desc.)</label><input type="number" id="m_e_v" class="form-control"></div><div><label class="form-label">Data Ref.</label><input type="date" id="m_e_d" class="form-control"></div></div>`,
+                'energia': `<div class="form-grid"><label class="form-label" style="color:var(--primary);"><i class="fa-solid fa-magic"></i> Importar do Aluguel (Opcional)</label><select class="form-control" onchange="importarInquilino(this.value)"><option value="">-- Novo Cliente (Preencher abaixo) --</option>${dados.casas.map(c => `<option value="${c.inquilino}|${c.celular}">${c.inquilino}</option>`).join('')}</select></div><div class="form-grid two-cols"><div><label class="form-label">Cliente</label><input type="text" id="m_e_n" class="form-control"></div><div><label class="form-label">Celular (WhatsApp)</label><input type="tel" id="m_e_cel" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Original (Sem desc.)</label><input type="number" id="m_e_v" class="form-control"></div><div><label class="form-label">Data Ref.</label><input type="date" id="m_e_d" class="form-control"></div></div>`,
                 
-                'juridico': `<div class="form-grid two-cols"><div><label class="form-label">Nome Cliente</label><input type="text" id="m_j_n" class="form-control"></div><div><label class="form-label">Tipo Causa</label><input type="text" id="m_j_t" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Causa</label><input type="number" id="m_j_v" class="form-control"></div><div><label class="form-label">Data Início</label><input type="date" id="m_j_d" class="form-control"></div></div><div class="form-grid"><label class="form-label">Investidor</label><select id="m_j_i" class="form-control"><option value="Junior">Junior (6%)</option><option value="Fernanda">Fernanda (10%)</option></select></div>`,
+                'juridico': `<div class="form-grid two-cols"><div><label class="form-label">Nome Cliente/Causa</label><input type="text" id="m_j_n" class="form-control"></div><div><label class="form-label">Tipo Causa</label><input type="text" id="m_j_t" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Causa</label><input type="number" id="m_j_v" class="form-control"></div><div><label class="form-label">Data Início</label><input type="date" id="m_j_d" class="form-control"></div></div><div class="form-grid"><label class="form-label">Investidor</label><select id="m_j_i" class="form-control"><option value="Junior">Junior (6%)</option><option value="Fernanda">Fernanda (10%)</option></select></div>`,
                 
                 'emprestimo': `<div class="form-grid"><div><label class="form-label">Nome da Pessoa</label><input type="text" id="m_em_n" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Total Emprestado</label><input type="number" id="m_em_vt" class="form-control"></div><div><label class="form-label">Qtd Parcelas Totais</label><input type="number" id="m_em_p" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor da Parcela</label><input type="number" id="m_em_v" class="form-control"></div><div><label class="form-label">Data do Empréstimo</label><input type="date" id="m_em_d" class="form-control"></div></div>`,
                 
@@ -421,32 +458,25 @@
 
         function salvarItem() {
             const id = Date.now(); let obj = {id}, arr = [];
-            
             if(abaAtual === 'casas'){ 
                 obj.nome = document.getElementById('m_c_n').value; obj.endereco = document.getElementById('m_c_e').value; obj.inquilino = document.getElementById('m_c_i').value; obj.celular = document.getElementById('m_c_cel').value; obj.valor = Number(document.getElementById('m_c_v').value); obj.dia = document.getElementById('m_c_dia').value; obj.data_inicio = document.getElementById('m_c_d').value;
                 arr = [id, obj.nome, obj.endereco, obj.inquilino, obj.celular, obj.valor, obj.dia, obj.data_inicio];
-            } 
-            else if(abaAtual === 'energia'){
+            } else if(abaAtual === 'energia'){
                 const v = Number(document.getElementById('m_e_v').value); obj.nome = document.getElementById('m_e_n').value; obj.celular = document.getElementById('m_e_cel').value; obj.valor_original = v; obj.valor_final = v*0.80; obj.data = document.getElementById('m_e_d').value;
                 arr = [id, obj.nome, obj.celular, obj.valor_original, obj.valor_final, obj.data];
-            } 
-            else if(abaAtual === 'juridico'){
-                obj.nome = document.getElementById('m_j_n').value; obj.tipo = document.getElementById('m_j_t').value; obj.valor = Number(document.getElementById('m_j_v').value); obj.data = document.getElementById('m_j_d').value; obj.investidor = document.getElementById('m_j_i').value; obj.status = 'Ativo';
+            } else if(abaAtual === 'juridico'){
+                obj.nome = document.getElementById('m_j_n').value; obj.tipo = document.getElementById('m_j_t').value; obj.valor = Number(document.getElementById('m_j_v').value); obj.data = document.getElementById('m_j_d').value; obj.investidor = document.getElementById('m_j_i').value; obj.status = 'Em Andamento';
                 arr = [id, obj.nome, obj.tipo, obj.valor, obj.data, obj.investidor, obj.status];
-            } 
-            else if(abaAtual === 'emprestimo'){
+            } else if(abaAtual === 'emprestimo'){
                 obj.nome = document.getElementById('m_em_n').value; obj.valor = Number(document.getElementById('m_em_vt').value); obj.parcelas_totais = Number(document.getElementById('m_em_p').value); obj.parcelas_restantes = obj.parcelas_totais; obj.valor_mensal = Number(document.getElementById('m_em_v').value); obj.data = document.getElementById('m_em_d').value;
                 arr = [id, obj.nome, obj.valor, obj.parcelas_totais, obj.parcelas_restantes, obj.valor_mensal, obj.data];
-            } 
-            else if(abaAtual === 'acai'){
+            } else if(abaAtual === 'acai'){
                 obj.data = document.getElementById('m_a_d').value; obj.tipo = document.getElementById('m_a_t').value; obj.descricao = document.getElementById('m_a_desc').value; obj.valor = Number(document.getElementById('m_a_v').value);
                 arr = [id, obj.data, obj.tipo, obj.descricao, obj.valor];
-            } 
-            else if(abaAtual === 'barbearia'){
+            } else if(abaAtual === 'barbearia'){
                 obj.data = document.getElementById('m_b_d').value; obj.faturamento = Number(document.getElementById('m_b_f').value); obj.bebidas = Number(document.getElementById('m_b_b').value); obj.pomadas = Number(document.getElementById('m_b_p').value);
                 arr = [id, obj.data, obj.faturamento, obj.bebidas, obj.pomadas];
             }
-            
             dados[abaAtual].push(obj); saveLocal(abaAtual); callSheets('salvar', abaAtual, arr);
             showToast('Salvo com sucesso!'); fecharModal();
         }
