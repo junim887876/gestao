@@ -140,6 +140,78 @@
         
         .loader-nuvem { animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* ================= ESTILOS DO POPUP INTELIGENTE ================= */
+        .pop-modal-container *, .pop-modal-container {
+            box-sizing: border-box;
+            font-family: var(--font-body);
+            touch-action: manipulation;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .pop-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            z-index: 10001; /* Fica acima do outro modal */
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .pop-modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .pop-modal-card {
+            background: var(--bg-card); width: 90%; max-width: 440px; max-height: 80vh;
+            border-radius: var(--radius-lg); box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-color);
+            display: flex; flex-direction: column; overflow: hidden;
+            transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .pop-modal-overlay.active .pop-modal-card { transform: scale(1); }
+
+        .pop-header {
+            padding: 20px; border-bottom: 1px solid var(--border-color); text-align: center; position: relative;
+        }
+        .pop-header h2 { margin: 0; font-size: 18px; font-weight: 700; color: var(--text-dark); font-family: var(--font-title); }
+        .pop-sub-header { font-size: 12px; color: var(--primary); font-weight: 700; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .pop-close-btn {
+            position: absolute; top: 18px; right: 16px; background: var(--bg-input); border: none;
+            width: 32px; height: 32px; border-radius: 50%; font-size: 14px; font-weight: bold;
+            color: var(--text-dark); cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+
+        .pop-content { padding: 16px; overflow-y: auto; flex: 1; }
+
+        .task-item {
+            background: var(--bg-card); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px;
+            display: flex; align-items: center; justify-content: space-between;
+            border: 1px solid var(--border-color); cursor: pointer; transition: background 0.2s, transform 0.1s;
+        }
+        .task-item:active { transform: scale(0.98); }
+        .task-text { font-size: 14px; font-weight: 500; color: var(--text-dark); flex: 1; padding-right: 12px; transition: color 0.2s; }
+
+        .checkbox-apple {
+            width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--text-gray);
+            display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+        }
+        .checkbox-apple::after { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: white; font-size: 12px; display: none; }
+
+        .task-item.done { background: var(--success-light); border-color: var(--success); }
+        .task-item.done .task-text { color: var(--text-gray); text-decoration: line-through; }
+        .task-item.done .checkbox-apple { background: var(--success); border-color: var(--success); }
+        .task-item.done .checkbox-apple::after { display: block; }
+        
+        .btn-zap-estoque {
+            display: none; width: 100%; padding: 14px; background: #25D366; color: #FFF;
+            border: none; border-radius: var(--radius-md); font-family: var(--font-title); font-weight: 700;
+            font-size: 1rem; cursor: pointer; margin-top: 10px; box-shadow: var(--shadow-float); text-align: center; text-decoration: none;
+        }
+        .btn-zap-estoque.active { display: block; }
     </style>
 </head>
 <body>
@@ -156,10 +228,29 @@
         </div>
     </div>
 
+    <div class="pop-modal-container">
+      <div class="pop-modal-overlay" id="popOverlay" onclick="if(event.target === this) togglePopModal(false)">
+        <div class="pop-modal-card">
+          <div class="pop-header">
+            <h2>POP Barbearia Junim</h2>
+            <div class="pop-sub-header" id="popPeriodo">Carregando...</div>
+            <button class="pop-close-btn" onclick="togglePopModal(false)"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="pop-content">
+            <div id="popTaskList"></div>
+            <a href="https://wa.me/?text=Olá!%20Gostaria%20de%20fazer%20pedido%20de%20reposição%20de%20Bebidas%20e%20Pomadas%20para%20a%20Barbearia." target="_blank" class="btn-zap-estoque" id="btnZapEstoque">
+                <i class="fa-brands fa-whatsapp"></i> Pedir Estoque
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="main-container">
         <header class="topbar">
             <div class="topbar-logo"><i class="fa-solid fa-bolt"></i><span>Gestor</span></div>
             <div class="user-controls">
+                <button class="btn-theme" onclick="togglePopModal(true)" title="POP Diário"><i class="fa-solid fa-list-check"></i></button>
                 <button class="btn-theme" onclick="sincronizarNuvem()" title="Puxar Nuvem" id="btn-sync"><i class="fa-solid fa-cloud-arrow-down"></i></button>
                 <button class="btn-theme" onclick="toggleTheme()" title="Tema"><i class="fa-solid fa-moon"></i></button>
             </div>
@@ -220,9 +311,91 @@
             Object.keys(dados).forEach(k => dados[k] = JSON.parse(localStorage.getItem(k+'_data')) || []);
             renderAll();
             sincronizarNuvem(true);
+            verificarEAtualizarDataLocalStorage(); // Inicia o banco do POP
         });
 
-        /* UI & NAVEGAÇÃO */
+        /* LÓGICA DO POP INTELIGENTE ========================== */
+        const bancoTarefas = {
+            entrada: [
+                { id: 'ent_varrer', text: 'Varrer o salão (Abertura)' },
+                { id: 'ent_bancadas', text: 'Limpar as bancadas' }
+            ],
+            saida: [
+                { id: 'sai_varrer', text: 'Varrer o salão (Fechamento)' },
+                { id: 'sai_tvs', text: 'Desligar as televisões' },
+                { id: 'sai_ar', text: 'Desligar o ar condicionado' },
+                { id: 'sai_pole', text: 'Desligar o pole da barbearia' },
+                { id: 'sai_jbl', text: 'Colocar o JBL para carregar' },
+                { id: 'sai_uniformes', text: 'Colocar os uniformes para lavar' },
+                { id: 'sai_lixeira', text: 'Verificar se a lixeira está cheia' },
+                { id: 'sai_status', text: 'Apagar os status do Instagram e WhatsApp' },
+                { id: 'sai_bucha', text: 'Lavar com bucha de barbear' },
+                { id: 'sai_navalhete', text: 'Passar álcool no navalhete' },
+                { id: 'sai_agua', text: 'Verificar água no borrifador e no agueiro' },
+                { id: 'sai_estoque', text: 'Verificar estoque de bebidas e pomadas (Compras)' }
+            ],
+            domingo: [
+                { id: 'dom_pano', text: 'Passar o pano em tudo' },
+                { id: 'dom_lavar', text: 'Lavar a barbearia por completo' }
+            ]
+        };
+
+        function obterConfigDiaHorario() {
+            const agora = new Date();
+            const diaSemana = agora.getDay();
+            const hora = agora.getHours();
+            
+            if (diaSemana === 0) return { chave: 'domingo', label: 'Domingo - Faxina Geral' };
+            if (hora < 15) return { chave: 'entrada', label: 'Turno da Manhã (Abertura)' };
+            return { chave: 'saida', label: 'Turno da Noite (Fechamento)' };
+        }
+
+        function verificarEAtualizarDataLocalStorage() {
+            const hojeStr = new Date().toDateString();
+            const ultimaDataSalva = localStorage.getItem('pop_data_execucao');
+            if (ultimaDataSalva !== hojeStr) {
+                localStorage.setItem('pop_tarefas_concluidas', JSON.stringify({}));
+                localStorage.setItem('pop_data_execucao', hojeStr);
+            }
+        }
+
+        function renderizarTarefas() {
+            verificarEAtualizarDataLocalStorage();
+            const { chave, label } = obterConfigDiaHorario();
+            document.getElementById('popPeriodo').innerText = label;
+            
+            const btnZap = document.getElementById('btnZapEstoque');
+            if (chave === 'saida') { btnZap.classList.add('active'); } else { btnZap.classList.remove('active'); }
+            
+            const tarefasDoTurno = bancoTarefas[chave];
+            const concluidas = JSON.parse(localStorage.getItem('pop_tarefas_concluidas') || '{}');
+            const container = document.getElementById('popTaskList');
+            container.innerHTML = '';
+            
+            tarefasDoTurno.forEach(tarefa => {
+                const isDone = !!concluidas[tarefa.id];
+                const div = document.createElement('div');
+                div.className = `task-item ${isDone ? 'done' : ''}`;
+                div.onclick = () => alternarEstadoTarefa(tarefa.id);
+                div.innerHTML = `<div class="task-text">${tarefa.text}</div><div class="checkbox-apple"></div>`;
+                container.appendChild(div);
+            });
+        }
+
+        function alternarEstadoTarefa(id) {
+            const concluidas = JSON.parse(localStorage.getItem('pop_tarefas_concluidas') || '{}');
+            if (concluidas[id]) delete concluidas[id]; else concluidas[id] = true;
+            localStorage.setItem('pop_tarefas_concluidas', JSON.stringify(concluidas));
+            renderizarTarefas();
+        }
+
+        function togglePopModal(mostrar) {
+            const overlay = document.getElementById('popOverlay');
+            if (mostrar) { renderizarTarefas(); overlay.classList.add('active'); } 
+            else { overlay.classList.remove('active'); }
+        }
+
+        /* UI & NAVEGAÇÃO RESTANTE ========================== */
         function initTheme() { 
             document.documentElement.setAttribute('data-theme', localStorage.getItem('tema_fm') || 'light'); 
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
@@ -340,12 +513,7 @@
         function renderEmprestimo() {
             document.getElementById('listaEmprestimo').innerHTML = dados.emprestimo.map(e => {
                 const isRendaFixa = e.parcelas_totais > 100;
-                const parcelasPagas = e.parcelas_totais - e.parcelas_restantes;
-                const totalRecebido = parcelasPagas * e.valor_mensal;
-                
-                // Emprestimos: Custo = Valor. Rentabilidade projetada total = (parcelas * mensal) - Custo (Mas vc disse Lucro 100%, então recebimento é lucro)
-                const percROI = ((e.valor_mensal / e.valor) * 100).toFixed(1); // ROI MENSAL
-                
+                const percROI = ((e.valor_mensal / e.valor) * 100).toFixed(1);
                 return `<div class="item-card"><div class="item-header"><div><h4 class="item-title">${e.nome}</h4><span class="badge ${isRendaFixa?'primary':'warning'}">${isRendaFixa?'<i class="fa-solid fa-infinity"></i> Renda Fixa':`Restam ${e.parcelas_restantes} parc`}</span></div><span class="badge success">LUCRO 100% Mensal</span></div><div style="margin-bottom: 5px;"><div class="item-meta-info"><i class="fa-solid fa-calendar"></i> Início: ${fData(e.data)}</div></div><div class="item-value"><div class="val-box"><span>Custo (Capital)</span><strong style="color:var(--danger)">${fMoeda(e.valor)}</strong></div><div class="val-box"><span>MRR (${percROI}% ao mês)</span><strong style="color:var(--success)">+${fMoeda(e.valor_mensal)}</strong></div></div><div class="item-actions"><button class="btn-action generate" onclick="abaterEmprestimo(${e.id})"><i class="fa-solid fa-hand-holding-dollar"></i> Receber Mensalidade</button><button class="btn-action delete" onclick="deletarItem('emprestimo', ${e.id})"><i class="fa-solid fa-trash"></i></button></div></div>`;
             }).join('');
         }
@@ -363,7 +531,6 @@
         /* ESTRATÉGIA DO DASHBOARD (MRR & ROI) */
         let chart = null;
         function renderDashboard() {
-            // MRR: Entradas Fixas de Aluguel + Energia + MENSALIDADE de Empréstimos (Lucro 100%)
             const mrrCasas = dados.casas.reduce((s,c)=>s+c.valor,0);
             const mrrEnergia = dados.energia.reduce((s,e)=>s+e.valor_final,0);
             const mrrEmprestimo = dados.emprestimo.reduce((s,e)=>s+e.valor_mensal,0);
@@ -371,14 +538,11 @@
 
             const giro = dados.acai.filter(a=>a.tipo==='Entrada').reduce((s,a)=>s+a.valor,0) + dados.barbearia.reduce((s,b)=>s+b.faturamento,0);
             
-            // Capital Alocado (Custo Real)
             const custoJuridico = dados.juridico.reduce((s,j)=>s+j.valor,0);
             const custoEmprestimo = dados.emprestimo.reduce((s,e)=>s+e.valor,0);
             const capitalTotal = custoJuridico + custoEmprestimo;
 
-            // Retorno (Lucro projetado)
             const retornoJuridico = dados.juridico.reduce((s,j)=>s+(j.valor*(j.investidor==='Junior'?0.06:0.10)),0);
-            // Para empréstimos, a rentabilidade já mostrada no card é o Mensal, mas o global projetado seria o total final menos custo? "Lucro 100%":
             const lucroEmprestimoProjetado = dados.emprestimo.reduce((s,e)=>s+((e.parcelas_totais * e.valor_mensal) - e.valor),0); 
             const roiPercent = capitalTotal > 0 ? (((retornoJuridico + lucroEmprestimoProjetado) / capitalTotal) * 100).toFixed(1) : 0;
 
