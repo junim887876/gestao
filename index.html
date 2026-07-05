@@ -261,6 +261,9 @@
                 <div class="nav-item active" onclick="mudarAba('dashboard')"><i class="fa-solid fa-chart-pie"></i><span>Início</span></div>
                 <div class="nav-item" onclick="mudarAba('casas')"><i class="fa-solid fa-house"></i><span>Casas</span></div>
                 <div class="nav-item" onclick="mudarAba('energia')"><i class="fa-solid fa-sun"></i><span>Energia</span></div>
+                
+                <div class="nav-item" onclick="mudarAba('lancar_fatura')"><i class="fa-solid fa-file-invoice-dollar"></i><span>Lançar Fatura</span></div>
+
                 <div class="nav-item" onclick="mudarAba('emprestimo')"><i class="fa-solid fa-hand-holding-dollar"></i><span>MRR / Emp.</span></div>
                 <div class="nav-item" onclick="mudarAba('juridico')"><i class="fa-solid fa-scale-balanced"></i><span>Jurídico</span></div>
                 <div class="nav-item" onclick="mudarAba('acai')"><i class="fa-solid fa-bowl-food"></i><span>Açaí</span></div>
@@ -290,7 +293,67 @@
                 </section>
 
                 <section id="casas" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #FF6B6B, #C92A2A);"><h2>Casas de Aluguel</h2><p>Receita passiva imobiliária.</p></div><div class="items-grid" id="listaCasas"></div></section>
+                
                 <section id="energia" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #F59E0B, #D97706);"><h2>SolarInvest</h2><p>Aluguel de energia com desconto integrado.</p></div><div class="items-grid" id="listaEnergia"></div></section>
+                
+                <section id="lancar_fatura" class="section">
+                    <div class="welcome-banner" style="background: linear-gradient(135deg, #30d158, #28a745);">
+                        <h2>Lançamento de Faturas</h2>
+                        <p>SolarInvest - Envio direto de faturas dos clientes.</p>
+                    </div>
+                    <div style="background: var(--bg-card); padding: 25px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); max-width: 600px; margin: 0 auto; border: 1px solid var(--border-color);">
+                        <form action="https://docs.google.com/forms/d/e/1FAIpQLSdpixkkc1OFcH4AxaVyM3hka_P0FmpOE_oFkE2cgxNLFqE9Sg/formResponse" method="POST" target="hidden_iframe" id="adminForm" onsubmit="prepararEnvioFatura()">
+                            
+                            <div class="form-grid">
+                                <label class="form-label">Consumo (kWh)</label>
+                                <input type="number" name="entry.1932818570" id="consumo_fatura" class="form-control" placeholder="Ex: 350" required min="0" step="any">
+                            </div>
+
+                            <div class="form-grid">
+                                <label class="form-label">Proprietário</label>
+                                <select name="entry.50057081" id="proprietario_fatura" class="form-control" required>
+                                    <option value="" disabled selected>Selecione o cliente...</option>
+                                    <option value="claiton">Claiton</option>
+                                    <option value="fernanda">Fernanda</option>
+                                </select>
+                            </div>
+
+                            <div class="form-grid">
+                                <label class="form-label">Mês da Fatura</label>
+                                <select name="entry.850237464" id="mes_fatura" class="form-control" required>
+                                    <option value="" disabled selected>Selecione o mês...</option>
+                                    <option value="janeiro">Janeiro</option>
+                                    <option value="fevereiro">Fevereiro</option>
+                                    <option value="marco">Março</option>
+                                    <option value="abril">Abril</option>
+                                    <option value="maio">Maio</option>
+                                    <option value="junho">Junho</option>
+                                    <option value="julho">Julho</option>
+                                    <option value="agosto">Agosto</option>
+                                    <option value="setembro">Setembro</option>
+                                    <option value="outubro">Outubro</option>
+                                    <option value="novembro">Novembro</option>
+                                    <option value="dezembro">Dezembro</option>
+                                </select>
+                            </div>
+
+                            <div class="form-grid">
+                                <label class="form-label">Data do Lançamento</label>
+                                <input type="text" id="data_display_fatura" class="form-control" readonly style="color: var(--success); font-weight: bold; background: var(--success-light); cursor: not-allowed;">
+                                <input type="hidden" name="entry.1037703769" id="data_form_fatura">
+                            </div>
+
+                            <input type="hidden" name="entry.274368089" id="link_form_fatura">
+
+                            <button type="submit" class="btn-primary" id="btn-submit-fatura" style="background: linear-gradient(135deg, #30d158, #28a745);">Enviar para Planilha</button>
+                        </form>
+
+                        <div id="success-msg-fatura" style="display: none; text-align: center; padding: 20px; background: var(--success-light); border: 1px solid var(--success); border-radius: var(--radius-md); color: var(--success); font-weight: 600; margin-top: 20px;">
+                            ✅ Fatura lançada com sucesso!
+                        </div>
+                    </div>
+                </section>
+                
                 <section id="emprestimo" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #10B981, #047857);"><h2>MRR & Empréstimos</h2><p>Operações de crédito com 100% de lucro contabilizado.</p></div><div class="items-grid" id="listaEmprestimo"></div></section>
                 <section id="juridico" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #6366F1, #4338CA);"><h2>Investimento Jurídico</h2><p>Acompanhamento de Capital e Rentabilidade.</p></div><div class="items-grid" id="listaJuridico"></div></section>
                 <section id="acai" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #EC4899, #BE185D);"><h2>UrbanAçaí & Picolés</h2><p>Visão focada 100% no faturamento bruto.</p></div><div class="summary-cards"><div class="summary-card"><div class="summary-info"><span>Faturamento Bruto</span><h3 id="bruto-acai" style="color:#EC4899;">R$ 0,00</h3></div></div></div><div class="items-grid" id="listaAcai"></div></section>
@@ -298,6 +361,8 @@
             </div>
         </div>
     </div>
+
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.submittedFatura) { finalizarEnvioFatura(); }"></iframe>
 
     <script>
         const URL_APP_SCRIPT = 'https://script.google.com/macros/s/AKfycbxb9j4YFCbRoLyUaKMnHvgvB7Y78XEBXgYOUKySNw1xC3T1r9_9SglljR9plYut90wl/exec';
@@ -312,7 +377,57 @@
             renderAll();
             sincronizarNuvem(true);
             verificarEAtualizarDataLocalStorage(); // Inicia o banco do POP
+            inicializarDataFatura(); // Inicia a data no formulário de fatura
         });
+
+        /* ================= INTEGRAÇÃO DO FORMULÁRIO DE FATURAS ================= */
+        window.submittedFatura = false;
+
+        window.inicializarDataFatura = function() {
+            const hoje = new Date();
+            const dataFormatada = hoje.toLocaleDateString('pt-BR');
+            const display = document.getElementById('data_display_fatura');
+            const form = document.getElementById('data_form_fatura');
+            if(display) display.value = dataFormatada;
+            if(form) form.value = dataFormatada;
+        };
+
+        window.prepararEnvioFatura = function() {
+            const proprietario = document.getElementById('proprietario_fatura').value;
+            const mes = document.getElementById('mes_fatura').value;
+            const btn = document.getElementById('btn-submit-fatura');
+            
+            // Gera o link de download automaticamente
+            const linkGerado = `faturas/${proprietario}_${mes}.pdf`;
+            document.getElementById('link_form_fatura').value = linkGerado;
+
+            // Feedback visual no botão
+            btn.innerHTML = '<i class="fa-solid fa-spinner loader-nuvem"></i> Enviando...';
+            btn.disabled = true;
+            
+            window.submittedFatura = true;
+        };
+
+        window.finalizarEnvioFatura = function() {
+            document.getElementById('adminForm').style.display = 'none';
+            document.getElementById('success-msg-fatura').style.display = 'block';
+            
+            // Restaura o formulário sem recarregar a página SPA
+            setTimeout(() => {
+                document.getElementById('adminForm').reset();
+                document.getElementById('adminForm').style.display = 'block';
+                document.getElementById('success-msg-fatura').style.display = 'none';
+                
+                const btn = document.getElementById('btn-submit-fatura');
+                btn.innerHTML = 'Enviar para Planilha';
+                btn.disabled = false;
+                
+                window.submittedFatura = false;
+                window.inicializarDataFatura();
+                showToast('Fatura lançada com sucesso no Forms!');
+            }, 2500);
+        };
+        /* ================= FIM INTEGRAÇÃO ================= */
 
         /* LÓGICA DO POP INTELIGENTE ========================== */
         const bancoTarefas = {
@@ -423,7 +538,9 @@
         function mudarAba(aba) {
             document.querySelectorAll('.section, .nav-item').forEach(e => e.classList.remove('active'));
             document.getElementById(aba).classList.add('active'); event.currentTarget.classList.add('active');
-            abaAtual = aba; renderDashboard();
+            abaAtual = aba; 
+            // Atualiza o dashboard apenas se a aba atual não for um painel estático sem gráficos, mas é seguro chamar:
+            if(aba === 'dashboard') renderDashboard();
         }
 
         /* SINCRONIZAÇÃO NUVEM */
@@ -584,6 +701,10 @@
         /* FORMULÁRIOS & MODAL */
         window.importarInquilino = function(val) { if(val) { const [n, c] = val.split('|'); document.getElementById('m_e_n').value = n; document.getElementById('m_e_cel').value = c; } }
         function abrirModalAtual() {
+            if(abaAtual === 'lancar_fatura') {
+                showToast("Esta aba já possui seu próprio formulário na tela.");
+                return;
+            }
             const tmpl = {
                 'casas': `<div class="form-grid two-cols"><div><label class="form-label">Nome Imóvel</label><input type="text" id="m_c_n" class="form-control"></div><div><label class="form-label">Endereço</label><input type="text" id="m_c_e" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Inquilino</label><input type="text" id="m_c_i" class="form-control"></div><div><label class="form-label">WhatsApp</label><input type="tel" id="m_c_cel" class="form-control" placeholder="62999999999"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Locação</label><input type="number" id="m_c_v" class="form-control"></div><div><label class="form-label">Vencimento (Dia)</label><input type="number" id="m_c_dia" class="form-control"></div></div><div class="form-grid"><label class="form-label">Início de Contrato</label><input type="date" id="m_c_d" class="form-control"></div>`,
                 'energia': `<div class="form-grid"><label class="form-label" style="color:var(--primary);"><i class="fa-solid fa-magic"></i> Puxar Inquilino</label><select class="form-control" onchange="importarInquilino(this.value)"><option value="">Novo Cliente</option>${dados.casas.map(c => `<option value="${c.inquilino}|${c.celular}">${c.inquilino}</option>`).join('')}</select></div><div class="form-grid two-cols"><div><label class="form-label">Cliente</label><input type="text" id="m_e_n" class="form-control"></div><div><label class="form-label">WhatsApp</label><input type="tel" id="m_e_cel" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Fatura Bruta (Sem desc.)</label><input type="number" id="m_e_v" class="form-control"></div><div><label class="form-label">Ref.</label><input type="date" id="m_e_d" class="form-control"></div></div>`,
@@ -592,6 +713,7 @@
                 'acai': `<div class="form-grid two-cols"><div><label class="form-label">Data</label><input type="date" id="m_a_d" class="form-control"></div><div><label class="form-label">Fluxo</label><select id="m_a_t" class="form-control"><option value="Entrada">Entrada (Giro)</option><option value="Saida">Saída (Custo)</option></select></div></div><div class="form-grid"><label class="form-label">Referência</label><input type="text" id="m_a_desc" class="form-control"></div><div class="form-grid"><label class="form-label">Valor</label><input type="number" id="m_a_v" class="form-control"></div>`,
                 'barbearia': `<div class="form-grid"><label class="form-label">Data de Fechamento</label><input type="date" id="m_b_d" class="form-control"></div><div class="form-grid"><label class="form-label">Giro Bruto</label><input type="number" id="m_b_f" class="form-control"></div><div class="form-grid two-cols"><div><label class="form-label">Bebidas (Custo)</label><input type="number" id="m_b_b" class="form-control" value="0"></div><div><label class="form-label">Pomadas (Custo)</label><input type="number" id="m_b_p" class="form-control" value="0"></div></div>`
             };
+            if(!tmpl[abaAtual]) return;
             document.getElementById('modalTitle').textContent = "Novo Ativo | " + abaAtual.toUpperCase();
             document.getElementById('modalBody').innerHTML = tmpl[abaAtual] + `<button class="btn-primary" onclick="salvarItem()">Confirmar Operação</button>`;
             document.getElementById('modalOverlay').classList.add('active');
