@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     
     <style>
         :root {
@@ -100,6 +101,7 @@
         .badge.primary { background: var(--primary-light); color: var(--primary); }
         .badge.success { background: var(--success-light); color: var(--success); }
         .badge.danger { background: var(--danger-light); color: var(--danger); }
+        .badge.warning { background: var(--warning); color: #FFF; }
         
         .item-value { background: var(--bg-input); padding: 16px; border-radius: var(--radius-md); display: grid; grid-template-columns: 1fr 1fr; gap: 15px; border-left: 4px solid var(--primary); }
         .val-box { display: flex; flex-direction: column; }
@@ -118,24 +120,38 @@
         .toast { background: var(--text-dark); color: var(--bg-card); padding: 14px 24px; border-radius: 30px; box-shadow: var(--shadow-float); display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 0.95rem; font-family: var(--font-title); transform: translateX(120%); animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes slideIn { to { transform: translateX(0); } }
 
+        /* ================= ESTILOS ESPECÍFICOS - ABA AÇAÍ ================= */
+        .acai-nav { display: flex; background: var(--bg-input); padding: 6px; border-radius: var(--radius-md); margin-bottom: 20px; border: 1px solid var(--border-color); }
+        .acai-nav-btn { flex: 1; padding: 12px; border: none; background: transparent; color: var(--text-gray); font-family: var(--font-title); font-weight: 700; border-radius: 10px; cursor: pointer; transition: 0.3s; font-size: 0.85rem; }
+        .acai-nav-btn.active { background: var(--bg-card); color: var(--primary); box-shadow: var(--shadow-soft); }
+        .acai-section-tab { display: none; animation: fadeIn 0.3s ease; }
+        .acai-section-tab.active { display: block; }
+        .acai-card { background: var(--bg-card); border-radius: var(--radius-lg); padding: 22px; box-shadow: var(--shadow-soft); border: 1px solid var(--border-color); margin-bottom: 18px; }
+        .acai-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .acai-title { font-family: var(--font-title); font-weight: 800; font-size: 1.1rem; color: var(--text-dark); display: flex; align-items: center; gap: 10px; }
+        .acai-icon-bg { width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; }
+        .acai-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 18px; }
+        .acai-list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px; border-bottom: 1px solid var(--border-color); }
+        .acai-list-item:last-child { border-bottom: none; }
+        .acai-select { width: 100%; background: var(--bg-input); color: var(--text-dark); border: 1px solid var(--border-color); padding: 14px 18px; border-radius: var(--radius-md); font-family: var(--font-title); font-weight: 700; outline: none; margin-bottom: 25px; appearance: none; box-shadow: var(--shadow-soft); }
+        .acai-sync-btn { background: rgba(255,255,255,0.2); color: #FFF; border: 1px solid rgba(255,255,255,0.3); padding: 10px 18px; border-radius: var(--radius-md); font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; font-family: var(--font-title); }
+        .acai-sync-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.3); }
+
         /* ================= APP NATIVO MOBILE UI ================= */
         @media (max-width: 768px) {
             .layout-core { flex-direction: column; }
-            
-            /* Bottom Tab Bar estilo iOS Glassmorphism */
             .sidebar { position: fixed; bottom: 0; left: 0; width: 100%; height: 85px; flex-direction: row; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.1); border-right: none; padding: 8px 15px 25px 15px; z-index: 90; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); overflow-x: auto; scroll-snap-type: x mandatory; }
             [data-theme="dark"] .sidebar { background: rgba(17, 28, 68, 0.85); }
-            
             .nav-item { flex: 0 0 auto; flex-direction: column; justify-content: center; gap: 6px; padding: 6px 12px; font-size: 0.65rem; scroll-snap-align: center; border-radius: var(--radius-lg); font-weight: 700; color: var(--text-gray); }
             .nav-item i { font-size: 1.4rem; }
             .nav-item.active { background: transparent; color: var(--primary); }
             .nav-item.active i { background: var(--primary-light); padding: 8px 18px; border-radius: 20px; }
-            
             .content-wrapper { padding: 20px 15px 120px 15px; }
             .form-grid.two-cols { grid-template-columns: 1fr; }
             .fab-button { bottom: 105px; right: 20px; }
             .items-grid { grid-template-columns: 1fr; }
             .welcome-banner { padding: 25px 20px; }
+            .acai-grid-2 { grid-template-columns: 1fr; }
         }
         
         .loader-nuvem { animation: spin 1s linear infinite; }
@@ -143,74 +159,29 @@
 
         /* ================= ESTILOS DO POPUP INTELIGENTE ================= */
         .pop-modal-container *, .pop-modal-container {
-            box-sizing: border-box;
-            font-family: var(--font-body);
-            touch-action: manipulation;
-            -webkit-user-select: none;
-            user-select: none;
+            box-sizing: border-box; font-family: var(--font-body); touch-action: manipulation; -webkit-user-select: none; user-select: none;
         }
-
         .pop-modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            -webkit-backdrop-filter: blur(8px);
-            backdrop-filter: blur(8px);
-            z-index: 10001; /* Fica acima do outro modal */
-            display: flex; justify-content: center; align-items: center;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); z-index: 10001; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
-
         .pop-modal-overlay.active { opacity: 1; pointer-events: auto; }
-
-        .pop-modal-card {
-            background: var(--bg-card); width: 90%; max-width: 440px; max-height: 80vh;
-            border-radius: var(--radius-lg); box-shadow: var(--shadow-soft);
-            border: 1px solid var(--border-color);
-            display: flex; flex-direction: column; overflow: hidden;
-            transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
+        .pop-modal-card { background: var(--bg-card); width: 90%; max-width: 440px; max-height: 80vh; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden; transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
         .pop-modal-overlay.active .pop-modal-card { transform: scale(1); }
-
-        .pop-header {
-            padding: 20px; border-bottom: 1px solid var(--border-color); text-align: center; position: relative;
-        }
+        .pop-header { padding: 20px; border-bottom: 1px solid var(--border-color); text-align: center; position: relative; }
         .pop-header h2 { margin: 0; font-size: 18px; font-weight: 700; color: var(--text-dark); font-family: var(--font-title); }
         .pop-sub-header { font-size: 12px; color: var(--primary); font-weight: 700; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .pop-close-btn {
-            position: absolute; top: 18px; right: 16px; background: var(--bg-input); border: none;
-            width: 32px; height: 32px; border-radius: 50%; font-size: 14px; font-weight: bold;
-            color: var(--text-dark); cursor: pointer; display: flex; align-items: center; justify-content: center;
-        }
-
+        .pop-close-btn { position: absolute; top: 18px; right: 16px; background: var(--bg-input); border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 14px; font-weight: bold; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .pop-content { padding: 16px; overflow-y: auto; flex: 1; }
-
-        .task-item {
-            background: var(--bg-card); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px;
-            display: flex; align-items: center; justify-content: space-between;
-            border: 1px solid var(--border-color); cursor: pointer; transition: background 0.2s, transform 0.1s;
-        }
+        .task-item { background: var(--bg-card); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border-color); cursor: pointer; transition: background 0.2s, transform 0.1s; }
         .task-item:active { transform: scale(0.98); }
         .task-text { font-size: 14px; font-weight: 500; color: var(--text-dark); flex: 1; padding-right: 12px; transition: color 0.2s; }
-
-        .checkbox-apple {
-            width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--text-gray);
-            display: flex; align-items: center; justify-content: center; transition: all 0.2s;
-        }
+        .checkbox-apple { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--text-gray); display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
         .checkbox-apple::after { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: white; font-size: 12px; display: none; }
-
         .task-item.done { background: var(--success-light); border-color: var(--success); }
         .task-item.done .task-text { color: var(--text-gray); text-decoration: line-through; }
         .task-item.done .checkbox-apple { background: var(--success); border-color: var(--success); }
         .task-item.done .checkbox-apple::after { display: block; }
-        
-        .btn-zap-estoque {
-            display: none; width: 100%; padding: 14px; background: #25D366; color: #FFF;
-            border: none; border-radius: var(--radius-md); font-family: var(--font-title); font-weight: 700;
-            font-size: 1rem; cursor: pointer; margin-top: 10px; box-shadow: var(--shadow-float); text-align: center; text-decoration: none;
-        }
+        .btn-zap-estoque { display: none; width: 100%; padding: 14px; background: #25D366; color: #FFF; border: none; border-radius: var(--radius-md); font-family: var(--font-title); font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 10px; box-shadow: var(--shadow-float); text-align: center; text-decoration: none; }
         .btn-zap-estoque.active { display: block; }
     </style>
 </head>
@@ -355,8 +326,110 @@
                 </section>
                 
                 <section id="emprestimo" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #10B981, #047857);"><h2>MRR & Empréstimos</h2><p>Operações de crédito com 100% de lucro contabilizado.</p></div><div class="items-grid" id="listaEmprestimo"></div></section>
+                
                 <section id="juridico" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #6366F1, #4338CA);"><h2>Investimento Jurídico</h2><p>Acompanhamento de Capital e Rentabilidade.</p></div><div class="items-grid" id="listaJuridico"></div></section>
-                <section id="acai" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #EC4899, #BE185D);"><h2>UrbanAçaí & Picolés</h2><p>Visão focada 100% no faturamento bruto.</p></div><div class="summary-cards"><div class="summary-card"><div class="summary-info"><span>Faturamento Bruto</span><h3 id="bruto-acai" style="color:#EC4899;">R$ 0,00</h3></div></div></div><div class="items-grid" id="listaAcai"></div></section>
+                
+                <section id="acai" class="section">
+                    <div class="welcome-banner" style="background: linear-gradient(135deg, #EC4899, #BE185D); padding: 25px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                            <div class="welcome-text">
+                                <h2>UrbanAçaí Analítico</h2>
+                                <p style="margin-top: 5px;">Sincronizado na Planilha | Linha 171+</p>
+                            </div>
+                            <button class="acai-sync-btn" onclick="fetchAcaiData()">
+                                <i class="fa-solid fa-rotate"></i> Sincronizar Sheets
+                            </button>
+                        </div>
+                    </div>
+
+                    <select id="acaiMonthSelector" class="acai-select"></select>
+
+                    <div id="acaiLoading" style="display: none; text-align: center; padding: 40px; color: var(--text-gray);">
+                        <i class="fa-solid fa-spinner loader-nuvem" style="font-size: 2.5rem; color: var(--primary);"></i>
+                        <p style="margin-top: 15px; font-weight: 600; font-family: var(--font-title);">Analisando inteligência de vendas...</p>
+                    </div>
+
+                    <div id="acaiContent" style="display: none;">
+                        <div class="acai-nav">
+                            <button class="acai-nav-btn active" onclick="switchAcaiTab('acai-tab-ia', this)">IA Clientes</button>
+                            <button class="acai-nav-btn" onclick="switchAcaiTab('acai-tab-prod', this)">Produção</button>
+                            <button class="acai-nav-btn" onclick="switchAcaiTab('acai-tab-fin', this)">Finanças</button>
+                        </div>
+
+                        <div id="acai-tab-ia" class="acai-section-tab active">
+                            <div class="acai-card" style="background: linear-gradient(135deg, rgba(117, 81, 255, 0.08), rgba(67, 24, 255, 0.02)); border-color: rgba(117, 81, 255, 0.15);">
+                                <div class="acai-header-flex">
+                                    <div class="acai-title"><div class="acai-icon-bg" style="background: var(--primary); color: white;"><i class="fa-solid fa-brain"></i></div> IA Comportamental</div>
+                                </div>
+                                <div id="acaiInsightsList" style="display: flex; flex-direction: column; gap: 12px;"></div>
+                            </div>
+                            <div class="acai-card">
+                                <div class="acai-title" style="margin-bottom: 15px;"><i class="fa-solid fa-trophy" style="color: #FFCE20;"></i> Top Clientes do Mês</div>
+                                <div id="acaiTopClientes" style="display: flex; flex-direction: column; gap: 10px;"></div>
+                            </div>
+                        </div>
+
+                        <div id="acai-tab-prod" class="acai-section-tab">
+                            <div class="acai-grid-2">
+                                <div class="acai-card" style="text-align: center; padding: 25px 15px;">
+                                    <div class="acai-icon-bg" style="background: var(--primary-light); color: var(--primary); width: 55px; height: 55px; margin: 0 auto 12px; font-size: 1.5rem;"><i class="fa-solid fa-cup-togo"></i></div>
+                                    <h4 style="color: var(--text-dark); font-family: var(--font-title); font-size: 1.2rem; font-weight: 800;">500ml</h4>
+                                    <h2 id="acai-qtd500" style="color: var(--primary); font-size: 2.4rem; margin: 5px 0; font-family: var(--font-title); font-weight: 800;">0</h2>
+                                    <span style="font-size: 0.75rem; color: var(--text-gray); font-weight: 700; text-transform: uppercase;">Vendidos</span>
+                                    <div style="margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 12px; display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600;">
+                                        <span style="color: var(--text-gray);">Lucro Gerado</span>
+                                        <strong id="acai-lucro500" style="color: var(--success);">R$ 0</strong>
+                                    </div>
+                                </div>
+                                <div class="acai-card" style="text-align: center; padding: 25px 15px;">
+                                    <div class="acai-icon-bg" style="background: rgba(245, 158, 11, 0.15); color: #F59E0B; width: 55px; height: 55px; margin: 0 auto 12px; font-size: 1.5rem;"><i class="fa-solid fa-cup-togo"></i></div>
+                                    <h4 style="color: var(--text-dark); font-family: var(--font-title); font-size: 1.2rem; font-weight: 800;">300ml</h4>
+                                    <h2 id="acai-qtd300" style="color: #F59E0B; font-size: 2.4rem; margin: 5px 0; font-family: var(--font-title); font-weight: 800;">0</h2>
+                                    <span style="font-size: 0.75rem; color: var(--text-gray); font-weight: 700; text-transform: uppercase;">Vendidos</span>
+                                    <div style="margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 12px; display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600;">
+                                        <span style="color: var(--text-gray);">Lucro Gerado</span>
+                                        <strong id="acai-lucro300" style="color: var(--success);">R$ 0</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="acai-card" style="text-align: center; font-size: 0.95rem; color: var(--text-gray); font-weight: 600;" id="acaiProdutoVeredito"></div>
+                            
+                            <div class="acai-card" style="background: var(--bg-input);">
+                                <div class="acai-title" style="margin-bottom: 15px; color: #EC4899;"><i class="fa-solid fa-users" style="color: #EC4899;"></i> Produtividade: Quem Fez?</div>
+                                <div id="acaiEquipeList" style="display: flex; flex-direction: column; gap: 10px;"></div>
+                            </div>
+                        </div>
+
+                        <div id="acai-tab-fin" class="acai-section-tab">
+                            <div class="acai-grid-2">
+                                <div class="acai-card" style="padding: 18px;">
+                                    <span style="font-size: 0.7rem; color: var(--text-gray); font-weight: 700; text-transform: uppercase;">Faturamento Bruto</span>
+                                    <h3 id="acai-fatTotal" style="font-size: 1.5rem; color: var(--text-dark); margin-top: 5px; font-family: var(--font-title); font-weight: 800;">R$ 0</h3>
+                                </div>
+                                <div class="acai-card" style="padding: 18px;">
+                                    <span style="font-size: 0.7rem; color: var(--text-gray); font-weight: 700; text-transform: uppercase;">Lucro Líquido</span>
+                                    <h3 id="acai-lucroTotal" style="font-size: 1.5rem; color: var(--primary); margin-top: 5px; font-family: var(--font-title); font-weight: 800;">R$ 0</h3>
+                                </div>
+                            </div>
+                            <div class="acai-card" style="border-left: 4px solid var(--success); padding: 20px;">
+                                <span style="font-size: 0.7rem; color: var(--success); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Pago / Recebido</span>
+                                <h3 id="acai-fatRecebido" style="font-size: 1.8rem; color: var(--text-dark); margin-top: 5px; font-family: var(--font-title); font-weight: 800;">R$ 0</h3>
+                                <div style="font-size: 0.85rem; color: var(--text-gray); margin-top: 8px; font-weight: 600;">Lucro garantido: <strong id="acai-lucroRecebido" style="color: var(--success);">R$ 0</strong></div>
+                            </div>
+                            <div class="acai-card" style="border-left: 4px solid var(--danger); padding: 20px;">
+                                <span style="font-size: 0.7rem; color: var(--danger); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Fiado / A Receber</span>
+                                <h3 id="acai-fatAReceber" style="font-size: 1.8rem; color: var(--text-dark); margin-top: 5px; font-family: var(--font-title); font-weight: 800;">R$ 0</h3>
+                                <div style="font-size: 0.85rem; color: var(--text-gray); margin-top: 8px; font-weight: 600;">Lucro pendente: <strong id="acai-lucroAReceber" style="color: var(--danger);">R$ 0</strong></div>
+                            </div>
+
+                            <div class="acai-card">
+                                <div class="acai-title" style="margin-bottom: 15px; font-size: 1rem;"><i class="fa-solid fa-list" style="color: var(--text-gray);"></i> Detalhamento de Fiados</div>
+                                <div id="acaiDividasList" style="display: flex; flex-direction: column; gap: 12px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 <section id="barbearia" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #F97316, #C2410C);"><h2>Barbearia Junim</h2><p>Giro de caixa e margem líquida diária.</p></div><div class="items-grid" id="listaBarbearia"></div></section>
             </div>
         </div>
@@ -376,8 +449,10 @@
             Object.keys(dados).forEach(k => dados[k] = JSON.parse(localStorage.getItem(k+'_data')) || []);
             renderAll();
             sincronizarNuvem(true);
-            verificarEAtualizarDataLocalStorage(); // Inicia o banco do POP
-            inicializarDataFatura(); // Inicia a data no formulário de fatura
+            verificarEAtualizarDataLocalStorage(); 
+            inicializarDataFatura(); 
+            // Inicia os dados do Açaí automaticamente quando carrega
+            fetchAcaiData();
         });
 
         /* ================= INTEGRAÇÃO DO FORMULÁRIO DE FATURAS ================= */
@@ -397,11 +472,9 @@
             const mes = document.getElementById('mes_fatura').value;
             const btn = document.getElementById('btn-submit-fatura');
             
-            // Gera o link de download automaticamente
             const linkGerado = `faturas/${proprietario}_${mes}.pdf`;
             document.getElementById('link_form_fatura').value = linkGerado;
 
-            // Feedback visual no botão
             btn.innerHTML = '<i class="fa-solid fa-spinner loader-nuvem"></i> Enviando...';
             btn.disabled = true;
             
@@ -412,7 +485,6 @@
             document.getElementById('adminForm').style.display = 'none';
             document.getElementById('success-msg-fatura').style.display = 'block';
             
-            // Restaura o formulário sem recarregar a página SPA
             setTimeout(() => {
                 document.getElementById('adminForm').reset();
                 document.getElementById('adminForm').style.display = 'block';
@@ -427,7 +499,6 @@
                 showToast('Fatura lançada com sucesso no Forms!');
             }, 2500);
         };
-        /* ================= FIM INTEGRAÇÃO ================= */
 
         /* LÓGICA DO POP INTELIGENTE ========================== */
         const bancoTarefas = {
@@ -539,11 +610,10 @@
             document.querySelectorAll('.section, .nav-item').forEach(e => e.classList.remove('active'));
             document.getElementById(aba).classList.add('active'); event.currentTarget.classList.add('active');
             abaAtual = aba; 
-            // Atualiza o dashboard apenas se a aba atual não for um painel estático sem gráficos, mas é seguro chamar:
             if(aba === 'dashboard') renderDashboard();
         }
 
-        /* SINCRONIZAÇÃO NUVEM */
+        /* SINCRONIZAÇÃO NUVEM GERAL */
         function parseCSV(str) {
             const arr = []; let quote = false; let row = 0, col = 0;
             for (let c = 0; c < str.length; c++) {
@@ -586,7 +656,7 @@
             btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-down"></i>';
         }
 
-        /* COMUNICAÇÃO SHEETS */
+        /* COMUNICAÇÃO SHEETS GERAL */
         function callSheets(acao, tipo, payload) {
             const body = { acao, tipo };
             if(acao === 'salvar') body.valores = payload; else body.id = payload;
@@ -611,8 +681,8 @@
         function fData(d) { if(!d) return '--'; const p = d.split('-'); return p.length===3 ? `${p[2]}/${p[1]}/${p[0]}` : d; }
         function fZap(num) { return num ? num.replace(/\D/g, '') : ''; }
 
-        /* RENDERIZAÇÃO */
-        function renderAll() { renderCasas(); renderEnergia(); renderJuridico(); renderEmprestimo(); renderAcai(); renderBarbearia(); renderDashboard(); }
+        /* RENDERIZAÇÃO GERAL */
+        function renderAll() { renderCasas(); renderEnergia(); renderJuridico(); renderEmprestimo(); renderBarbearia(); renderDashboard(); }
 
         function renderCasas() {
             document.getElementById('listaCasas').innerHTML = dados.casas.map(c => {
@@ -647,16 +717,10 @@
         }
         window.abaterEmprestimo = function(id) { const e = dados.emprestimo.find(x=>x.id===id); if(e && e.parcelas_restantes>0) { e.parcelas_restantes--; deletarItem('emprestimo',id,true); e.id=Date.now(); dados.emprestimo.push(e); saveLocal('emprestimo'); setTimeout(()=>callSheets('salvar','emprestimo',[e.id,e.nome,e.valor,e.parcelas_totais,e.parcelas_restantes,e.valor_mensal,e.data]),1000); showToast('Mensalidade Computada no MRR!'); } }
 
-        function renderAcai() {
-            const fb = dados.acai.filter(a=>a.tipo==='Entrada').reduce((s,a)=>s+a.valor,0); document.getElementById('bruto-acai').textContent=fMoeda(fb);
-            document.getElementById('listaAcai').innerHTML = dados.acai.map(a=>`<div class="item-card"><div class="item-header"><div><h4 class="item-title">${a.descricao}</h4><span class="badge ${a.tipo==='Entrada'?'success':'danger'}">${a.tipo}</span></div></div><div class="item-value" style="grid-template-columns:1fr"><div class="val-box" style="flex-direction:row;justify-content:space-between"><span>Valor Bruto</span><strong style="color:var(--${a.tipo==='Entrada'?'success':'danger'})">${fMoeda(a.valor)}</strong></div></div><button class="btn-action delete" style="width:100%;margin-top:10px;" onclick="deletarItem('acai',${a.id})"><i class="fa-solid fa-trash"></i> Excluir Registro</button></div>`).join('');
-        }
-
         function renderBarbearia() {
             document.getElementById('listaBarbearia').innerHTML = dados.barbearia.map(b=>`<div class="item-card"><div class="item-header"><div><h4 class="item-title">Operação ${fData(b.data)}</h4></div></div><div class="item-value"><div class="val-box"><span>Faturamento</span><strong style="color:var(--success)">${fMoeda(b.faturamento)}</strong></div><div class="val-box"><span>Margem Líquida</span><strong style="color:var(--primary)">${fMoeda(b.faturamento-(b.bebidas+b.pomadas))}</strong></div></div><button class="btn-action delete" style="width:100%;margin-top:10px;" onclick="deletarItem('barbearia',${b.id})"><i class="fa-solid fa-trash"></i> Excluir Caixa</button></div>`).join('');
         }
 
-        /* ESTRATÉGIA DO DASHBOARD (MRR & ROI) */
         let chart = null;
         function renderDashboard() {
             const mrrCasas = dados.casas.reduce((s,c)=>s+c.valor,0);
@@ -664,7 +728,9 @@
             const mrrEmprestimo = dados.emprestimo.reduce((s,e)=>s+e.valor_mensal,0);
             const totalMRR = mrrCasas + mrrEnergia + mrrEmprestimo;
 
-            const giro = dados.acai.filter(a=>a.tipo==='Entrada').reduce((s,a)=>s+a.valor,0) + dados.barbearia.reduce((s,b)=>s+b.faturamento,0);
+            // O Açaí agora baseia a visão Global de Giro na variável da Planilha Inteligente. 
+            // Se as antigas entradas locais existirem (por padrão), contabiliza.
+            const giroLocal = dados.acai.filter(a=>a.tipo==='Entrada').reduce((s,a)=>s+a.valor,0) + dados.barbearia.reduce((s,b)=>s+b.faturamento,0);
             
             const custoJuridico = dados.juridico.reduce((s,j)=>s+j.valor,0);
             const custoEmprestimo = dados.emprestimo.reduce((s,e)=>s+e.valor,0);
@@ -675,16 +741,15 @@
             const roiPercent = capitalTotal > 0 ? (((retornoJuridico + lucroEmprestimoProjetado) / capitalTotal) * 100).toFixed(1) : 0;
 
             document.getElementById('total-mrr').textContent = fMoeda(totalMRR); 
-            document.getElementById('total-giro').textContent = fMoeda(giro); 
+            document.getElementById('total-giro').textContent = fMoeda(giroLocal); 
             document.getElementById('total-capital').textContent = fMoeda(capitalTotal);
             document.getElementById('roi-projetado').innerHTML = `<i class="fa-solid fa-arrow-trend-up"></i> +${roiPercent}% ROI Projetado`;
             
             const ctx = document.getElementById('chartGeral'); if(!ctx) return;
             if(chart) chart.destroy();
-            chart = new Chart(ctx, { type: 'bar', data: { labels: ['MRR (Fixos+Emp)', 'Giro Bruto', 'Capital Alocado'], datasets: [{ data: [totalMRR, giro, capitalTotal], backgroundColor: ['#4318FF', '#05CD99', '#FFCE20'], borderRadius: 10 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+            chart = new Chart(ctx, { type: 'bar', data: { labels: ['MRR (Fixos+Emp)', 'Giro Bruto', 'Capital Alocado'], datasets: [{ data: [totalMRR, giroLocal, capitalTotal], backgroundColor: ['#4318FF', '#05CD99', '#FFCE20'], borderRadius: 10 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
         }
 
-        /* FATURAS & RECIBOS */
         window.gerarFaturaCliente = function(nome) {
             const cL = dados.casas.filter(c => c.inquilino === nome); const eL = dados.energia.filter(e => e.nome === nome);
             if(cL.length===0 && eL.length===0) return; showToast('Emitindo Fatura Integrada...');
@@ -698,11 +763,288 @@
             setTimeout(() => html2canvas(d, {scale:2}).then(c => { const l = document.createElement('a'); l.download = `Fatura_${nome.replace(/\s+/g,'_')}.png`; l.href = c.toDataURL(); l.click(); d.remove(); }), 500);
         }
 
-        /* FORMULÁRIOS & MODAL */
-        window.importarInquilino = function(val) { if(val) { const [n, c] = val.split('|'); document.getElementById('m_e_n').value = n; document.getElementById('m_e_cel').value = c; } }
+        /* ================= LÓGICA ESPECÍFICA DO ANALÍTICO AÇAÍ (PLANILHA) ================= */
+        const acaiSheetUrl = 'https://docs.google.com/spreadsheets/d/19FSgFADLJ_6IvNpwOkl7r49oU4d0jz6mc8mYd--4SRo/export?format=csv';
+        let globalDataByMonth = {};
+        let historicalClientData = {};
+
+        function switchAcaiTab(tabId, btnElement) {
+            document.querySelectorAll('.acai-section-tab').forEach(s => s.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('.acai-nav-btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+        }
+
+        const parseDateObj = (dateStr) => {
+            if (!dateStr) return null;
+            const p = String(dateStr).split('/');
+            if (p.length === 3) {
+                let y = p[2].length === 2 ? "20" + p[2] : p[2];
+                return new Date(y, p[1] - 1, p[0]);
+            }
+            const d = new Date(dateStr); return isNaN(d) ? null : d;
+        };
+        const getMonthId = (dateObj) => {
+            if (!dateObj) return "Indefinido";
+            return `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}`;
+        };
+        const getMonthName = (monthId) => {
+            if (monthId === "Indefinido") return "Mês Indefinido";
+            const [y, m] = monthId.split('-');
+            const months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+            return `${months[parseInt(m)-1]} ${y}`;
+        };
+
+        function fetchAcaiData() {
+            document.getElementById('acaiLoading').style.display = 'block';
+            document.getElementById('acaiContent').style.display = 'none';
+            
+            Papa.parse(acaiSheetUrl, {
+                download: true,
+                header: false,
+                skipEmptyLines: true,
+                complete: function(results) { processAcaiData(results.data); },
+                error: function(err) { showToast("Erro Planilha Açaí"); }
+            });
+        }
+
+        function processAcaiData(data) {
+            document.getElementById('acaiLoading').style.display = 'none';
+            globalDataByMonth = {};
+            historicalClientData = {};
+
+            const startIndex = 170; // Começa na linha 171
+            if (data.length <= startIndex) {
+                showToast("Sem dados a partir da linha 171");
+                return;
+            }
+
+            for (let i = startIndex; i < data.length; i++) {
+                const row = data[i];
+                if (row.length < 9) continue;
+
+                const rawName = String(row[0] || '').trim();
+                const cliente = rawName === '' ? 'Cliente Avulso' : rawName;
+                const produtoStr = String(row[1] || '').toLowerCase();
+                const status = String(row[3] || '').trim().toLowerCase() === 'f' ? 'fiado' : 'pago';
+                const fat = Number(String(row[4] || '').replace(/[^0-9,-]/g, '').replace(',', '.')) || 0;
+                const lucro = Number(String(row[5] || '').replace(/[^0-9,-]/g, '').replace(',', '.')) || 0;
+                const dataRaw = String(row[6] || '').trim();
+                
+                let quem = String(row[8] || '').trim();
+                if (quem === '') {
+                    quem = 'Não Informado';
+                } else {
+                    quem = quem.charAt(0).toUpperCase() + quem.slice(1).toLowerCase();
+                }
+                
+                if (fat === 0 && lucro === 0) continue;
+
+                const dateObj = parseDateObj(dataRaw);
+                const monthId = getMonthId(dateObj);
+
+                let tipoCopo = 'outros';
+                if (produtoStr.includes('500')) tipoCopo = '500ml';
+                else if (produtoStr.includes('300')) tipoCopo = '300ml';
+
+                if (!globalDataByMonth[monthId]) {
+                    globalDataByMonth[monthId] = {
+                        fatRec: 0, lucroRec: 0, fatFia: 0, lucroFia: 0,
+                        c500_qtd: 0, c500_lucro: 0, c300_qtd: 0, c300_lucro: 0,
+                        dividas: [], clientesMes: {}, equipe: {}
+                    };
+                }
+
+                const dm = globalDataByMonth[monthId];
+                
+                if (!dm.equipe[quem]) dm.equipe[quem] = 0;
+                dm.equipe[quem]++;
+
+                if (status === 'fiado') {
+                    dm.fatFia += fat; dm.lucroFia += lucro;
+                    dm.dividas.push({ data: dataRaw, cliente, fat, lucro, quem });
+                } else {
+                    dm.fatRec += fat; dm.lucroRec += lucro;
+                }
+
+                if (tipoCopo === '500ml') { dm.c500_qtd++; dm.c500_lucro += lucro; }
+                if (tipoCopo === '300ml') { dm.c300_qtd++; dm.c300_lucro += lucro; }
+
+                if (!dm.clientesMes[cliente]) dm.clientesMes[cliente] = { qtd: 0, fat: 0 };
+                dm.clientesMes[cliente].qtd += 1;
+                dm.clientesMes[cliente].fat += fat;
+
+                if (cliente !== 'Cliente Avulso') {
+                    if (!historicalClientData[cliente]) historicalClientData[cliente] = { meses: {} };
+                    if (!historicalClientData[cliente].meses[monthId]) historicalClientData[cliente].meses[monthId] = 0;
+                    historicalClientData[cliente].meses[monthId] += 1;
+                }
+            }
+
+            const sel = document.getElementById('acaiMonthSelector');
+            sel.innerHTML = '';
+            const months = Object.keys(globalDataByMonth).sort().reverse();
+            
+            months.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m;
+                opt.text = getMonthName(m);
+                sel.appendChild(opt);
+            });
+            
+            sel.onchange = () => updateAcaiUI(sel.value, months);
+            if (months.length > 0) updateAcaiUI(sel.value, months);
+
+            document.getElementById('acaiContent').style.display = 'block';
+        }
+
+        function updateAcaiUI(monthId, allMonths) {
+            const data = globalDataByMonth[monthId];
+            if (!data) return;
+
+            /* FINANÇAS - Adaptado faturamento bruto */
+            document.getElementById('acai-fatTotal').innerText = fMoeda(data.fatRec + data.fatFia);
+            document.getElementById('acai-lucroTotal').innerText = fMoeda(data.lucroRec + data.lucroFia);
+            document.getElementById('acai-fatRecebido').innerText = fMoeda(data.fatRec);
+            document.getElementById('acai-lucroRecebido').innerText = fMoeda(data.lucroRec);
+            document.getElementById('acai-fatAReceber').innerText = fMoeda(data.fatFia);
+            document.getElementById('acai-lucroAReceber').innerText = fMoeda(data.lucroFia);
+
+            const divList = document.getElementById('acaiDividasList');
+            divList.innerHTML = '';
+            if (data.dividas.length === 0) {
+                divList.innerHTML = '<div style="color:var(--success); font-weight:700; text-align:center; padding:10px;">Nenhum fiado este mês! 🎉</div>';
+            } else {
+                data.dividas.forEach(d => {
+                    divList.innerHTML += `
+                        <div style="background: var(--bg-input); padding: 12px 15px; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--danger);">
+                            <div>
+                                <p style="font-family: var(--font-title); font-weight: 700; color: var(--text-dark); margin: 0; font-size: 0.95rem;">${d.cliente} <span style="font-size:0.75rem; color:var(--text-gray); font-weight: 500;">(${d.quem})</span></p>
+                                <p style="color: var(--text-gray); font-size: 0.75rem; margin: 2px 0 0;">${d.data}</p>
+                            </div>
+                            <div style="text-align: right;">
+                                <p style="color: var(--danger); font-family: var(--font-title); font-weight: 800; margin: 0;">${fMoeda(d.fat)}</p>
+                                <p style="color: var(--text-gray); font-size: 0.75rem; margin: 2px 0 0;">Lucro: ${fMoeda(d.lucro)}</p>
+                            </div>
+                        </div>`;
+                });
+            }
+
+            /* PRODUTOS */
+            document.getElementById('acai-qtd500').innerText = data.c500_qtd;
+            document.getElementById('acai-lucro500').innerText = fMoeda(data.c500_lucro);
+            document.getElementById('acai-qtd300').innerText = data.c300_qtd;
+            document.getElementById('acai-lucro300').innerText = fMoeda(data.c300_lucro);
+
+            const veredito = document.getElementById('acaiProdutoVeredito');
+            if (data.c500_lucro > data.c300_lucro) {
+                veredito.innerHTML = `Vaca Leiteira: <strong style="color:var(--text-dark);">500ml</strong> 💰`;
+            } else if (data.c300_lucro > data.c500_lucro) {
+                veredito.innerHTML = `Vaca Leiteira: <strong style="color:var(--text-dark);">300ml</strong> 💰`;
+            } else {
+                veredito.innerHTML = "Vendas Empatadas ⚖️";
+            }
+
+            /* EQUIPE */
+            const equipeEl = document.getElementById('acaiEquipeList');
+            equipeEl.innerHTML = '';
+            const equipeArr = Object.entries(data.equipe).sort((a,b) => b[1] - a[1]);
+            
+            if(equipeArr.length === 0) {
+                 equipeEl.innerHTML = '<div style="color:var(--text-gray); font-size:0.85rem;">Sem dados de equipe no mês.</div>';
+            } else {
+                equipeArr.forEach(([nome, qtd], idx) => {
+                    const isMae = nome.toLowerCase().includes('mãe') || nome.toLowerCase().includes('mae');
+                    const colorBg = isMae ? 'rgba(236, 72, 153, 0.15)' : 'var(--primary-light)';
+                    const colorText = isMae ? '#EC4899' : 'var(--primary)';
+                    const iconeRank = idx === 0 ? '👑' : '';
+                    
+                    equipeEl.innerHTML += `
+                        <div style="background: var(--bg-card); padding: 12px 15px; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color); box-shadow: var(--shadow-soft);">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 35px; height: 35px; border-radius: 50%; background: ${colorBg}; color: ${colorText}; display: flex; align-items: center; justify-content: center; font-weight: 800; font-family: var(--font-title);">${nome.charAt(0)}</div>
+                                <span style="font-family: var(--font-title); font-weight: 700; color: var(--text-dark);">${nome} <span style="font-size:0.8rem;">${iconeRank}</span></span>
+                            </div>
+                            <div style="text-align: right;">
+                                <span style="font-family: var(--font-title); font-weight: 800; color: var(--text-dark); font-size: 1.1rem;">${qtd} <span style="font-size:0.7rem; color:var(--text-gray); font-weight:600; text-transform:uppercase;">itens</span></span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            /* IA CLIENTES */
+            const currentClientsMap = data.clientesMes;
+            const topList = Object.entries(currentClientsMap)
+                .filter(([n]) => n !== 'Cliente Avulso')
+                .sort((a, b) => b[1].qtd - a[1].qtd)
+                .slice(0, 5);
+
+            const topEl = document.getElementById('acaiTopClientes');
+            topEl.innerHTML = '';
+            topList.forEach(([nome, info], idx) => {
+                const isFirst = idx === 0;
+                topEl.innerHTML += `
+                    <div style="background: var(--bg-input); padding: 12px 15px; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 25px; height: 25px; border-radius: 50%; background: ${isFirst ? 'rgba(255,206,32,0.2)' : 'var(--primary-light)'}; color: ${isFirst ? '#FFCE20' : 'var(--primary)'}; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem;">${idx+1}</div>
+                            <span style="font-weight: 700; color: var(--text-dark); font-family: var(--font-title); font-size: 0.95rem;">${nome}</span>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-weight: 800; color: var(--text-dark); font-family: var(--font-title); font-size: 1rem;">${info.qtd} <span style="font-size:0.7rem; color:var(--text-gray); font-weight:600; text-transform:uppercase;">vezes</span></span>
+                        </div>
+                    </div>`;
+            });
+
+            const currentIdx = allMonths.indexOf(monthId);
+            const prevMonth = currentIdx < allMonths.length - 1 ? allMonths[currentIdx + 1] : null;
+            const aiList = document.getElementById('acaiInsightsList');
+            aiList.innerHTML = '';
+
+            let sumiu = [], cresceu = [];
+
+            if (prevMonth) {
+                for (let cliente in historicalClientData) {
+                    const qAnt = historicalClientData[cliente].meses[prevMonth] || 0;
+                    const qAtu = historicalClientData[cliente].meses[monthId] || 0;
+                    if (qAnt >= 2 && qAtu === 0) sumiu.push({nome: cliente});
+                    else if (qAnt > 0 && qAtu > qAnt) cresceu.push({nome: cliente, qAnt, qAtu});
+                }
+
+                if (sumiu.length > 0) {
+                    const names = sumiu.slice(0, 2).map(c => c.nome).join(', ');
+                    aiList.innerHTML += `
+                        <div style="background: var(--danger-light); border: 1px solid rgba(238,93,80,0.3); padding: 15px; border-radius: var(--radius-md); display: flex; gap: 12px;">
+                            <i class="fa-solid fa-triangle-exclamation" style="color: var(--danger); margin-top: 3px;"></i>
+                            <div>
+                                <p style="font-family: var(--font-title); font-weight: 800; color: var(--danger); margin: 0; font-size: 0.95rem;">Risco de Perda</p>
+                                <p style="color: var(--text-dark); font-size: 0.8rem; margin: 4px 0 0; line-height: 1.4;"><strong>${names}</strong> sumiram este mês. Mande uma promoção no WhatsApp!</p>
+                            </div>
+                        </div>`;
+                }
+
+                if (cresceu.length > 0) {
+                    const bClient = cresceu.sort((a,b) => (b.qAtu - b.qAnt) - (a.qAtu - a.qAnt))[0];
+                    aiList.innerHTML += `
+                        <div style="background: var(--success-light); border: 1px solid rgba(5,205,153,0.3); padding: 15px; border-radius: var(--radius-md); display: flex; gap: 12px;">
+                            <i class="fa-solid fa-fire" style="color: var(--success); margin-top: 3px;"></i>
+                            <div>
+                                <p style="font-family: var(--font-title); font-weight: 800; color: var(--success); margin: 0; font-size: 0.95rem;">Fidelização em Alta</p>
+                                <p style="color: var(--text-dark); font-size: 0.8rem; margin: 4px 0 0; line-height: 1.4;"><strong>${bClient.nome}</strong> aumentou consumo (de ${bClient.qAnt} p/ ${bClient.qAtu}).</p>
+                            </div>
+                        </div>`;
+                }
+                
+                if(!sumiu.length && !cresceu.length) aiList.innerHTML = '<p style="color:var(--text-gray); font-size:0.85rem; margin:0;">Sem alertas críticos comportamentais para este mês.</p>';
+            } else {
+                aiList.innerHTML = '<p style="color:var(--text-gray); font-size:0.85rem; margin:0;">Necessário mês anterior para comparar o modelo de IA.</p>';
+            }
+        }
+
+        /* FORMS DEFAULT / MODAL */
         function abrirModalAtual() {
-            if(abaAtual === 'lancar_fatura') {
-                showToast("Esta aba já possui seu próprio formulário na tela.");
+            if(abaAtual === 'lancar_fatura' || abaAtual === 'acai') {
+                showToast("Esta aba gerencia dados via integrações/Sheets.");
                 return;
             }
             const tmpl = {
@@ -710,7 +1052,6 @@
                 'energia': `<div class="form-grid"><label class="form-label" style="color:var(--primary);"><i class="fa-solid fa-magic"></i> Puxar Inquilino</label><select class="form-control" onchange="importarInquilino(this.value)"><option value="">Novo Cliente</option>${dados.casas.map(c => `<option value="${c.inquilino}|${c.celular}">${c.inquilino}</option>`).join('')}</select></div><div class="form-grid two-cols"><div><label class="form-label">Cliente</label><input type="text" id="m_e_n" class="form-control"></div><div><label class="form-label">WhatsApp</label><input type="tel" id="m_e_cel" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Fatura Bruta (Sem desc.)</label><input type="number" id="m_e_v" class="form-control"></div><div><label class="form-label">Ref.</label><input type="date" id="m_e_d" class="form-control"></div></div>`,
                 'juridico': `<div class="form-grid two-cols"><div><label class="form-label">Processo/Causa</label><input type="text" id="m_j_n" class="form-control"></div><div><label class="form-label">Natureza</label><input type="text" id="m_j_t" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Custo do Capital</label><input type="number" id="m_j_v" class="form-control"></div><div><label class="form-label">Data Início</label><input type="date" id="m_j_d" class="form-control"></div></div><div class="form-grid"><label class="form-label">Agente</label><select id="m_j_i" class="form-control"><option value="Junior">Junior (6% ROI)</option><option value="Fernanda">Fernanda (10% ROI)</option></select></div>`,
                 'emprestimo': `<div class="form-grid"><div><label class="form-label">Tomador</label><input type="text" id="m_em_n" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Custo do Capital</label><input type="number" id="m_em_vt" class="form-control"></div><div><label class="form-label">Prazo (>100 = Renda Fixa)</label><input type="number" id="m_em_p" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">MRR (Lucro 100% Mensal)</label><input type="number" id="m_em_v" class="form-control"></div><div><label class="form-label">Lançamento</label><input type="date" id="m_em_d" class="form-control"></div></div>`,
-                'acai': `<div class="form-grid two-cols"><div><label class="form-label">Data</label><input type="date" id="m_a_d" class="form-control"></div><div><label class="form-label">Fluxo</label><select id="m_a_t" class="form-control"><option value="Entrada">Entrada (Giro)</option><option value="Saida">Saída (Custo)</option></select></div></div><div class="form-grid"><label class="form-label">Referência</label><input type="text" id="m_a_desc" class="form-control"></div><div class="form-grid"><label class="form-label">Valor</label><input type="number" id="m_a_v" class="form-control"></div>`,
                 'barbearia': `<div class="form-grid"><label class="form-label">Data de Fechamento</label><input type="date" id="m_b_d" class="form-control"></div><div class="form-grid"><label class="form-label">Giro Bruto</label><input type="number" id="m_b_f" class="form-control"></div><div class="form-grid two-cols"><div><label class="form-label">Bebidas (Custo)</label><input type="number" id="m_b_b" class="form-control" value="0"></div><div><label class="form-label">Pomadas (Custo)</label><input type="number" id="m_b_p" class="form-control" value="0"></div></div>`
             };
             if(!tmpl[abaAtual]) return;
@@ -720,13 +1061,14 @@
         }
         function fecharModal() { document.getElementById('modalOverlay').classList.remove('active'); }
 
+        window.importarInquilino = function(val) { if(val) { const [n, c] = val.split('|'); document.getElementById('m_e_n').value = n; document.getElementById('m_e_cel').value = c; } }
+
         window.salvarItem = function() {
             const id = Date.now(); let obj = {id}, arr = [];
             if(abaAtual === 'casas'){ obj.nome = document.getElementById('m_c_n').value; obj.endereco = document.getElementById('m_c_e').value; obj.inquilino = document.getElementById('m_c_i').value; obj.celular = document.getElementById('m_c_cel').value; obj.valor = Number(document.getElementById('m_c_v').value); obj.dia = document.getElementById('m_c_dia').value; obj.data_inicio = document.getElementById('m_c_d').value; arr = [id, obj.nome, obj.endereco, obj.inquilino, obj.celular, obj.valor, obj.dia, obj.data_inicio]; }
             else if(abaAtual === 'energia'){ const v = Number(document.getElementById('m_e_v').value); obj.nome = document.getElementById('m_e_n').value; obj.celular = document.getElementById('m_e_cel').value; obj.valor_original = v; obj.valor_final = v*0.80; obj.data = document.getElementById('m_e_d').value; arr = [id, obj.nome, obj.celular, obj.valor_original, obj.valor_final, obj.data]; }
             else if(abaAtual === 'juridico'){ obj.nome = document.getElementById('m_j_n').value; obj.tipo = document.getElementById('m_j_t').value; obj.valor = Number(document.getElementById('m_j_v').value); obj.data = document.getElementById('m_j_d').value; obj.investidor = document.getElementById('m_j_i').value; obj.status = 'Em Andamento'; arr = [id, obj.nome, obj.tipo, obj.valor, obj.data, obj.investidor, obj.status]; }
             else if(abaAtual === 'emprestimo'){ obj.nome = document.getElementById('m_em_n').value; obj.valor = Number(document.getElementById('m_em_vt').value); obj.parcelas_totais = Number(document.getElementById('m_em_p').value); obj.parcelas_restantes = obj.parcelas_totais; obj.valor_mensal = Number(document.getElementById('m_em_v').value); obj.data = document.getElementById('m_em_d').value; arr = [id, obj.nome, obj.valor, obj.parcelas_totais, obj.parcelas_restantes, obj.valor_mensal, obj.data]; }
-            else if(abaAtual === 'acai'){ obj.data = document.getElementById('m_a_d').value; obj.tipo = document.getElementById('m_a_t').value; obj.descricao = document.getElementById('m_a_desc').value; obj.valor = Number(document.getElementById('m_a_v').value); arr = [id, obj.data, obj.tipo, obj.descricao, obj.valor]; }
             else if(abaAtual === 'barbearia'){ obj.data = document.getElementById('m_b_d').value; obj.faturamento = Number(document.getElementById('m_b_f').value); obj.bebidas = Number(document.getElementById('m_b_b').value); obj.pomadas = Number(document.getElementById('m_b_p').value); arr = [id, obj.data, obj.faturamento, obj.bebidas, obj.pomadas]; }
             dados[abaAtual].push(obj); saveLocal(abaAtual); callSheets('salvar', abaAtual, arr); showToast('Ativo Registrado!'); fecharModal();
         }
