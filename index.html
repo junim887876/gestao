@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Gestor Financeiro Premium | Invest & MRR</title>
+    <title>Gestor Financeiro Premium | Invest, MRR & Cartões</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -137,6 +137,34 @@
         .acai-sync-btn { background: rgba(255,255,255,0.2); color: #FFF; border: 1px solid rgba(255,255,255,0.3); padding: 10px 18px; border-radius: var(--radius-md); font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; font-family: var(--font-title); }
         .acai-sync-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.3); }
 
+        /* ================= ESTILOS ESPECÍFICOS - CARTÕES ================= */
+        .cartao-tabs-container { display: flex; overflow-x: auto; gap: 8px; padding: 5px 0 15px 0; scrollbar-width: none; border-bottom: 1px solid var(--border-color); margin-bottom: 15px; }
+        .cartao-tabs-container::-webkit-scrollbar { display: none; }
+        .cartao-tab-btn { background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-gray); padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; white-space: nowrap; transition: all 0.2s ease; font-family: var(--font-title); cursor: pointer; }
+        .cartao-tab-btn.active { background: var(--primary); color: #FFF; border-color: var(--primary); box-shadow: var(--shadow-float); }
+        
+        .cartao-total-card { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); border-radius: var(--radius-lg); padding: 25px; text-align: center; color: #FFF; margin-bottom: 20px; box-shadow: var(--shadow-soft); position: relative; overflow: hidden; }
+        .cartao-total-card p { font-size: 11px; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; font-weight: 700; }
+        .cartao-total-card h2 { font-size: 34px; font-weight: 800; margin-bottom: 10px; font-family: var(--font-title); }
+        .cartao-total-card span { font-size: 11px; display: inline-block; background: rgba(255,255,255,0.15); padding: 5px 12px; border-radius: 12px; font-weight: 600; }
+        
+        .cartao-cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 25px; }
+        .cartao-cat-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 12px 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; box-shadow: var(--shadow-soft); transition: all 0.2s; }
+        .cartao-cat-card.active-filter { border-color: var(--primary); background: var(--primary-light); transform: translateY(-2px); }
+        .cartao-cat-card span { font-size: 10px; color: var(--text-gray); font-weight: 600; text-align: center; }
+        .cartao-cat-card strong { font-size: 11px; color: var(--text-dark); font-family: var(--font-title); }
+        .cartao-cat-investimento { grid-column: span 3; flex-direction: row; padding: 12px; background: var(--success-light); border-color: var(--success); }
+        .cartao-cat-investimento span, .cartao-cat-investimento strong { color: var(--success); font-size: 12px; }
+
+        .cartao-transaction { background: var(--bg-card); border-radius: var(--radius-md); padding: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color); box-shadow: var(--shadow-soft); margin-bottom: 10px; }
+        .cartao-t-info { display: flex; flex-direction: column; gap: 4px; }
+        .cartao-t-desc { font-size: 14px; font-weight: 700; color: var(--text-dark); font-family: var(--font-title); }
+        .cartao-t-date { font-size: 11px; color: var(--text-gray); font-weight: 500; }
+        .cartao-t-val { font-size: 14px; font-weight: 800; color: var(--text-dark); font-family: var(--font-title); }
+
+        .pulse-dot { width: 8px; height: 8px; background-color: var(--success); border-radius: 50%; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+
         /* ================= APP NATIVO MOBILE UI ================= */
         @media (max-width: 768px) {
             .layout-core { flex-direction: column; }
@@ -230,11 +258,12 @@
         <div class="layout-core">
             <div class="sidebar">
                 <div class="nav-item active" onclick="mudarAba('dashboard')"><i class="fa-solid fa-chart-pie"></i><span>Início</span></div>
+                
+                <div class="nav-item" onclick="mudarAba('cartoes')"><i class="fa-solid fa-credit-card"></i><span>Cartões</span></div>
+                
                 <div class="nav-item" onclick="mudarAba('casas')"><i class="fa-solid fa-house"></i><span>Casas</span></div>
                 <div class="nav-item" onclick="mudarAba('energia')"><i class="fa-solid fa-sun"></i><span>Energia Solar</span></div>
-                
                 <div class="nav-item" onclick="mudarAba('lancar_fatura')"><i class="fa-solid fa-file-invoice-dollar"></i><span>Lançar Fatura</span></div>
-
                 <div class="nav-item" onclick="mudarAba('emprestimo')"><i class="fa-solid fa-hand-holding-dollar"></i><span>Emprestimos</span></div>
                 <div class="nav-item" onclick="mudarAba('juridico')"><i class="fa-solid fa-scale-balanced"></i><span>Jurídico</span></div>
                 <div class="nav-item" onclick="mudarAba('acai')"><i class="fa-solid fa-bowl-food"></i><span> Urban Açaí</span></div>
@@ -263,6 +292,39 @@
                     </div>
                 </section>
 
+                <section id="cartoes" class="section">
+                    <div class="welcome-banner" style="background: linear-gradient(135deg, #111C44, #0B1437);">
+                        <h2>Faturas & Cartões</h2>
+                        <p>Gestão automatizada de ciclos e monitoramento de gastos.</p>
+                    </div>
+                    
+                    <div class="cartao-tabs-container" id="cartao-tabs"></div>
+                    
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px; align-items: center;">
+                        <select id="cartao-month-selector" class="acai-select" style="margin-bottom: 0; flex: 1;" onchange="changeMonthCycleCartoes()"></select>
+                        <div style="font-size: 11px; color: var(--success); display: flex; align-items: center; gap: 6px; padding: 12px 15px; background: var(--success-light); border-radius: var(--radius-md); font-weight: 700; border: 1px solid var(--success);">
+                            <div class="pulse-dot"></div> Auto 2m
+                        </div>
+                    </div>
+
+                    <div class="cartao-total-card">
+                        <p id="cartao-total-label">Fatura Atual</p>
+                        <h2 id="cartao-total-amount">R$ 0,00</h2>
+                        <span id="cartao-invoice-dates">Período: --/-- a --/-- | Vence: --/--</span>
+                    </div>
+
+                    <div style="background: var(--bg-card); padding: 20px; border-radius: var(--radius-lg); margin-bottom: 25px; box-shadow: var(--shadow-soft); border: 1px solid var(--border-color);">
+                        <div class="chart-container" style="height: 220px; margin-top: 0;"><canvas id="cartaoPieChart"></canvas></div>
+                    </div>
+
+                    <div class="cartao-cat-grid" id="cartao-categories-dashboard"></div>
+
+                    <h4 style="margin-bottom: 12px; font-family: var(--font-title); font-weight: 800; color: var(--text-dark); text-transform: uppercase; font-size: 0.9rem;" id="cartao-list-title">Compras do Ciclo</h4>
+                    
+                    <div id="cartao-transactions-list" style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="text-align: center; padding: 30px; color: var(--text-gray);"><i class="fa-solid fa-spinner loader-nuvem"></i> Conectando à Planilha de Cartões...</div>
+                    </div>
+                </section>
                 <section id="casas" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #FF6B6B, #C92A2A);"><h2>Casas de Aluguel</h2><p>Receita passiva imobiliária.</p></div><div class="items-grid" id="listaCasas"></div></section>
                 
                 <section id="energia" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #F59E0B, #D97706);"><h2>SolarInvest</h2><p>Aluguel de energia com desconto integrado.</p></div><div class="items-grid" id="listaEnergia"></div></section>
@@ -444,6 +506,40 @@
         let dados = { casas: [], energia: [], juridico: [], emprestimo: [], acai: [], barbearia: [] };
         let abaAtual = 'dashboard';
 
+        /* ================= VARIÁVEIS & LÓGICA: CARTÕES ================= */
+        const CARTAO_CSV_URL = 'https://docs.google.com/spreadsheets/d/191PXwMxfuq776RX7XY3LSJrvWwsilHHSJ_mfQCKGP0o/export?format=csv';
+        const banksCartoesList = ['Nubank', 'PicPay', 'Nubank PJ', 'Caixa', 'Banco do Brasil', 'Santander', 'Will Bank'];
+        
+        const bankConfigsCartoes = {
+            'Nubank':          { close: 17, due: 24, offset: 0 },
+            'Nubank PJ':       { close: 19, due: 27, offset: 0 },
+            'Will Bank':       { close: 18, due: 27, offset: 0 },
+            'Banco do Brasil': { close: 30, due: 5,  offset: 1 },
+            'Santander':       { close: 30, due: 5,  offset: 1 },
+            'Caixa':           { close: 24, due: 5,  offset: 1 },
+            'PicPay':          { close: 20, due: 28, offset: 0 }
+        };
+        const defaultCardConfigCartoes = { close: 20, due: 10, offset: 0 };
+        
+        const categoryConfigCartoes = {
+            'Lazer': { icon: 'gamepad-2', color: '#0a84ff' },
+            'Barbearia': { icon: 'scissors', color: '#af52de' },
+            'Seguro': { icon: 'shield-check', color: '#5e5ce6' },
+            'Bebidas': { icon: 'beer', color: '#ff9f0a' },
+            'Pessoal': { icon: 'user', color: '#ff375f' },
+            'Faculdade': { icon: 'graduation-cap', color: '#64d2ff' },
+            'Investimento': { icon: 'trending-up', color: '#32d74b', isWide: true }
+        };
+
+        const mesesNomes = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+
+        let transactionsCartoes = [];
+        let currentBankCartoes = 'Nubank';
+        let currentCycleKeyCartoes = ""; 
+        let currentCategoryFilterCartoes = null;
+        let chartInstanceCartoes = null;
+        /* ============================================================== */
+
         document.addEventListener('DOMContentLoaded', () => { 
             initTheme(); 
             Object.keys(dados).forEach(k => dados[k] = JSON.parse(localStorage.getItem(k+'_data')) || []);
@@ -451,9 +547,301 @@
             sincronizarNuvem(true);
             verificarEAtualizarDataLocalStorage(); 
             inicializarDataFatura(); 
-            // Inicia os dados do Açaí automaticamente quando carrega
             fetchAcaiData();
+            
+            // Inicializa Cartões
+            fetchCartoesData(false);
+            // Atualiza a cada 2 minutos (120000ms) silenciosamente
+            setInterval(() => fetchCartoesData(true), 120000);
         });
+
+        /* ================= FUNÇÕES DO CARTÃO (NOVA ABA) ================= */
+        async function fetchCartoesData(isSilent = false) {
+            try {
+                if (!isSilent) {
+                    document.getElementById('cartao-transactions-list').innerHTML = '<div style="text-align: center; padding: 30px; color: var(--text-gray);"><i class="fa-solid fa-spinner loader-nuvem"></i> Sincronizando Cartões...</div>';
+                }
+                const response = await fetch(CARTAO_CSV_URL);
+                const data = await response.text();
+                
+                parseCartoesCSV(data);
+                processCyclesForActiveBankCartoes();
+                buildTabsFixedCartoes();
+                buildMonthSelectorOptionsCartoes(!isSilent);
+                renderDashboardAndListCartoes();
+            } catch (error) {
+                console.error("Erro na busca de dados dos cartões: ", error);
+            }
+        }
+
+        function parseCartoesCSV(text) {
+            const lines = text.split(/\r?\n/);
+            if (lines.length < 2) return;
+
+            const header = lines[0];
+            const separator = (header.match(/;/g) || []).length > (header.match(/,/g) || []).length ? ';' : ',';
+
+            transactionsCartoes = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+
+                let cols = [];
+                let currentCell = '';
+                let inQuotes = false;
+
+                for (let j = 0; j < line.length; j++) {
+                    const char = line[j];
+                    if (char === '"') {
+                        inQuotes = !inQuotes; 
+                    } else if (char === separator && !inQuotes) {
+                        cols.push(currentCell.trim());
+                        currentCell = '';
+                    } else {
+                        currentCell += char;
+                    }
+                }
+                cols.push(currentCell.trim());
+
+                if (cols.length >= 5) {
+                    const bankName = cols[1].replace(/"/g, '').trim();
+                    if(!bankName) continue;
+
+                    let rawValue = cols[4].replace(/"/g, '').trim();
+                    rawValue = rawValue.replace(/\./g, '').replace(',', '.');
+                    const parsedValue = parseFloat(rawValue) || 0;
+
+                    transactionsCartoes.push({
+                        dateStr: cols[0].replace(/"/g, '').trim(),
+                        bank: bankName,
+                        category: cols[2].replace(/"/g, '').trim(),
+                        desc: cols[3].replace(/"/g, '').trim(),
+                        value: parsedValue
+                    });
+                }
+            }
+        }
+
+        function processCyclesForActiveBankCartoes() {
+            const config = bankConfigsCartoes[currentBankCartoes] || defaultCardConfigCartoes;
+            
+            transactionsCartoes.forEach(t => {
+                if (t.bank.toLowerCase().trim() !== currentBankCartoes.toLowerCase().trim()) return;
+
+                const datePart = t.dateStr.split(' ')[0];
+                const parts = datePart.includes('/') ? datePart.split('/') : datePart.split('-');
+                
+                let year = parseInt(parts[0]);
+                let month = parseInt(parts[1]) - 1; 
+                const day = parseInt(parts[2]);
+
+                if (day > config.close) {
+                    month++;
+                }
+                month += config.offset;
+
+                while (month > 11) {
+                    month -= 12;
+                    year++;
+                }
+                t.calculatedCycle = `${year}-${month}`;
+            });
+        }
+
+        function buildTabsFixedCartoes() {
+            const tabsDiv = document.getElementById('cartao-tabs');
+            if (tabsDiv.children.length === 0) {
+                banksCartoesList.forEach(bank => {
+                    const btn = document.createElement('div');
+                    btn.className = `cartao-tab-btn ${bank.toLowerCase() === currentBankCartoes.toLowerCase() ? 'active' : ''}`;
+                    btn.textContent = bank;
+                    btn.onclick = () => { 
+                        currentBankCartoes = bank; 
+                        currentCategoryFilterCartoes = null; 
+                        document.querySelectorAll('.cartao-tab-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        fetchCartoesData(false); 
+                    };
+                    tabsDiv.appendChild(btn);
+                });
+            }
+        }
+
+        function buildMonthSelectorOptionsCartoes(resetToLatest = true) {
+            const selector = document.getElementById('cartao-month-selector');
+            const bankTransactions = transactionsCartoes.filter(t => t.bank.toLowerCase().trim() === currentBankCartoes.toLowerCase().trim());
+            const uniqueCycles = [...new Set(bankTransactions.map(t => t.calculatedCycle))].sort().reverse();
+            
+            const previousSelection = selector.value;
+            selector.innerHTML = '';
+            
+            if(uniqueCycles.length === 0) {
+                selector.innerHTML = '<option value="">Sem faturas lançadas</option>';
+                currentCycleKeyCartoes = null;
+                return;
+            }
+
+            uniqueCycles.forEach(key => {
+                const [yr, mth] = key.split('-');
+                const opt = document.createElement('option');
+                opt.value = key;
+                opt.textContent = `Fatura ${mesesNomes[parseInt(mth)]} de ${yr}`;
+                selector.appendChild(opt);
+            });
+
+            if (!resetToLatest && uniqueCycles.includes(previousSelection)) {
+                currentCycleKeyCartoes = previousSelection;
+            } else {
+                currentCycleKeyCartoes = uniqueCycles[0]; 
+            }
+            selector.value = currentCycleKeyCartoes;
+        }
+
+        function changeMonthCycleCartoes() {
+            currentCycleKeyCartoes = document.getElementById('cartao-month-selector').value;
+            currentCategoryFilterCartoes = null;
+            renderDashboardAndListCartoes();
+        }
+
+        function renderDashboardAndListCartoes() {
+            if (!currentCycleKeyCartoes) {
+                document.getElementById('cartao-total-amount').textContent = "R$ 0,00";
+                document.getElementById('cartao-invoice-dates').textContent = "Sem lançamentos ativos";
+                document.getElementById('cartao-categories-dashboard').innerHTML = '';
+                document.getElementById('cartao-transactions-list').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-gray);">Nenhuma transação encontrada.</div>';
+                if (chartInstanceCartoes) chartInstanceCartoes.destroy();
+                return;
+            }
+
+            const filteredTransactions = transactionsCartoes.filter(t => 
+                t.bank.toLowerCase().trim() === currentBankCartoes.toLowerCase().trim() && 
+                t.calculatedCycle === currentCycleKeyCartoes
+            );
+            
+            const config = bankConfigsCartoes[currentBankCartoes] || defaultCardConfigCartoes;
+            const [yrStr, mthStr] = currentCycleKeyCartoes.split('-');
+            const y_due = parseInt(yrStr);
+            const m_due = parseInt(mthStr);
+            
+            let m_close = m_due - config.offset;
+            let y_close = y_due;
+            if(m_close < 0) { m_close += 12; y_close--; }
+
+            let dia_abertura = config.close >= 28 ? 1 : config.close + 1;
+            let m_abertura = m_close;
+            if (dia_abertura !== 1) {
+                m_abertura -= 1;
+                if (m_abertura < 0) { m_abertura += 12; }
+            }
+
+            let maxDaysCloseMonth = new Date(y_close, m_close + 1, 0).getDate();
+            let safeCloseDay = Math.min(config.close, maxDaysCloseMonth);
+
+            const dataAbertura = `${String(dia_abertura).padStart(2,'0')}/${String(m_abertura+1).padStart(2,'0')}`;
+            const dataFechamento = `${String(safeCloseDay).padStart(2,'0')}/${String(m_close+1).padStart(2,'0')}`;
+            const dataVencimento = `${String(config.due).padStart(2,'0')}/${String(m_due+1).padStart(2,'0')}/${y_due}`;
+
+            document.getElementById('cartao-invoice-dates').textContent = `Ciclo: ${dataAbertura} a ${dataFechamento} | Vence: ${dataVencimento}`;
+
+            const totalGeral = filteredTransactions.reduce((sum, t) => sum + t.value, 0);
+            document.getElementById('cartao-total-amount').textContent = `R$ ${totalGeral.toFixed(2).replace('.', ',')}`;
+            document.getElementById('cartao-total-label').textContent = `Fatura ${currentBankCartoes}`;
+
+            let chartLabels = []; let chartData = []; let chartColors = [];
+            const dashDiv = document.getElementById('cartao-categories-dashboard');
+            dashDiv.innerHTML = '';
+
+            Object.keys(categoryConfigCartoes).forEach(catName => {
+                const conf = categoryConfigCartoes[catName];
+                const totalCat = filteredTransactions
+                    .filter(t => t.category.toLowerCase().includes(catName.toLowerCase()))
+                    .reduce((sum, t) => sum + t.value, 0);
+
+                if (totalCat > 0) {
+                    chartLabels.push(catName);
+                    chartData.push(totalCat.toFixed(2));
+                    chartColors.push(conf.color);
+                }
+
+                const div = document.createElement('div');
+                div.className = `cartao-cat-card ${conf.isWide ? 'cartao-cat-investimento' : ''} ${currentCategoryFilterCartoes === catName ? 'active-filter' : ''}`;
+                div.onclick = () => {
+                    currentCategoryFilterCartoes = (currentCategoryFilterCartoes === catName) ? null : catName;
+                    renderDashboardAndListCartoes();
+                };
+                
+                div.innerHTML = `
+                    <i data-lucide="${conf.icon}" width="16" height="16"></i>
+                    <span>${catName}</span>
+                    <strong>R$ ${totalCat.toFixed(2).replace('.', ',')}</strong>
+                `;
+                dashDiv.appendChild(div);
+            });
+
+            buildPieChartCartoes(chartLabels, chartData, chartColors);
+            renderTransactionsListCartoes(filteredTransactions);
+            lucide.createIcons();
+        }
+
+        function buildPieChartCartoes(labels, data, colors) {
+            const ctx = document.getElementById('cartaoPieChart').getContext('2d');
+            if (chartInstanceCartoes) { chartInstanceCartoes.destroy(); }
+
+            if(data.length === 0) {
+                ctx.clearRect(0, 0, 200, 200);
+                return;
+            }
+
+            const borderColorStr = document.documentElement.getAttribute('data-theme') === 'dark' ? '#111C44' : '#FFFFFF';
+
+            chartInstanceCartoes = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{ data: data, backgroundColor: colors, borderWidth: 2, borderColor: borderColorStr }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#A3AED0', font: { size: 11, family: "'Poppins', sans-serif", weight: '600' }, boxWidth: 10, padding: 8 } },
+                        tooltip: { callbacks: { label: function(context) { return ` R$ ${parseFloat(context.raw).toFixed(2).replace('.', ',')}`; } } }
+                    }
+                }
+            });
+        }
+
+        function renderTransactionsListCartoes(filteredTransactions) {
+            const listDiv = document.getElementById('cartao-transactions-list');
+            listDiv.innerHTML = '';
+
+            let filtered = filteredTransactions;
+            if (currentCategoryFilterCartoes) {
+                filtered = filtered.filter(t => t.category.toLowerCase().includes(currentCategoryFilterCartoes.toLowerCase()));
+                document.getElementById('cartao-list-title').textContent = `Filtrado por: ${currentCategoryFilterCartoes}`;
+            } else {
+                document.getElementById('cartao-list-title').textContent = `Compras do Ciclo`;
+            }
+
+            if (filtered.length === 0) {
+                listDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-gray);">Nenhuma compra listada.</div>';
+                return;
+            }
+
+            filtered.forEach(t => {
+                const dataFormatada = t.dateStr.split(' ')[0];
+                listDiv.innerHTML += `
+                    <div class="cartao-transaction">
+                        <div class="cartao-t-info">
+                            <span class="cartao-t-desc">${t.desc}</span>
+                            <span class="cartao-t-date">${dataFormatada} • ${t.category}</span>
+                        </div>
+                        <div class="cartao-t-val">R$ ${t.value.toFixed(2).replace('.', ',')}</div>
+                    </div>
+                `;
+            });
+        }
+
 
         /* ================= INTEGRAÇÃO DO FORMULÁRIO DE FATURAS ================= */
         window.submittedFatura = false;
@@ -601,6 +989,9 @@
         function toggleTheme() { 
             const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', n); localStorage.setItem('tema_fm', n); initTheme();
+            
+            // Re-render chart for dark/light mode border adaptation
+            if(abaAtual === 'cartoes') renderDashboardAndListCartoes();
         }
         function showToast(msg) { 
             const t = document.createElement('div'); t.className = 'toast'; t.innerHTML = `<i class="fa-solid fa-check-circle" style="color:var(--success)"></i> ${msg}`;
@@ -611,10 +1002,11 @@
             document.getElementById(aba).classList.add('active'); event.currentTarget.classList.add('active');
             abaAtual = aba; 
             if(aba === 'dashboard') renderDashboard();
+            if(aba === 'cartoes') renderDashboardAndListCartoes();
         }
 
         /* SINCRONIZAÇÃO NUVEM GERAL */
-        function parseCSV(str) {
+        function parseCSVGeral(str) {
             const arr = []; let quote = false; let row = 0, col = 0;
             for (let c = 0; c < str.length; c++) {
                 let cc = str[c], nc = str[c+1];
@@ -637,7 +1029,7 @@
                 for (let aba of Object.keys(dados)) {
                     const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${aba}`);
                     if (!res.ok) continue;
-                    const linhas = parseCSV(await res.text());
+                    const linhas = parseCSVGeral(await res.text());
                     const nDados = [];
                     linhas.forEach(row => {
                         if(row.length < 2 || !Number(row[0])) return;
@@ -721,15 +1113,13 @@
             document.getElementById('listaBarbearia').innerHTML = dados.barbearia.map(b=>`<div class="item-card"><div class="item-header"><div><h4 class="item-title">Operação ${fData(b.data)}</h4></div></div><div class="item-value"><div class="val-box"><span>Faturamento</span><strong style="color:var(--success)">${fMoeda(b.faturamento)}</strong></div><div class="val-box"><span>Margem Líquida</span><strong style="color:var(--primary)">${fMoeda(b.faturamento-(b.bebidas+b.pomadas))}</strong></div></div><button class="btn-action delete" style="width:100%;margin-top:10px;" onclick="deletarItem('barbearia',${b.id})"><i class="fa-solid fa-trash"></i> Excluir Caixa</button></div>`).join('');
         }
 
-        let chart = null;
+        let chartGeralRef = null;
         function renderDashboard() {
             const mrrCasas = dados.casas.reduce((s,c)=>s+c.valor,0);
             const mrrEnergia = dados.energia.reduce((s,e)=>s+e.valor_final,0);
             const mrrEmprestimo = dados.emprestimo.reduce((s,e)=>s+e.valor_mensal,0);
             const totalMRR = mrrCasas + mrrEnergia + mrrEmprestimo;
 
-            // O Açaí agora baseia a visão Global de Giro na variável da Planilha Inteligente. 
-            // Se as antigas entradas locais existirem (por padrão), contabiliza.
             const giroLocal = dados.acai.filter(a=>a.tipo==='Entrada').reduce((s,a)=>s+a.valor,0) + dados.barbearia.reduce((s,b)=>s+b.faturamento,0);
             
             const custoJuridico = dados.juridico.reduce((s,j)=>s+j.valor,0);
@@ -746,8 +1136,8 @@
             document.getElementById('roi-projetado').innerHTML = `<i class="fa-solid fa-arrow-trend-up"></i> +${roiPercent}% ROI Projetado`;
             
             const ctx = document.getElementById('chartGeral'); if(!ctx) return;
-            if(chart) chart.destroy();
-            chart = new Chart(ctx, { type: 'bar', data: { labels: ['MRR (Fixos+Emp)', 'Giro Bruto', 'Capital Alocado'], datasets: [{ data: [totalMRR, giroLocal, capitalTotal], backgroundColor: ['#4318FF', '#05CD99', '#FFCE20'], borderRadius: 10 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+            if(chartGeralRef) chartGeralRef.destroy();
+            chartGeralRef = new Chart(ctx, { type: 'bar', data: { labels: ['MRR (Fixos+Emp)', 'Giro Bruto', 'Capital Alocado'], datasets: [{ data: [totalMRR, giroLocal, capitalTotal], backgroundColor: ['#4318FF', '#05CD99', '#FFCE20'], borderRadius: 10 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
         }
 
         window.gerarFaturaCliente = function(nome) {
@@ -1043,7 +1433,7 @@
 
         /* FORMS DEFAULT / MODAL */
         function abrirModalAtual() {
-            if(abaAtual === 'lancar_fatura' || abaAtual === 'acai') {
+            if(abaAtual === 'lancar_fatura' || abaAtual === 'acai' || abaAtual === 'cartoes') {
                 showToast("Esta aba gerencia dados via integrações/Sheets.");
                 return;
             }
