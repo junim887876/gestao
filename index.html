@@ -195,10 +195,15 @@
         .pop-modal-overlay.active { opacity: 1; pointer-events: auto; }
         .pop-modal-card { background: var(--bg-card); width: 90%; max-width: 440px; max-height: 80vh; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden; transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
         .pop-modal-overlay.active .pop-modal-card { transform: scale(1); }
-        .pop-header { padding: 20px; border-bottom: 1px solid var(--border-color); text-align: center; position: relative; }
+        .pop-header { padding: 20px 20px 10px 20px; text-align: center; position: relative; }
         .pop-header h2 { margin: 0; font-size: 18px; font-weight: 700; color: var(--text-dark); font-family: var(--font-title); }
         .pop-sub-header { font-size: 12px; color: var(--primary); font-weight: 700; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
         .pop-close-btn { position: absolute; top: 18px; right: 16px; background: var(--bg-input); border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 14px; font-weight: bold; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        
+        .pop-nav { display: flex; background: var(--bg-input); padding: 5px; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); }
+        .pop-nav-btn { flex: 1; padding: 10px 5px; border: none; background: transparent; color: var(--text-gray); font-family: var(--font-title); font-weight: 700; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 0.75rem; }
+        .pop-nav-btn.active { background: var(--bg-card); color: var(--primary); box-shadow: var(--shadow-soft); }
+
         .pop-content { padding: 16px; overflow-y: auto; flex: 1; }
         .task-item { background: var(--bg-card); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border-color); cursor: pointer; transition: background 0.2s, transform 0.1s; }
         .task-item:active { transform: scale(0.98); }
@@ -231,9 +236,14 @@
       <div class="pop-modal-overlay" id="popOverlay" onclick="if(event.target === this) togglePopModal(false)">
         <div class="pop-modal-card">
           <div class="pop-header">
-            <h2>POP Barbearia Junim</h2>
+            <h2 id="popModalTitle">POP Barbearia Junim</h2>
             <div class="pop-sub-header" id="popPeriodo">Carregando...</div>
             <button class="pop-close-btn" onclick="togglePopModal(false)"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="pop-nav">
+            <button class="pop-nav-btn active" onclick="mudarEmpresaPop('barbearia', this)">Barbearia</button>
+            <button class="pop-nav-btn" onclick="mudarEmpresaPop('acai', this)">Urban Açaí</button>
+            <button class="pop-nav-btn" onclick="mudarEmpresaPop('solar', this)">Solar Invest</button>
           </div>
           <div class="pop-content">
             <div id="popTaskList"></div>
@@ -889,39 +899,52 @@
         };
 
         /* LÓGICA DO POP INTELIGENTE ========================== */
+        let empresaAtualPop = 'barbearia';
+
         const bancoTarefas = {
-            entrada: [
-                { id: 'ent_varrer', text: 'Varrer o salão (Abertura)' },
-                { id: 'ent_bancadas', text: 'Limpar as bancadas' },
-                { id: 'ent_status', text: 'Postar Storys De Aberto' },
-                { id: 'ent_jbl', text: 'Tirar JBL do Carregador' },
-                { id: 'ent_tvs', text: 'Ligar Televisões' }
+            barbearia: {
+                entrada: [
+                    { id: 'ent_varrer', text: 'Varrer o salão (Abertura)' },
+                    { id: 'ent_bancadas', text: 'Limpar as bancadas' },
+                    { id: 'ent_status', text: 'Postar Storys De Aberto' },
+                    { id: 'ent_jbl', text: 'Tirar JBL do Carregador' },
+                    { id: 'ent_tvs', text: 'Ligar Televisões' }
+                ],
+                saida: [
+                    { id: 'sai_varrer', text: 'Varrer o salão (Fechamento)' },
+                    { id: 'sai_tvs', text: 'Desligar as televisões' },
+                    { id: 'sai_ar', text: 'Desligar o ar condicionado' },
+                    { id: 'sai_pole', text: 'Desligar o pole da barbearia' },
+                    { id: 'sai_jbl', text: 'Colocar o JBL para carregar' },
+                    { id: 'sai_uniformes', text: 'Colocar os uniformes para lavar' },
+                    { id: 'sai_lixeira', text: 'Verificar se a lixeira está cheia' },
+                    { id: 'sai_status', text: 'Apagar os status do Instagram e WhatsApp' },
+                    { id: 'sai_bucha', text: 'Lavar com bucha de barbear' },
+                    { id: 'sai_navalhete', text: 'Passar álcool no navalhete' },
+                    { id: 'sai_agua', text: 'Verificar água no borrifador e no agueiro' },
+                    { id: 'sai_estoque', text: 'Verificar estoque de bebidas e pomadas (Compras)' },
+                    { id: 'sai_lamina', text: 'Verificar Laminas' },
+                    { id: 'sai_maquina', text: 'Passar Oleo nas maquinas' }
+                ],
+                domingo: [
+                    { id: 'dom_pano', text: 'Passar o pano em tudo' },
+                    { id: 'dom_lavar', text: 'Lavar a barbearia por completo' },
+                    { id: 'dom_solar', text: 'Lavar Placas Solares' },
+                    { id: 'dom_lavarr', text: 'Lavar Carro' },
+                    { id: 'dom_cobrar', text: 'Mandar Mensagem Para Clientes' },
+                    { id: 'dom_acai', text: 'Mandar Mensagem Açai' },
+                    { id: 'dom_ava', text: 'Verificar AVA' },
+                    { id: 'dom_contab', text: 'Fazer Contabilidade' }
+                ]
+            },
+            acai: [
+                { id: 'acai_est1', text: 'Verificar Estoque "Complementos e Açaí"' },
+                { id: 'acai_est2', text: 'Verificar Estoque "Sacolas, colheres, copos, tampas e adesivos"' },
+                { id: 'acai_msg', text: 'Mandar Msg Clientes sobre o açaí' }
             ],
-            saida: [
-                { id: 'sai_varrer', text: 'Varrer o salão (Fechamento)' },
-                { id: 'sai_tvs', text: 'Desligar as televisões' },
-                { id: 'sai_ar', text: 'Desligar o ar condicionado' },
-                { id: 'sai_pole', text: 'Desligar o pole da barbearia' },
-                { id: 'sai_jbl', text: 'Colocar o JBL para carregar' },
-                { id: 'sai_uniformes', text: 'Colocar os uniformes para lavar' },
-                { id: 'sai_lixeira', text: 'Verificar se a lixeira está cheia' },
-                { id: 'sai_status', text: 'Apagar os status do Instagram e WhatsApp' },
-                { id: 'sai_bucha', text: 'Lavar com bucha de barbear' },
-                { id: 'sai_navalhete', text: 'Passar álcool no navalhete' },
-                { id: 'sai_agua', text: 'Verificar água no borrifador e no agueiro' },
-                { id: 'sai_estoque', text: 'Verificar estoque de bebidas e pomadas (Compras)' },
-                { id: 'sai_lamina', text: 'Verificar Laminas' },
-                { id: 'sai_maquina', text: 'Passar Oleo nas maquinas' }
-            ],
-            domingo: [
-                { id: 'dom_pano', text: 'Passar o pano em tudo' },
-                { id: 'dom_lavar', text: 'Lavar a barbearia por completo' },
-                { id: 'dom_solar', text: 'Lavar Placas Solares' },
-                { id: 'dom_lavarr', text: 'Lavar Carro' },
-                { id: 'dom_cobrar', text: 'Mandar Mensagem Para Clientes' },
-                { id: 'dom_acai', text: 'Mandar Mensagem Açai' },
-                { id: 'dom_ava', text: 'Verificar AVA' },
-                { id: 'dom_contab', text: 'Fazer Contabilidade' }
+            solar: [
+                { id: 'sol_placas', text: 'Lavar Placas Todo domingo' },
+                { id: 'sol_clientes', text: 'Atrair Mais Clientes' }
             ]
         };
 
@@ -944,18 +967,40 @@
             }
         }
 
+        window.mudarEmpresaPop = function(empresa, btn) {
+            empresaAtualPop = empresa;
+            document.querySelectorAll('.pop-nav-btn').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            renderizarTarefas();
+        }
+
         function renderizarTarefas() {
             verificarEAtualizarDataLocalStorage();
-            const { chave, label } = obterConfigDiaHorario();
-            document.getElementById('popPeriodo').innerText = label;
-            
-            const btnZap = document.getElementById('btnZapEstoque');
-            if (chave === 'saida') { btnZap.classList.add('active'); } else { btnZap.classList.remove('active'); }
-            
-            const tarefasDoTurno = bancoTarefas[chave];
-            const concluidas = JSON.parse(localStorage.getItem('pop_tarefas_concluidas') || '{}');
             const container = document.getElementById('popTaskList');
+            const btnZap = document.getElementById('btnZapEstoque');
             container.innerHTML = '';
+            
+            let tarefasDoTurno = [];
+
+            if (empresaAtualPop === 'barbearia') {
+                const { chave, label } = obterConfigDiaHorario();
+                document.getElementById('popModalTitle').innerText = 'POP Barbearia Junim';
+                document.getElementById('popPeriodo').innerText = label;
+                tarefasDoTurno = bancoTarefas.barbearia[chave];
+                if (chave === 'saida') { btnZap.classList.add('active'); } else { btnZap.classList.remove('active'); }
+            } else if (empresaAtualPop === 'acai') {
+                document.getElementById('popModalTitle').innerText = 'POP Urban Açaí';
+                document.getElementById('popPeriodo').innerText = 'Rotina Padrão';
+                tarefasDoTurno = bancoTarefas.acai;
+                btnZap.classList.remove('active');
+            } else if (empresaAtualPop === 'solar') {
+                document.getElementById('popModalTitle').innerText = 'POP Solar Invest';
+                document.getElementById('popPeriodo').innerText = 'Rotina Padrão';
+                tarefasDoTurno = bancoTarefas.solar;
+                btnZap.classList.remove('active');
+            }
+
+            const concluidas = JSON.parse(localStorage.getItem('pop_tarefas_concluidas') || '{}');
             
             tarefasDoTurno.forEach(tarefa => {
                 const isDone = !!concluidas[tarefa.id];
@@ -976,7 +1021,14 @@
 
         function togglePopModal(mostrar) {
             const overlay = document.getElementById('popOverlay');
-            if (mostrar) { renderizarTarefas(); overlay.classList.add('active'); } 
+            if (mostrar) { 
+                // Ao abrir, sempre reseta para Barbearia por padrão
+                empresaAtualPop = 'barbearia';
+                document.querySelectorAll('.pop-nav-btn').forEach(b => b.classList.remove('active'));
+                document.querySelector('.pop-nav-btn').classList.add('active'); // O primeiro é barbearia
+                renderizarTarefas(); 
+                overlay.classList.add('active'); 
+            } 
             else { overlay.classList.remove('active'); }
         }
 
