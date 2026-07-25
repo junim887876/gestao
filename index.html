@@ -85,12 +85,13 @@
         .form-label { font-size: 0.8rem; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; display: block; }
         .form-control { width: 100%; background: var(--bg-input); border: 2px solid transparent; border-radius: var(--radius-md); padding: 14px; color: var(--text-dark); font-family: inherit; font-weight: 500; outline: none; transition: 0.2s; }
         .form-control:focus { border-color: var(--primary); background: var(--bg-card); }
-        .btn-primary { width: 100%; padding: 16px; background: var(--primary); color: #FFF; border: none; border-radius: var(--radius-md); font-family: var(--font-title); font-weight: 700; font-size: 1.05rem; cursor: pointer; margin-top: 10px; box-shadow: var(--shadow-float); }
+        .btn-primary { width: 100%; padding: 16px; background: var(--primary); color: #FFF; border: none; border-radius: var(--radius-md); font-family: var(--font-title); font-weight: 700; font-size: 1.05rem; cursor: pointer; margin-top: 10px; box-shadow: var(--shadow-float); display: flex; align-items: center; justify-content: center; gap: 8px;}
         .btn-primary:active { transform: scale(0.98); }
 
         /* CARDS APP NATIVO */
         .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
-        .item-card { background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); padding: 22px; display: flex; flex-direction: column; gap: 15px; position: relative; overflow: hidden; box-shadow: var(--shadow-soft); }
+        .item-card { background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); padding: 22px; display: flex; flex-direction: column; gap: 15px; position: relative; overflow: hidden; box-shadow: var(--shadow-soft); transition: transform 0.1s;}
+        .item-card:active { transform: scale(0.98); }
         .item-header { display: flex; justify-content: space-between; align-items: flex-start; }
         .item-title { font-family: var(--font-title); font-size: 1.2rem; font-weight: 800; color: var(--text-dark); margin-bottom: 2px; }
         .item-meta-info { font-size: 0.85rem; color: var(--text-gray); display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-weight: 500; }
@@ -121,8 +122,9 @@
         @keyframes slideIn { to { transform: translateX(0); } }
 
         /* ================= ESTILOS ESPECÍFICOS - ABA AÇAÍ ================= */
-        .acai-nav { display: flex; background: var(--bg-input); padding: 6px; border-radius: var(--radius-md); margin-bottom: 20px; border: 1px solid var(--border-color); }
-        .acai-nav-btn { flex: 1; padding: 12px; border: none; background: transparent; color: var(--text-gray); font-family: var(--font-title); font-weight: 700; border-radius: 10px; cursor: pointer; transition: 0.3s; font-size: 0.85rem; }
+        .acai-nav { display: flex; background: var(--bg-input); padding: 6px; border-radius: var(--radius-md); margin-bottom: 20px; border: 1px solid var(--border-color); overflow-x: auto; scrollbar-width: none;}
+        .acai-nav::-webkit-scrollbar { display: none; }
+        .acai-nav-btn { flex: 1; padding: 12px 8px; border: none; background: transparent; color: var(--text-gray); font-family: var(--font-title); font-weight: 700; border-radius: 10px; cursor: pointer; transition: 0.3s; font-size: 0.85rem; white-space: nowrap;}
         .acai-nav-btn.active { background: var(--bg-card); color: var(--primary); box-shadow: var(--shadow-soft); }
         .acai-section-tab { display: none; animation: fadeIn 0.3s ease; }
         .acai-section-tab.active { display: block; }
@@ -136,6 +138,9 @@
         .acai-select { width: 100%; background: var(--bg-input); color: var(--text-dark); border: 1px solid var(--border-color); padding: 14px 18px; border-radius: var(--radius-md); font-family: var(--font-title); font-weight: 700; outline: none; margin-bottom: 25px; appearance: none; box-shadow: var(--shadow-soft); }
         .acai-sync-btn { background: rgba(255,255,255,0.2); color: #FFF; border: 1px solid rgba(255,255,255,0.3); padding: 10px 18px; border-radius: var(--radius-md); font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; font-family: var(--font-title); }
         .acai-sync-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.3); }
+        
+        /* NOVO: Estilos do ticket formatado para impressão no modal */
+        .ticket-print { background: var(--bg-input); border-radius: 12px; padding: 15px; font-family: monospace; font-size: 13px; line-height: 1.6; margin-bottom: 20px; white-space: pre-wrap; border: 1px dashed var(--border-color); color: var(--text-dark); max-height: 45vh; overflow-y: auto; }
 
         /* ================= ESTILOS ESPECÍFICOS - CARTÕES ================= */
         .cartao-tabs-container { display: flex; overflow-x: auto; gap: 8px; padding: 5px 0 15px 0; scrollbar-width: none; border-bottom: 1px solid var(--border-color); margin-bottom: 15px; }
@@ -232,6 +237,7 @@
         </div>
     </div>
 
+    <!-- MODAL POP INTELIGENTE -->
     <div class="pop-modal-container">
       <div class="pop-modal-overlay" id="popOverlay" onclick="if(event.target === this) togglePopModal(false)">
         <div class="pop-modal-card">
@@ -255,6 +261,24 @@
       </div>
     </div>
 
+    <!-- NOVO: MODAL DO PEDIDO (AÇAÍ LIVE) -->
+    <div class="pop-modal-container">
+        <div class="pop-modal-overlay" id="pedidoModalOverlay" onclick="if(event.target === this) fecharModalPedido()">
+          <div class="pop-modal-card">
+            <div class="pop-header">
+              <h2>Detalhes do Pedido</h2>
+              <button class="pop-close-btn" onclick="fecharModalPedido()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="pop-content">
+              <div id="ticket-text" class="ticket-print"></div>
+              <button class="btn-primary" onclick="copiarTextoPedido()" style="background: #25D366; margin-top: 0;">
+                  <i class="fa-brands fa-whatsapp" style="font-size: 1.2rem;"></i> Copiar p/ WhatsApp
+              </button>
+            </div>
+          </div>
+        </div>
+    </div>
+
     <div class="main-container">
         <header class="topbar">
             <div class="topbar-logo"><i class="fa-solid fa-bolt"></i><span>Grupo Junim</span></div>
@@ -268,9 +292,7 @@
         <div class="layout-core">
             <div class="sidebar">
                 <div class="nav-item active" onclick="mudarAba('dashboard')"><i class="fa-solid fa-chart-pie"></i><span>Início</span></div>
-                
                 <div class="nav-item" onclick="mudarAba('cartoes')"><i class="fa-solid fa-credit-card"></i><span>Cartões</span></div>
-                
                 <div class="nav-item" onclick="mudarAba('casas')"><i class="fa-solid fa-house"></i><span>Casas</span></div>
                 <div class="nav-item" onclick="mudarAba('energia')"><i class="fa-solid fa-sun"></i><span>Energia Solar</span></div>
                 <div class="nav-item" onclick="mudarAba('lancar_fatura')"><i class="fa-solid fa-file-invoice-dollar"></i><span>Lançar Fatura</span></div>
@@ -359,7 +381,6 @@
                                     <option value="claiton">Claiton</option>
                                     <option value="fernanda">Fernanda</option>
                                     <option value="rauana">Rauana</option>
-                                    
                                 </select>
                             </div>
 
@@ -403,12 +424,13 @@
                 
                 <section id="juridico" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #6366F1, #4338CA);"><h2>Investimento Jurídico</h2><p>Acompanhamento de Capital e Rentabilidade.</p></div><div class="items-grid" id="listaJuridico"></div></section>
                 
+                <!-- ABA URBAN AÇAÍ -->
                 <section id="acai" class="section">
                     <div class="welcome-banner" style="background: linear-gradient(135deg, #EC4899, #BE185D); padding: 25px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
                             <div class="welcome-text">
-                                <h2>UrbanAçaí Analítico</h2>
-                                <p style="margin-top: 5px;">Sincronizado na Planilha | Linha 171+</p>
+                                <h2>UrbanAçaí Manager</h2>
+                                <p style="margin-top: 5px;">Gerenciamento completo e Pedidos ao Vivo.</p>
                             </div>
                             <button class="acai-sync-btn" onclick="fetchAcaiData()">
                                 <i class="fa-solid fa-rotate"></i> Sincronizar Sheets
@@ -416,7 +438,33 @@
                         </div>
                     </div>
 
-                    <select id="acaiMonthSelector" class="acai-select"></select>
+                    <!-- NOVO: NAVEGAÇÃO COM 4 ABAS (Incluindo Pedidos Live) -->
+                    <div class="acai-nav">
+                        <button class="acai-nav-btn active" onclick="switchAcaiTab('acai-tab-pedidos', this)">Live 🔴</button>
+                        <button class="acai-nav-btn" onclick="switchAcaiTab('acai-tab-ia', this)">IA Clientes</button>
+                        <button class="acai-nav-btn" onclick="switchAcaiTab('acai-tab-prod', this)">Produção</button>
+                        <button class="acai-nav-btn" onclick="switchAcaiTab('acai-tab-fin', this)">Finanças</button>
+                    </div>
+
+                    <!-- ABA DE PEDIDOS AO VIVO (APP INTEGRADO) -->
+                    <div id="acai-tab-pedidos" class="acai-section-tab active">
+                        <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="font-family: var(--font-title); font-weight: 800; font-size: 1.2rem; color: var(--text-dark);" id="data-hoje-label">Carregando data...</h3>
+                            <div style="font-size: 11px; color: var(--success); display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--success-light); border-radius: var(--radius-md); font-weight: 700; border: 1px solid var(--success);">
+                                <div class="pulse-dot"></div> Auto
+                            </div>
+                        </div>
+
+                        <div id="loading-pedidos-live" style="text-align: center; padding: 30px; color: var(--text-gray);">
+                            <i class="fa-solid fa-spinner loader-nuvem" style="font-size: 2rem; color: var(--primary);"></i>
+                            <p style="margin-top: 10px; font-weight: 600; font-family: var(--font-title);">Buscando pedidos do Forms...</p>
+                        </div>
+
+                        <!-- Lista Onde os Cards Vão Entrar -->
+                        <div id="lista-pedidos-live" style="display: flex; flex-direction: column; gap: 15px; padding-bottom: 30px;"></div>
+                    </div>
+                    
+                    <select id="acaiMonthSelector" class="acai-select" style="display: none;"></select>
 
                     <div id="acaiLoading" style="display: none; text-align: center; padding: 40px; color: var(--text-gray);">
                         <i class="fa-solid fa-spinner loader-nuvem" style="font-size: 2.5rem; color: var(--primary);"></i>
@@ -424,13 +472,7 @@
                     </div>
 
                     <div id="acaiContent" style="display: none;">
-                        <div class="acai-nav">
-                            <button class="acai-nav-btn active" onclick="switchAcaiTab('acai-tab-ia', this)">IA Clientes</button>
-                            <button class="acai-nav-btn" onclick="switchAcaiTab('acai-tab-prod', this)">Produção</button>
-                            <button class="acai-nav-btn" onclick="switchAcaiTab('acai-tab-fin', this)">Finanças</button>
-                        </div>
-
-                        <div id="acai-tab-ia" class="acai-section-tab active">
+                        <div id="acai-tab-ia" class="acai-section-tab">
                             <div class="acai-card" style="background: linear-gradient(135deg, rgba(117, 81, 255, 0.08), rgba(67, 24, 255, 0.02)); border-color: rgba(117, 81, 255, 0.15);">
                                 <div class="acai-header-flex">
                                     <div class="acai-title"><div class="acai-icon-bg" style="background: var(--primary); color: white;"><i class="fa-solid fa-brain"></i></div> IA Comportamental</div>
@@ -552,6 +594,10 @@
         let chartInstanceCartoes = null;
         /* ============================================================== */
 
+        /* ================= VARIÁVEIS: AÇAÍ PEDIDOS AO VIVO ================= */
+        const FORMS_CSV_URL = "https://docs.google.com/spreadsheets/d/1ivdu73z2cVMM7eWqDDOVu9wNWKgSCHlaHSbuyTuSZm8/export?format=csv";
+        let pedidoAtualTexto = "";
+
         document.addEventListener('DOMContentLoaded', () => { 
             initTheme(); 
             Object.keys(dados).forEach(k => dados[k] = JSON.parse(localStorage.getItem(k+'_data')) || []);
@@ -563,11 +609,192 @@
             
             // Inicializa Cartões
             fetchCartoesData(false);
-            // Atualiza a cada 2 minutos (120000ms) silenciosamente
             setInterval(() => fetchCartoesData(true), 120000);
+
+            // Inicializa Pedidos ao Vivo
+            fetchPedidosLive();
+            setInterval(fetchPedidosLive, 15000); // Polling a cada 15s para novos pedidos
         });
 
-        /* ================= FUNÇÕES DO CARTÃO (NOVA ABA) ================= */
+        /* ================= FUNÇÕES DO APP DE PEDIDOS (LIVE) ================= */
+        async function fetchPedidosLive() {
+            try {
+                const response = await fetch(FORMS_CSV_URL);
+                const dataText = await response.text();
+                const linhas = parseCSVGeral(dataText); // Reutilizando a função robusta do app principal
+                
+                const container = document.getElementById('lista-pedidos-live');
+                if(!container) return;
+
+                document.getElementById('loading-pedidos-live').style.display = 'none';
+
+                const hoje = new Date();
+                const diaHoje = hoje.getDate();
+                const mesHoje = hoje.getMonth() + 1;
+                const anoHoje = hoje.getFullYear();
+                
+                const dataAtualFormatada = `${String(diaHoje).padStart(2, '0')}/${String(mesHoje).padStart(2, '0')}/${anoHoje}`;
+                document.getElementById('data-hoje-label').innerText = `Pedidos de Hoje (${dataAtualFormatada})`;
+
+                let pedidos = [];
+
+                for (let i = 1; i < linhas.length; i++) {
+                    let linha = linhas[i];
+                    if (linha.length < 5) continue;
+
+                    let carimbo = linha[0];
+                    if(!carimbo.trim()) continue;
+
+                    let dataDoPedidoStr = carimbo.split(' ')[0];
+                    let partesData = dataDoPedidoStr.split(/[\/-]/);
+                    
+                    if (partesData.length >= 3) {
+                        let diaPedido, mesPedido, anoPedido;
+                        
+                        if (partesData[0].length === 4) {
+                            anoPedido = parseInt(partesData[0], 10);
+                            mesPedido = parseInt(partesData[1], 10);
+                            diaPedido = parseInt(partesData[2], 10);
+                        } else {
+                            diaPedido = parseInt(partesData[0], 10);
+                            mesPedido = parseInt(partesData[1], 10);
+                            anoPedido = parseInt(partesData[2], 10);
+                        }
+
+                        if (diaPedido !== diaHoje || mesPedido !== mesHoje || anoPedido !== anoHoje) {
+                            continue; // Ignora se não for de hoje
+                        }
+                    } else {
+                        continue;
+                    }
+
+                    let tamanho_str = "", complementos_str = "", endereco_completo_str = "", whatsapp_str = "";
+
+                    for (let j = 1; j < linha.length; j++) {
+                        let col = linha[j].trim();
+                        if (col.includes("x Açaí")) tamanho_str = col;
+                        else if (col.includes("Nome:") && col.includes("| Endereço:")) endereco_completo_str = col;
+                        else if (col.replace(/\D/g, '').length > 8) whatsapp_str = col;
+                        else if (col && !col.includes("Nome:") && !col.includes("x Açaí")) complementos_str = col;
+                    }
+
+                    let qtd = 1, size = '300';
+                    let match_tam = tamanho_str.match(/(\d+)x Açaí (\d+)ml/i);
+                    if (match_tam) {
+                        qtd = parseInt(match_tam[1]);
+                        size = match_tam[2];
+                    }
+
+                    let nome = "Cliente Forms";
+                    let endereco = "Não informado";
+                    let total = `R$ ${((size === '300' ? 21.0 : 25.0) * qtd).toFixed(2).replace('.', ',')}`;
+
+                    if (endereco_completo_str) {
+                        let partes = endereco_completo_str.split('|');
+                        partes.forEach(parte => {
+                            if (parte.includes("Nome:")) nome = parte.replace("Nome:", "").trim();
+                            else if (parte.includes("Endereço:")) endereco = parte.replace("Endereço:", "").trim();
+                            else if (parte.includes("Valor Final:")) total = parte.replace("Valor Final:", "").trim();
+                        });
+                    }
+
+                    pedidos.push({
+                        hora: carimbo,
+                        nome: nome,
+                        whatsapp: whatsapp_str || "Não informado",
+                        endereco: endereco,
+                        qtd: qtd,
+                        tamanho: size,
+                        complementos: complementos_str || "Puro",
+                        total: total
+                    });
+                }
+
+                pedidos.reverse();
+                container.innerHTML = '';
+
+                pedidos.forEach(p => {
+                    let ingredientesFormatados = "";
+                    
+                    if (!p.complementos || p.complementos.toLowerCase().includes("puro") || p.complementos.toLowerCase().includes("nenhum") || p.complementos.trim() === "") {
+                        ingredientesFormatados = "-> *Sem Adicionais (Puro)*";
+                    } else {
+                        let listaIngredientes = p.complementos.split(',').map(item => item.trim()).filter(item => item !== "");
+                        ingredientesFormatados = listaIngredientes.map(ingrediente => `-> *${ingrediente}*`).join('\n');
+                    }
+
+                    const textoParaCopiar = 
+`🟣 *NOVO PEDIDO | URBAN AÇAÍ* 🟣
+
+👤 *Cliente:* ${p.nome}
+📞 *Zap:* ${p.whatsapp}
+📍 *Endereço:* ${p.endereco}
+
+━━━━━━━━━━━━━━━━━━━━━
+📦 *DETALHES DO AÇAÍ*
+
+🍧 *TIPO:* Açaí no Copo
+📏 *TAMANHO:* *${p.tamanho}ml*
+🛒 *QUANTIDADE:* *${p.qtd}x*
+
+✨ *INGREDIENTES:*
+${ingredientesFormatados}
+━━━━━━━━━━━━━━━━━━━━━
+
+💰 *TOTAL A PAGAR:* *${p.total}*`;
+
+                    const card = document.createElement('div');
+                    card.className = 'item-card';
+                    card.style.padding = '18px';
+                    card.style.cursor = 'pointer';
+                    card.style.borderLeft = '4px solid #EC4899'; // Destaque visual
+                    
+                    card.innerHTML = `
+                        <div class="item-header">
+                            <h4 class="item-title" style="font-size: 1.05rem;">${p.nome}</h4>
+                            <span class="badge" style="background: rgba(236,72,153,0.15); color: #EC4899;">${p.hora.split(' ')[1] || p.hora}</span>
+                        </div>
+                        <div style="margin-top: 8px; font-family: var(--font-title); font-weight: 700; color: var(--text-dark);">
+                            🥤 ${p.qtd}x Açaí ${p.tamanho}ml
+                        </div>
+                        <div style="font-size: 12px; color: var(--text-gray); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 5px;">
+                            <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i> ${p.endereco}
+                        </div>
+                    `;
+
+                    card.onclick = () => abrirModalPedido(textoParaCopiar);
+                    container.appendChild(card);
+                });
+
+                if(pedidos.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; opacity:0.6; padding: 20px; font-weight:600; color: var(--text-gray);">Nenhum pedido recebido hoje no Forms.</div>';
+                }
+
+            } catch (error) {
+                console.error("Erro Planilha Live", error);
+            }
+        }
+
+        function abrirModalPedido(textoFormatado) {
+            pedidoAtualTexto = textoFormatado;
+            document.getElementById('ticket-text').innerText = textoFormatado;
+            document.getElementById('pedidoModalOverlay').classList.add('active');
+        }
+
+        function fecharModalPedido() {
+            document.getElementById('pedidoModalOverlay').classList.remove('active');
+        }
+
+        function copiarTextoPedido() {
+            navigator.clipboard.writeText(pedidoAtualTexto).then(() => {
+                showToast('Copiado! Cole no WhatsApp ✅');
+                fecharModalPedido();
+            }).catch(err => {
+                alert("Erro ao copiar! Tente selecionar o texto manualmente.");
+            });
+        }
+
+        /* ================= FUNÇÕES DO CARTÃO ================= */
         async function fetchCartoesData(isSilent = false) {
             try {
                 if (!isSilent) {
@@ -854,7 +1081,6 @@
             });
         }
 
-
         /* ================= INTEGRAÇÃO DO FORMULÁRIO DE FATURAS ================= */
         window.submittedFatura = false;
 
@@ -1024,10 +1250,9 @@
         function togglePopModal(mostrar) {
             const overlay = document.getElementById('popOverlay');
             if (mostrar) { 
-                // Ao abrir, sempre reseta para Barbearia por padrão
                 empresaAtualPop = 'barbearia';
                 document.querySelectorAll('.pop-nav-btn').forEach(b => b.classList.remove('active'));
-                document.querySelector('.pop-nav-btn').classList.add('active'); // O primeiro é barbearia
+                document.querySelector('.pop-nav-btn').classList.add('active');
                 renderizarTarefas(); 
                 overlay.classList.add('active'); 
             } 
@@ -1043,8 +1268,6 @@
         function toggleTheme() { 
             const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', n); localStorage.setItem('tema_fm', n); initTheme();
-            
-            // Re-render chart for dark/light mode border adaptation
             if(abaAtual === 'cartoes') renderDashboardAndListCartoes();
         }
         function showToast(msg) { 
@@ -1057,6 +1280,29 @@
             abaAtual = aba; 
             if(aba === 'dashboard') renderDashboard();
             if(aba === 'cartoes') renderDashboardAndListCartoes();
+            
+            // Re-render select option visibility for UI consistency
+            if (aba === 'acai') {
+                const elTabs = document.querySelectorAll('.acai-section-tab.active');
+                if(elTabs.length > 0 && elTabs[0].id === 'acai-tab-pedidos'){
+                     document.getElementById('acaiMonthSelector').style.display = 'none';
+                } else {
+                     document.getElementById('acaiMonthSelector').style.display = 'block';
+                }
+            }
+        }
+
+        function switchAcaiTab(tabId, btnElement) {
+            document.querySelectorAll('.acai-section-tab').forEach(s => s.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('.acai-nav-btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            if(tabId === 'acai-tab-pedidos') {
+                document.getElementById('acaiMonthSelector').style.display = 'none';
+            } else {
+                document.getElementById('acaiMonthSelector').style.display = 'block';
+            }
         }
 
         /* SINCRONIZAÇÃO NUVEM GERAL */
@@ -1211,13 +1457,6 @@
         const acaiSheetUrl = 'https://docs.google.com/spreadsheets/d/19FSgFADLJ_6IvNpwOkl7r49oU4d0jz6mc8mYd--4SRo/export?format=csv';
         let globalDataByMonth = {};
         let historicalClientData = {};
-
-        function switchAcaiTab(tabId, btnElement) {
-            document.querySelectorAll('.acai-section-tab').forEach(s => s.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            document.querySelectorAll('.acai-nav-btn').forEach(b => b.classList.remove('active'));
-            btnElement.classList.add('active');
-        }
 
         const parseDateObj = (dateStr) => {
             if (!dateStr) return null;
