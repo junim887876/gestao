@@ -58,7 +58,6 @@
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* MARKETER BANNER */
         .welcome-banner { background: linear-gradient(135deg, var(--primary) 0%, #1A0B6E 100%); border-radius: var(--radius-lg); padding: 30px; color: #FFF; margin-bottom: 25px; box-shadow: var(--shadow-soft); position: relative; overflow: hidden; }
         .welcome-banner::after { content: ''; position: absolute; right: -20px; top: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%); border-radius: 50%; }
         .welcome-text h2 { font-family: var(--font-title); font-size: 1.6rem; margin-bottom: 4px; font-weight: 800; letter-spacing: -0.5px; }
@@ -72,7 +71,6 @@
         .fab-button { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--primary-hover)); border: none; border-radius: 50%; color: #FFF; font-size: 1.6rem; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: var(--shadow-float); z-index: 100; transition: transform 0.2s; }
         .fab-button:active { transform: scale(0.9); }
 
-        /* MODAL NATIVO */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(11, 20, 55, 0.6); z-index: 1000; padding: 15px; align-items: center; justify-content: center; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
         .modal-overlay.active { display: flex; animation: fadeModal 0.3s; }
         @keyframes fadeModal { from { opacity: 0; } to { opacity: 1; } }
@@ -88,7 +86,6 @@
         .btn-primary { width: 100%; padding: 16px; background: var(--primary); color: #FFF; border: none; border-radius: var(--radius-md); font-family: var(--font-title); font-weight: 700; font-size: 1.05rem; cursor: pointer; margin-top: 10px; box-shadow: var(--shadow-float); display: flex; align-items: center; justify-content: center; gap: 8px;}
         .btn-primary:active { transform: scale(0.98); }
 
-        /* CARDS APP NATIVO */
         .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
         .item-card { background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); padding: 22px; display: flex; flex-direction: column; gap: 15px; position: relative; overflow: hidden; box-shadow: var(--shadow-soft); transition: transform 0.1s;}
         .item-card:active { transform: scale(0.98); }
@@ -121,7 +118,6 @@
         .toast { background: var(--text-dark); color: var(--bg-card); padding: 14px 24px; border-radius: 30px; box-shadow: var(--shadow-float); display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 0.95rem; font-family: var(--font-title); transform: translateX(120%); animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes slideIn { to { transform: translateX(0); } }
 
-        /* ================= ESTILOS ESPECÍFICOS - ABA AÇAÍ ================= */
         .acai-nav { display: flex; background: var(--bg-input); padding: 6px; border-radius: var(--radius-md); margin-bottom: 20px; border: 1px solid var(--border-color); overflow-x: auto; scrollbar-width: none;}
         .acai-nav::-webkit-scrollbar { display: none; }
         .acai-nav-btn { flex: 1; padding: 12px 8px; border: none; background: transparent; color: var(--text-gray); font-family: var(--font-title); font-weight: 700; border-radius: 10px; cursor: pointer; transition: 0.3s; font-size: 0.85rem; white-space: nowrap;}
@@ -139,10 +135,8 @@
         .acai-sync-btn { background: rgba(255,255,255,0.2); color: #FFF; border: 1px solid rgba(255,255,255,0.3); padding: 10px 18px; border-radius: var(--radius-md); font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; font-family: var(--font-title); }
         .acai-sync-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.3); }
         
-        /* NOVO: Estilos do ticket formatado para impressão no modal */
         .ticket-print { background: var(--bg-input); border-radius: 12px; padding: 15px; font-family: monospace; font-size: 13px; line-height: 1.6; margin-bottom: 20px; white-space: pre-wrap; border: 1px dashed var(--border-color); color: var(--text-dark); max-height: 45vh; overflow-y: auto; }
 
-        /* ================= ESTILOS ESPECÍFICOS - CARTÕES ================= */
         .cartao-tabs-container { display: flex; overflow-x: auto; gap: 8px; padding: 5px 0 15px 0; scrollbar-width: none; border-bottom: 1px solid var(--border-color); margin-bottom: 15px; }
         .cartao-tabs-container::-webkit-scrollbar { display: none; }
         .cartao-tab-btn { background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-gray); padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; white-space: nowrap; transition: all 0.2s ease; font-family: var(--font-title); cursor: pointer; }
@@ -170,7 +164,6 @@
         .pulse-dot { width: 8px; height: 8px; background-color: var(--success); border-radius: 50%; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
 
-        /* ================= APP NATIVO MOBILE UI ================= */
         @media (max-width: 768px) {
             .layout-core { flex-direction: column; }
             .sidebar { position: fixed; bottom: 0; left: 0; width: 100%; height: 85px; flex-direction: row; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.1); border-right: none; padding: 8px 15px 25px 15px; z-index: 90; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); overflow-x: auto; scroll-snap-type: x mandatory; }
@@ -190,13 +183,8 @@
         .loader-nuvem { animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* ================= ESTILOS DO POPUP INTELIGENTE ================= */
-        .pop-modal-container *, .pop-modal-container {
-            box-sizing: border-box; font-family: var(--font-body); touch-action: manipulation; -webkit-user-select: none; user-select: none;
-        }
-        .pop-modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); z-index: 10001; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-        }
+        .pop-modal-container *, .pop-modal-container { box-sizing: border-box; font-family: var(--font-body); touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+        .pop-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); z-index: 10001; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
         .pop-modal-overlay.active { opacity: 1; pointer-events: auto; }
         .pop-modal-card { background: var(--bg-card); width: 90%; max-width: 440px; max-height: 80vh; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden; transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
         .pop-modal-overlay.active .pop-modal-card { transform: scale(1); }
@@ -261,7 +249,7 @@
       </div>
     </div>
 
-    <!-- NOVO: MODAL DO PEDIDO (AÇAÍ LIVE) -->
+    <!-- MODAL DO PEDIDO (AÇAÍ LIVE) -->
     <div class="pop-modal-container">
         <div class="pop-modal-overlay" id="pedidoModalOverlay" onclick="if(event.target === this) fecharModalPedido()">
           <div class="pop-modal-card">
@@ -424,7 +412,6 @@
                 
                 <section id="juridico" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #6366F1, #4338CA);"><h2>Investimento Jurídico</h2><p>Acompanhamento de Capital e Rentabilidade.</p></div><div class="items-grid" id="listaJuridico"></div></section>
                 
-                <!-- ABA URBAN AÇAÍ -->
                 <section id="acai" class="section">
                     <div class="welcome-banner" style="background: linear-gradient(135deg, #EC4899, #BE185D); padding: 25px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
@@ -438,7 +425,6 @@
                         </div>
                     </div>
 
-                    <!-- NOVO: NAVEGAÇÃO COM 4 ABAS (Incluindo Pedidos Live) -->
                     <div class="acai-nav">
                         <button class="acai-nav-btn active" onclick="switchAcaiTab('acai-tab-pedidos', this)">Live 🔴</button>
                         <button class="acai-nav-btn" onclick="switchAcaiTab('acai-tab-ia', this)">IA Clientes</button>
@@ -446,7 +432,6 @@
                         <button class="acai-nav-btn" onclick="switchAcaiTab('acai-tab-fin', this)">Finanças</button>
                     </div>
 
-                    <!-- ABA DE PEDIDOS AO VIVO (APP INTEGRADO) -->
                     <div id="acai-tab-pedidos" class="acai-section-tab active">
                         <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
                             <h3 style="font-family: var(--font-title); font-weight: 800; font-size: 1.2rem; color: var(--text-dark);" id="data-hoje-label">Carregando data...</h3>
@@ -459,8 +444,7 @@
                             <i class="fa-solid fa-spinner loader-nuvem" style="font-size: 2rem; color: var(--primary);"></i>
                             <p style="margin-top: 10px; font-weight: 600; font-family: var(--font-title);">Buscando pedidos do Forms...</p>
                         </div>
-
-                        <!-- Lista Onde os Cards Vão Entrar -->
+                        
                         <div id="lista-pedidos-live" style="display: flex; flex-direction: column; gap: 15px; padding-bottom: 30px;"></div>
                     </div>
                     
@@ -560,7 +544,6 @@
         let dados = { casas: [], energia: [], juridico: [], emprestimo: [], acai: [], barbearia: [] };
         let abaAtual = 'dashboard';
 
-        /* ================= VARIÁVEIS & LÓGICA: CARTÕES ================= */
         const CARTAO_CSV_URL = 'https://docs.google.com/spreadsheets/d/191PXwMxfuq776RX7XY3LSJrvWwsilHHSJ_mfQCKGP0o/export?format=csv';
         const banksCartoesList = ['Nubank', 'PicPay', 'Nubank PJ', 'Caixa', 'Banco do Brasil', 'Santander', 'Will Bank'];
         
@@ -592,9 +575,7 @@
         let currentCycleKeyCartoes = ""; 
         let currentCategoryFilterCartoes = null;
         let chartInstanceCartoes = null;
-        /* ============================================================== */
 
-        /* ================= VARIÁVEIS: AÇAÍ PEDIDOS AO VIVO ================= */
         const FORMS_CSV_URL = "https://docs.google.com/spreadsheets/d/1ivdu73z2cVMM7eWqDDOVu9wNWKgSCHlaHSbuyTuSZm8/export?format=csv";
         let pedidoAtualTexto = "";
 
@@ -607,21 +588,18 @@
             inicializarDataFatura(); 
             fetchAcaiData();
             
-            // Inicializa Cartões
             fetchCartoesData(false);
             setInterval(() => fetchCartoesData(true), 120000);
 
-            // Inicializa Pedidos ao Vivo
             fetchPedidosLive();
-            setInterval(fetchPedidosLive, 15000); // Polling a cada 15s para novos pedidos
+            setInterval(fetchPedidosLive, 15000); 
         });
 
-        /* ================= FUNÇÕES DO APP DE PEDIDOS (LIVE) ================= */
         async function fetchPedidosLive() {
             try {
                 const response = await fetch(FORMS_CSV_URL);
                 const dataText = await response.text();
-                const linhas = parseCSVGeral(dataText); // Reutilizando a função robusta do app principal
+                const linhas = parseCSVGeral(dataText); 
                 
                 const container = document.getElementById('lista-pedidos-live');
                 if(!container) return;
@@ -662,7 +640,7 @@
                         }
 
                         if (diaPedido !== diaHoje || mesPedido !== mesHoje || anoPedido !== anoHoje) {
-                            continue; // Ignora se não for de hoje
+                            continue; 
                         }
                     } else {
                         continue;
@@ -747,7 +725,7 @@ ${ingredientesFormatados}
                     card.className = 'item-card';
                     card.style.padding = '18px';
                     card.style.cursor = 'pointer';
-                    card.style.borderLeft = '4px solid #EC4899'; // Destaque visual
+                    card.style.borderLeft = '4px solid #EC4899'; 
                     
                     card.innerHTML = `
                         <div class="item-header">
@@ -794,7 +772,6 @@ ${ingredientesFormatados}
             });
         }
 
-        /* ================= FUNÇÕES DO CARTÃO ================= */
         async function fetchCartoesData(isSilent = false) {
             try {
                 if (!isSilent) {
@@ -1081,7 +1058,6 @@ ${ingredientesFormatados}
             });
         }
 
-        /* ================= INTEGRAÇÃO DO FORMULÁRIO DE FATURAS ================= */
         window.submittedFatura = false;
 
         window.inicializarDataFatura = function() {
@@ -1126,7 +1102,6 @@ ${ingredientesFormatados}
             }, 2500);
         };
 
-        /* LÓGICA DO POP INTELIGENTE ========================== */
         let empresaAtualPop = 'barbearia';
 
         const bancoTarefas = {
@@ -1259,7 +1234,6 @@ ${ingredientesFormatados}
             else { overlay.classList.remove('active'); }
         }
 
-        /* UI & NAVEGAÇÃO RESTANTE ========================== */
         function initTheme() { 
             document.documentElement.setAttribute('data-theme', localStorage.getItem('tema_fm') || 'light'); 
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
@@ -1281,7 +1255,6 @@ ${ingredientesFormatados}
             if(aba === 'dashboard') renderDashboard();
             if(aba === 'cartoes') renderDashboardAndListCartoes();
             
-            // Re-render select option visibility for UI consistency
             if (aba === 'acai') {
                 const elTabs = document.querySelectorAll('.acai-section-tab.active');
                 if(elTabs.length > 0 && elTabs[0].id === 'acai-tab-pedidos'){
@@ -1305,7 +1278,6 @@ ${ingredientesFormatados}
             }
         }
 
-        /* SINCRONIZAÇÃO NUVEM GERAL */
         function parseCSVGeral(str) {
             const arr = []; let quote = false; let row = 0, col = 0;
             for (let c = 0; c < str.length; c++) {
@@ -1327,28 +1299,57 @@ ${ingredientesFormatados}
             btn.innerHTML = '<i class="fa-solid fa-spinner loader-nuvem"></i>';
             try {
                 for (let aba of Object.keys(dados)) {
-                    const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${aba}`);
+                    let fetchUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${aba}`;
+                    
+                    if (aba === 'juridico') {
+                        fetchUrl = `https://docs.google.com/spreadsheets/d/1WMUKbr-gNUDIql29huUskmSinfQfAC_5ZPU4lVnHWPU/gviz/tq?tqx=out:csv&sheet=Form_Responses`;
+                    }
+
+                    const res = await fetch(fetchUrl);
                     if (!res.ok) continue;
+                    
                     const linhas = parseCSVGeral(await res.text());
                     const nDados = [];
-                    linhas.forEach(row => {
-                        if(row.length < 2 || !Number(row[0])) return;
-                        const id = Number(row[0]);
-                        if(aba === 'casas') nDados.push({ id, nome: row[1], endereco: row[2], inquilino: row[3], celular: row[4], valor: Number(row[5]||0), dia: row[6], data_inicio: row[7] });
-                        if(aba === 'energia') nDados.push({ id, nome: row[1], celular: row[2], valor_original: Number(row[3]||0), valor_final: Number(row[4]||0), data: row[5] });
-                        if(aba === 'juridico') nDados.push({ id, nome: row[1], tipo: row[2], valor: Number(row[3]||0), data: row[4], investidor: row[5], status: row[6] });
-                        if(aba === 'emprestimo') nDados.push({ id, nome: row[1], valor: Number(row[2]||0), parcelas_totais: Number(row[3]||0), parcelas_restantes: Number(row[4]||0), valor_mensal: Number(row[5]||0), data: row[6] });
-                        if(aba === 'acai') nDados.push({ id, data: row[1], tipo: row[2], descricao: row[3], valor: Number(row[4]||0) });
-                        if(aba === 'barbearia') nDados.push({ id, data: row[1], faturamento: Number(row[2]||0), bebidas: Number(row[3]||0), pomadas: Number(row[4]||0) });
-                    });
-                    dados[aba] = nDados; localStorage.setItem(aba+'_data', JSON.stringify(dados[aba]));
+                    
+                    if (aba === 'juridico') {
+                        for(let i = 1; i < linhas.length; i++) {
+                            const row = linhas[i];
+                            if(row.length < 2 || !row[0]) continue;
+                            
+                            const id = new Date(row[0]).getTime() || (Date.now() + i);
+                            
+                            nDados.push({
+                                id: id,
+                                nome: row[1] || '',
+                                tipo: row[4] || '',
+                                investidor: row[5] || 'junior',
+                                valor: Number(String(row[6]).replace(',', '.')) || 0,
+                                status: row[7] || 'Pendente'
+                            });
+                        }
+                    } else {
+                        linhas.forEach(row => {
+                            if(row.length < 2 || !Number(row[0])) return;
+                            const id = Number(row[0]);
+                            if(aba === 'casas') nDados.push({ id, nome: row[1]||'', endereco: row[2]||'', inquilino: row[3]||'', celular: row[4]||'', valor: Number(row[5]||0), dia: row[6]||'', data_inicio: row[7]||'' });
+                            if(aba === 'energia') nDados.push({ id, nome: row[1]||'', celular: row[2]||'', valor_original: Number(row[3]||0), valor_final: Number(row[4]||0), data: row[5]||'' });
+                            if(aba === 'emprestimo') nDados.push({ id, nome: row[1]||'', valor: Number(row[2]||0), parcelas_totais: Number(row[3]||0), parcelas_restantes: Number(row[4]||0), valor_mensal: Number(row[5]||0), data: row[6]||'' });
+                            if(aba === 'acai') nDados.push({ id, data: row[1]||'', tipo: row[2]||'', descricao: row[3]||'', valor: Number(row[4]||0) });
+                            if(aba === 'barbearia') nDados.push({ id, data: row[1]||'', faturamento: Number(row[2]||0), bebidas: Number(row[3]||0), pomadas: Number(row[4]||0) });
+                        });
+                    }
+
+                    dados[aba] = nDados; 
+                    localStorage.setItem(aba+'_data', JSON.stringify(dados[aba]));
                 }
-                renderAll(); if(!silencioso) showToast('App atualizado!');
-            } catch(e) { if(!silencioso) showToast('Erro ao atualizar.'); }
+                renderAll(); 
+                if(!silencioso) showToast('Jurídico e Nuvem sincronizados!');
+            } catch(e) { 
+                if(!silencioso) showToast('Erro de Conexão.'); 
+            }
             btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-down"></i>';
         }
 
-        /* COMUNICAÇÃO SHEETS GERAL */
         function callSheets(acao, tipo, payload) {
             const body = { acao, tipo };
             if(acao === 'salvar') body.valores = payload; else body.id = payload;
@@ -1363,7 +1364,6 @@ ${ingredientesFormatados}
             }
         }
 
-        /* REGRAS & FORMATAÇÃO */
         function calcMeses(dataRef) {
             if(!dataRef) return 1;
             const d1 = new Date(dataRef), d2 = new Date();
@@ -1373,7 +1373,6 @@ ${ingredientesFormatados}
         function fData(d) { if(!d) return '--'; const p = d.split('-'); return p.length===3 ? `${p[2]}/${p[1]}/${p[0]}` : d; }
         function fZap(num) { return num ? num.replace(/\D/g, '') : ''; }
 
-        /* RENDERIZAÇÃO GERAL */
         function renderAll() { renderCasas(); renderEnergia(); renderJuridico(); renderEmprestimo(); renderBarbearia(); renderDashboard(); }
 
         function renderCasas() {
@@ -1392,13 +1391,48 @@ ${ingredientesFormatados}
 
         function renderJuridico() {
             document.getElementById('listaJuridico').innerHTML = dados.juridico.map(j => {
-                const isRecebido = j.status.includes('Recebido');
-                const ret = j.valor * (j.investidor === 'Junior' ? 0.06 : 0.10);
-                const percROI = ((ret / j.valor) * 100).toFixed(1);
-                return `<div class="item-card"><div class="item-header"><div><h4 class="item-title">${j.nome}</h4><span class="badge ${isRecebido?'success':'primary'}">${j.status}</span></div></div><div style="margin-bottom: 5px;"><div class="item-meta-info"><i class="fa-solid fa-scale-balanced"></i> ${j.tipo} | ${j.investidor}</div></div><div class="item-value"><div class="val-box"><span>Custo (Capital)</span><strong style="color:var(--danger)">${fMoeda(j.valor)}</strong></div><div class="val-box"><span>Rentabilidade (${percROI}%)</span><strong style="color:var(--success)">+${fMoeda(ret)}</strong></div></div><div class="item-actions" style="grid-template-columns: ${isRecebido?'1fr 1fr':'1fr 1fr 1fr'};">${!isRecebido?`<button class="btn-action action" onclick="marcarRecebidoJuridico(${j.id})"><i class="fa-solid fa-check-double"></i> Receber</button>`:''}<button class="btn-action generate" onclick="gerarReciboJuridico(${j.id})"><i class="fa-solid fa-file-pdf"></i> Repasse</button><button class="btn-action delete" onclick="deletarItem('juridico', ${j.id})"><i class="fa-solid fa-trash"></i></button></div></div>`;
+                const isRecebido = String(j.status || '').toLowerCase().includes('recebido') || String(j.status || '').toLowerCase().includes('pago') || String(j.status || '').toLowerCase().includes('concluído');
+                const ret = j.valor * 0.50; 
+                const percROI = j.valor > 0 ? ((ret / j.valor) * 100).toFixed(1) : 0;
+                
+                return `<div class="item-card">
+                    <div class="item-header">
+                        <div>
+                            <h4 class="item-title">${j.nome}</h4>
+                            <span class="badge ${isRecebido?'success':'warning'}">${j.status || 'Pendente'}</span>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 5px;">
+                        <div class="item-meta-info"><i class="fa-solid fa-scale-balanced"></i> ${j.tipo} | Investidor: ${j.investidor}</div>
+                    </div>
+                    <div class="item-value">
+                        <div class="val-box"><span>Valor da Causa</span><strong style="color:var(--danger)">${fMoeda(j.valor)}</strong></div>
+                        <div class="val-box"><span>Sua Parte (50%)</span><strong style="color:var(--success)">+${fMoeda(ret)}</strong></div>
+                    </div>
+                    <div class="item-actions" style="grid-template-columns: ${isRecebido?'1fr 1fr':'1fr 1fr 1fr'};">
+                        ${!isRecebido?`<button class="btn-action action" onclick="marcarRecebidoJuridico(${j.id})"><i class="fa-solid fa-check-double"></i> Receber</button>`:''}
+                        <button class="btn-action generate" onclick="gerarReciboJuridico(${j.id})"><i class="fa-solid fa-file-pdf"></i> Repasse</button>
+                        <button class="btn-action delete" onclick="deletarItem('juridico', ${j.id})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>`;
             }).join('');
         }
-        window.marcarRecebidoJuridico = function(id) { const j = dados.juridico.find(x=>x.id===id); if(j && confirm("Marcar Recebido?")){ deletarItem('juridico',id,true); j.status='Recebido ✅'; j.id=Date.now(); dados.juridico.push(j); saveLocal('juridico'); setTimeout(()=>callSheets('salvar','juridico',[j.id,j.nome,j.tipo,j.valor,j.data,j.investidor,j.status]),1000); showToast('Liquidado!'); } }
+        
+        window.marcarRecebidoJuridico = function(id) { const j = dados.juridico.find(x=>x.id===id); if(j && confirm("Marcar Recebido?")){ deletarItem('juridico',id,true); j.status='Recebido ✅'; j.id=Date.now(); dados.juridico.push(j); saveLocal('juridico'); setTimeout(()=>callSheets('salvar','juridico',[j.id,j.nome,j.tipo,j.valor,j.investidor,j.status]),1000); showToast('Liquidado!'); } }
+
+        window.gerarReciboJuridico = function(id) {
+            const j = dados.juridico.find(x => x.id === id);
+            if(!j) return;
+            showToast('Emitindo Recibo...');
+            const d = document.createElement('div'); d.style = "position:fixed;top:-9999px;background:#fff;padding:40px;width:400px;border-radius:15px;font-family:'Poppins',sans-serif;color:#1B2559;";
+            const ret = j.valor * 0.50;
+            const total = j.valor + ret;
+            let html = `<div style="text-align:center;margin-bottom:20px;"><i class="fa-solid fa-scale-balanced" style="font-size:2.2rem;color:#4318FF;"></i><h2 style="margin:10px 0 5px;font-weight:800;">Repasse Jurídico</h2><p style="color:#A3AED0;font-size:0.95rem;margin:0;">Causa: <b>${j.nome}</b></p></div>`;
+            html += `<div style="border-top:2px dashed #E9EDF7;padding:15px 0;"><h4 style="margin:0 0 5px;color:#05CD99;"><i class="fa-solid fa-money-bill-trend-up"></i> Detalhamento</h4><p style="margin:0;font-size:0.85rem;">Agente: ${j.investidor}<br>Capital Inicial: ${fMoeda(j.valor)}<br>Rentabilidade (50%): ${fMoeda(ret)}</p></div>`;
+            html += `<div style="background:#F4F7FE;padding:20px;border-radius:12px;text-align:center;margin-top:20px;"><p style="margin:0;font-size:0.8rem;color:#A3AED0;font-weight:700;">TOTAL LIQUIDADO</p><h1 style="color:#4318FF;margin:5px 0 0;font-size:2.2rem;">${fMoeda(total)}</h1></div><p style="text-align:center;font-size:0.75rem;color:#A3AED0;margin-top:20px;">Gerado em ${new Date().toLocaleDateString('pt-BR')}</p>`;
+            d.innerHTML = html; document.body.appendChild(d);
+            setTimeout(() => html2canvas(d, {scale:2}).then(c => { const l = document.createElement('a'); l.download = `Repasse_${j.nome.replace(/\s+/g,'_')}.png`; l.href = c.toDataURL(); l.click(); d.remove(); }), 500);
+        }
 
         function renderEmprestimo() {
             document.getElementById('listaEmprestimo').innerHTML = dados.emprestimo.map(e => {
@@ -1426,7 +1460,7 @@ ${ingredientesFormatados}
             const custoEmprestimo = dados.emprestimo.reduce((s,e)=>s+e.valor,0);
             const capitalTotal = custoJuridico + custoEmprestimo;
 
-            const retornoJuridico = dados.juridico.reduce((s,j)=>s+(j.valor*(j.investidor==='Junior'?0.06:0.10)),0);
+            const retornoJuridico = dados.juridico.reduce((s,j)=>s+(j.valor*0.50),0);
             const lucroEmprestimoProjetado = dados.emprestimo.reduce((s,e)=>s+((e.parcelas_totais * e.valor_mensal) - e.valor),0); 
             const roiPercent = capitalTotal > 0 ? (((retornoJuridico + lucroEmprestimoProjetado) / capitalTotal) * 100).toFixed(1) : 0;
 
@@ -1453,7 +1487,6 @@ ${ingredientesFormatados}
             setTimeout(() => html2canvas(d, {scale:2}).then(c => { const l = document.createElement('a'); l.download = `Fatura_${nome.replace(/\s+/g,'_')}.png`; l.href = c.toDataURL(); l.click(); d.remove(); }), 500);
         }
 
-        /* ================= LÓGICA ESPECÍFICA DO ANALÍTICO AÇAÍ (PLANILHA) ================= */
         const acaiSheetUrl = 'https://docs.google.com/spreadsheets/d/19FSgFADLJ_6IvNpwOkl7r49oU4d0jz6mc8mYd--4SRo/export?format=csv';
         let globalDataByMonth = {};
         let historicalClientData = {};
@@ -1496,7 +1529,7 @@ ${ingredientesFormatados}
             globalDataByMonth = {};
             historicalClientData = {};
 
-            const startIndex = 170; // Começa na linha 171
+            const startIndex = 170; 
             if (data.length <= startIndex) {
                 showToast("Sem dados a partir da linha 171");
                 return;
@@ -1585,7 +1618,6 @@ ${ingredientesFormatados}
             const data = globalDataByMonth[monthId];
             if (!data) return;
 
-            /* FINANÇAS - Adaptado faturamento bruto */
             document.getElementById('acai-fatTotal').innerText = fMoeda(data.fatRec + data.fatFia);
             document.getElementById('acai-lucroTotal').innerText = fMoeda(data.lucroRec + data.lucroFia);
             document.getElementById('acai-fatRecebido').innerText = fMoeda(data.fatRec);
@@ -1613,7 +1645,6 @@ ${ingredientesFormatados}
                 });
             }
 
-            /* PRODUTOS */
             document.getElementById('acai-qtd500').innerText = data.c500_qtd;
             document.getElementById('acai-lucro500').innerText = fMoeda(data.c500_lucro);
             document.getElementById('acai-qtd300').innerText = data.c300_qtd;
@@ -1628,7 +1659,6 @@ ${ingredientesFormatados}
                 veredito.innerHTML = "Vendas Empatadas ⚖️";
             }
 
-            /* EQUIPE */
             const equipeEl = document.getElementById('acaiEquipeList');
             equipeEl.innerHTML = '';
             const equipeArr = Object.entries(data.equipe).sort((a,b) => b[1] - a[1]);
@@ -1656,7 +1686,6 @@ ${ingredientesFormatados}
                 });
             }
 
-            /* IA CLIENTES */
             const currentClientsMap = data.clientesMes;
             const topList = Object.entries(currentClientsMap)
                 .filter(([n]) => n !== 'Cliente Avulso')
@@ -1724,7 +1753,6 @@ ${ingredientesFormatados}
             }
         }
 
-        /* FORMS DEFAULT / MODAL */
         function abrirModalAtual() {
             if(abaAtual === 'lancar_fatura' || abaAtual === 'acai' || abaAtual === 'cartoes') {
                 showToast("Esta aba gerencia dados via integrações/Sheets.");
@@ -1733,7 +1761,7 @@ ${ingredientesFormatados}
             const tmpl = {
                 'casas': `<div class="form-grid two-cols"><div><label class="form-label">Nome Imóvel</label><input type="text" id="m_c_n" class="form-control"></div><div><label class="form-label">Endereço</label><input type="text" id="m_c_e" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Inquilino</label><input type="text" id="m_c_i" class="form-control"></div><div><label class="form-label">WhatsApp</label><input type="tel" id="m_c_cel" class="form-control" placeholder="62999999999"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Locação</label><input type="number" id="m_c_v" class="form-control"></div><div><label class="form-label">Vencimento (Dia)</label><input type="number" id="m_c_dia" class="form-control"></div></div><div class="form-grid"><label class="form-label">Início de Contrato</label><input type="date" id="m_c_d" class="form-control"></div>`,
                 'energia': `<div class="form-grid"><label class="form-label" style="color:var(--primary);"><i class="fa-solid fa-magic"></i> Puxar Inquilino</label><select class="form-control" onchange="importarInquilino(this.value)"><option value="">Novo Cliente</option>${dados.casas.map(c => `<option value="${c.inquilino}|${c.celular}">${c.inquilino}</option>`).join('')}</select></div><div class="form-grid two-cols"><div><label class="form-label">Cliente</label><input type="text" id="m_e_n" class="form-control"></div><div><label class="form-label">WhatsApp</label><input type="tel" id="m_e_cel" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Fatura Bruta (Sem desc.)</label><input type="number" id="m_e_v" class="form-control"></div><div><label class="form-label">Ref.</label><input type="date" id="m_e_d" class="form-control"></div></div>`,
-                'juridico': `<div class="form-grid two-cols"><div><label class="form-label">Processo/Causa</label><input type="text" id="m_j_n" class="form-control"></div><div><label class="form-label">Natureza</label><input type="text" id="m_j_t" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Custo do Capital</label><input type="number" id="m_j_v" class="form-control"></div><div><label class="form-label">Data Início</label><input type="date" id="m_j_d" class="form-control"></div></div><div class="form-grid"><label class="form-label">Agente</label><select id="m_j_i" class="form-control"><option value="Junior">Junior (6% ROI)</option><option value="Fernanda">Fernanda (10% ROI)</option></select></div>`,
+                'juridico': `<div class="form-grid"><div><label class="form-label">Nome do Cliente</label><input type="text" id="m_j_n" class="form-control"></div></div><div class="form-grid"><div><label class="form-label">Descrição da Causa</label><input type="text" id="m_j_t" class="form-control"></div></div><div class="form-grid"><div><label class="form-label">Valor da Causa</label><input type="number" id="m_j_v" class="form-control"></div></div><div class="form-grid"><label class="form-label">Agente</label><select id="m_j_i" class="form-control"><option value="junior">Junior (50% ROI)</option></select></div>`,
                 'emprestimo': `<div class="form-grid"><div><label class="form-label">Tomador</label><input type="text" id="m_em_n" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Custo do Capital</label><input type="number" id="m_em_vt" class="form-control"></div><div><label class="form-label">Prazo (>100 = Renda Fixa)</label><input type="number" id="m_em_p" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">MRR (Lucro 100% Mensal)</label><input type="number" id="m_em_v" class="form-control"></div><div><label class="form-label">Lançamento</label><input type="date" id="m_em_d" class="form-control"></div></div>`,
                 'barbearia': `<div class="form-grid"><label class="form-label">Data de Fechamento</label><input type="date" id="m_b_d" class="form-control"></div><div class="form-grid"><label class="form-label">Giro Bruto</label><input type="number" id="m_b_f" class="form-control"></div><div class="form-grid two-cols"><div><label class="form-label">Bebidas (Custo)</label><input type="number" id="m_b_b" class="form-control" value="0"></div><div><label class="form-label">Pomadas (Custo)</label><input type="number" id="m_b_p" class="form-control" value="0"></div></div>`
             };
@@ -1750,7 +1778,7 @@ ${ingredientesFormatados}
             const id = Date.now(); let obj = {id}, arr = [];
             if(abaAtual === 'casas'){ obj.nome = document.getElementById('m_c_n').value; obj.endereco = document.getElementById('m_c_e').value; obj.inquilino = document.getElementById('m_c_i').value; obj.celular = document.getElementById('m_c_cel').value; obj.valor = Number(document.getElementById('m_c_v').value); obj.dia = document.getElementById('m_c_dia').value; obj.data_inicio = document.getElementById('m_c_d').value; arr = [id, obj.nome, obj.endereco, obj.inquilino, obj.celular, obj.valor, obj.dia, obj.data_inicio]; }
             else if(abaAtual === 'energia'){ const v = Number(document.getElementById('m_e_v').value); obj.nome = document.getElementById('m_e_n').value; obj.celular = document.getElementById('m_e_cel').value; obj.valor_original = v; obj.valor_final = v*0.80; obj.data = document.getElementById('m_e_d').value; arr = [id, obj.nome, obj.celular, obj.valor_original, obj.valor_final, obj.data]; }
-            else if(abaAtual === 'juridico'){ obj.nome = document.getElementById('m_j_n').value; obj.tipo = document.getElementById('m_j_t').value; obj.valor = Number(document.getElementById('m_j_v').value); obj.data = document.getElementById('m_j_d').value; obj.investidor = document.getElementById('m_j_i').value; obj.status = 'Em Andamento'; arr = [id, obj.nome, obj.tipo, obj.valor, obj.data, obj.investidor, obj.status]; }
+            else if(abaAtual === 'juridico'){ obj.nome = document.getElementById('m_j_n').value; obj.tipo = document.getElementById('m_j_t').value; obj.valor = Number(document.getElementById('m_j_v').value); obj.investidor = document.getElementById('m_j_i').value; obj.status = 'Pendente'; arr = [Date.now(), obj.nome, '', '', obj.tipo, obj.investidor, obj.valor, obj.status]; }
             else if(abaAtual === 'emprestimo'){ obj.nome = document.getElementById('m_em_n').value; obj.valor = Number(document.getElementById('m_em_vt').value); obj.parcelas_totais = Number(document.getElementById('m_em_p').value); obj.parcelas_restantes = obj.parcelas_totais; obj.valor_mensal = Number(document.getElementById('m_em_v').value); obj.data = document.getElementById('m_em_d').value; arr = [id, obj.nome, obj.valor, obj.parcelas_totais, obj.parcelas_restantes, obj.valor_mensal, obj.data]; }
             else if(abaAtual === 'barbearia'){ obj.data = document.getElementById('m_b_d').value; obj.faturamento = Number(document.getElementById('m_b_f').value); obj.bebidas = Number(document.getElementById('m_b_b').value); obj.pomadas = Number(document.getElementById('m_b_p').value); arr = [id, obj.data, obj.faturamento, obj.bebidas, obj.pomadas]; }
             dados[abaAtual].push(obj); saveLocal(abaAtual); callSheets('salvar', abaAtual, arr); showToast('Ativo Registrado!'); fecharModal();
