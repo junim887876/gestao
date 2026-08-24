@@ -695,31 +695,18 @@
                     let ingredientesFormatados = "";
                     
                     if (!p.complementos || p.complementos.toLowerCase().includes("puro") || p.complementos.toLowerCase().includes("nenhum") || p.complementos.trim() === "") {
-                        ingredientesFormatados = "-> *Sem Adicionais (Puro)*";
+                        ingredientesFormatados = "-> Sem Adicionais (Puro)";
                     } else {
                         let listaIngredientes = p.complementos.split(',').map(item => item.trim()).filter(item => item !== "");
-                        ingredientesFormatados = listaIngredientes.map(ingrediente => `-> *${ingrediente}*`).join('\n');
+                        ingredientesFormatados = listaIngredientes.map(ingrediente => `-> ${ingrediente}`).join('\n');
                     }
 
+                    // AQUI ESTÁ A ALTERAÇÃO: O TEXTO COPIADO FICOU LIMPO E DIRETO!
                     const textoParaCopiar = 
-`🟣 *NOVO PEDIDO | URBAN AÇAÍ* 🟣
-
-👤 *Cliente:* ${p.nome}
-📞 *Zap:* ${p.whatsapp}
-📍 *Endereço:* ${p.endereco}
-
-━━━━━━━━━━━━━━━━━━━━━
-📦 *DETALHES DO AÇAÍ*
-
-🍧 *TIPO:* Açaí no Copo
-📏 *TAMANHO:* *${p.tamanho}ml*
-🛒 *QUANTIDADE:* *${p.qtd}x*
-
-✨ *INGREDIENTES:*
-${ingredientesFormatados}
-━━━━━━━━━━━━━━━━━━━━━
-
-💰 *TOTAL A PAGAR:* *${p.total}*`;
+`👤 *Cliente:* ${p.nome}
+🛒 *Quantidade:* ${p.qtd}x Açaí ${p.tamanho}ml
+✨ *Ingredientes:*
+${ingredientesFormatados}`;
 
                     const card = document.createElement('div');
                     card.className = 'item-card';
