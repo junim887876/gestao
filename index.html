@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#141824">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SolarInvest">
+    <link rel="apple-touch-icon" href="./logo_nova.jpg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Gestor Financeiro Premium | Invest, MRR & Cartões</title>
@@ -1771,6 +1777,37 @@ ${ingredientesFormatados}`;
             else if(abaAtual === 'emprestimo'){ obj.nome = document.getElementById('m_em_n').value; obj.valor = Number(document.getElementById('m_em_vt').value); obj.parcelas_totais = Number(document.getElementById('m_em_p').value); obj.parcelas_restantes = obj.parcelas_totais; obj.valor_mensal = Number(document.getElementById('m_em_v').value); obj.data = document.getElementById('m_em_d').value; arr = [id, obj.nome, obj.valor, obj.parcelas_totais, obj.parcelas_restantes, obj.valor_mensal, obj.data]; }
             else if(abaAtual === 'barbearia'){ obj.data = document.getElementById('m_b_d').value; obj.faturamento = Number(document.getElementById('m_b_f').value); obj.bebidas = Number(document.getElementById('m_b_b').value); obj.pomadas = Number(document.getElementById('m_b_p').value); arr = [id, obj.data, obj.faturamento, obj.bebidas, obj.pomadas]; }
             dados[abaAtual].push(obj); saveLocal(abaAtual); callSheets('salvar', abaAtual, arr); showToast('Ativo Registrado!'); fecharModal();
+        }
+    </script>
+    <script>
+        let deferredPrompt;
+        const installBtn = document.getElementById('pwa-install-btn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if (installBtn) installBtn.classList.remove('hidden');
+        });
+
+        if (installBtn) {
+            installBtn.addEventListener('click', async () => {
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('App instalado com sucesso');
+                }
+                deferredPrompt = null;
+                installBtn.classList.add('hidden');
+            });
+        }
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('SW registrado:', reg.scope))
+                    .catch(err => console.error('Erro SW:', err));
+            });
         }
     </script>
 </body>
