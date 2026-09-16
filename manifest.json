@@ -1,1 +1,20 @@
-
+{
+  "short_name": "Gestão",
+  "name": "Gestao",
+  "description": "gestao junim",
+  "icons": [
+    {
+      "src": "./logo_nova.jpg",
+      "type": "image/jpeg",
+      "sizes": "192x192 512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#141824",
+  "theme_color": "#141824",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "pt-BR",
+  "categories": ["utilities", "finance"]
+}
