@@ -11,11 +11,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Gestão Junim</title>
     
+    <!-- Icons & Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- External Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            corePlugins: {
+                preflight: false, // Desativado para evitar conflito com CSS base do Gestão Junim
+            },
+            theme: {
+                extend: {
+                    colors: {
+                        'solar-bg': '#0a081d',
+                        'solar-green': '#30d158',
+                        'solar-green-dark': '#00c853',
+                        'solar-orange': '#ff9f0a',
+                        'solar-red': '#ff453a'
+                    },
+                    boxShadow: {
+                        'solar-glow': '0 0 35px rgba(48, 209, 88, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
     
     <style>
         :root {
@@ -169,6 +195,111 @@
 
         .pulse-dot { width: 8px; height: 8px; background-color: var(--success); border-radius: 50%; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+
+        /* Estilos Customizados SolarInvest ADM Integrados */
+        .glass-pill {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .fade-in-up { 
+            animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+            opacity: 0;
+            transform: translateY(16px);
+        }
+        @keyframes fadeInUp { 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        .admin-card { 
+            background: #ffffff; 
+            color: #0f172a; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22); 
+            overflow: hidden; 
+            transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+        .admin-card:hover { 
+            transform: translateY(-4px) scale(1.01); 
+            box-shadow: 0 18px 38px rgba(0, 0, 0, 0.35); 
+        }
+        .admin-card:active { 
+            transform: scale(0.985); 
+        }
+
+        .card-details-btn { 
+            background: #f8fafc; 
+            color: #475569; 
+            font-size: 11px; 
+            font-weight: 800; 
+            text-align: center; 
+            padding: 14px 16px; 
+            border-top: 1px solid #f1f5f9; 
+            transition: all 0.2s ease; 
+            text-transform: uppercase; 
+            letter-spacing: 0.6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+            cursor: pointer;
+            border: none;
+        }
+        .card-details-btn:hover { 
+            background: #0f172a; 
+            color: #ffffff; 
+        }
+
+        .bottom-sheet-solar { 
+            position: fixed; 
+            bottom: 0; 
+            left: 50%;
+            transform: translate(-50%, 100%);
+            width: 100%; 
+            max-width: 540px;
+            background: #141a29; 
+            color: #ffffff; 
+            border-top-left-radius: 28px; 
+            border-top-right-radius: 28px; 
+            padding: 24px 24px 40px; 
+            z-index: 10001; 
+            border: 1px solid rgba(255,255,255,0.14); 
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+            max-height: 88vh; 
+            overflow-y: auto; 
+            box-shadow: 0 -10px 50px rgba(0,0,0,0.8); 
+        }
+        .modal-pill-solar { 
+            width: 44px; 
+            height: 5px; 
+            background: rgba(255,255,255,0.25); 
+            border-radius: 10px; 
+            margin: 0 auto 20px; 
+        }
+
+        .spinner-solar { 
+            border: 3px solid rgba(255,255,255,0.15); 
+            width: 34px; 
+            height: 34px; 
+            border-radius: 50%; 
+            border-left-color: #30d158; 
+            animation: spin 0.75s linear infinite; 
+        }
 
         @media (max-width: 768px) {
             .layout-core { flex-direction: column; }
@@ -351,9 +482,168 @@
                         <div style="text-align: center; padding: 30px; color: var(--text-gray);"><i class="fa-solid fa-spinner loader-nuvem"></i> Conectando à Planilha de Cartões...</div>
                     </div>
                 </section>
+                
                 <section id="casas" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #FF6B6B, #C92A2A);"><h2>Casas de Aluguel</h2><p>Receita passiva imobiliária.</p></div><div class="items-grid" id="listaCasas"></div></section>
                 
-                <section id="energia" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #F59E0B, #D97706);"><h2>SolarInvest</h2><p>Aluguel de energia com desconto integrado.</p></div><div class="items-grid" id="listaEnergia"></div></section>
+                <!-- ABA ENERGIA SOLAR COMPLETA (SolarInvest ADM) -->
+                <section id="energia" class="section">
+                    <div class="bg-[#0a081d] rounded-3xl p-4 sm:p-6 text-white min-h-[80vh] shadow-2xl relative overflow-hidden font-sans border border-indigo-900/40">
+                        
+                        <!-- Tela de Carregamento Solar -->
+                        <div id="solar-loading-screen" class="absolute inset-0 z-50 bg-[#0a081d] flex flex-col justify-center items-center p-8 transition-opacity duration-500 rounded-3xl">
+                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#00c853] to-emerald-300 flex items-center justify-center mb-6 shadow-solar-glow animate-pulse">
+                                <i class="fa-solid fa-chart-line text-2xl text-slate-950"></i>
+                            </div>
+                            <h1 class="text-2xl font-black text-white mb-2 tracking-tight">SolarInvest ADM</h1>
+                            <p class="text-xs text-indigo-200/70 mb-6 font-medium text-center">Sincronizando faturamento e relatório do banco de dados...</p>
+                            <div class="spinner-solar" id="solar-main-spinner"></div>
+                        </div>
+
+                        <!-- Header Solar Dashboard -->
+                        <header class="px-2 pt-2 pb-6 text-center z-20 max-w-4xl mx-auto w-full">
+                            <div class="flex items-center justify-center gap-2 mb-3">
+                                <div class="inline-flex items-center gap-2 text-xs text-indigo-100 font-bold uppercase tracking-wider glass-pill px-4 py-2 rounded-full shadow-lg transition-transform active:scale-95 cursor-pointer">
+                                    <i class="fa-solid fa-calendar-check text-[#30d158] text-sm"></i>
+                                    <span>LUCRO TOTAL DE:</span>
+                                    <select id="solar-month-filter" class="bg-transparent text-white font-extrabold cursor-pointer focus:outline-none uppercase pr-1" onchange="filterSolarDataByMonth()">
+                                    </select>
+                                    <i class="fa-solid fa-chevron-down text-indigo-200 text-[10px] ml-1"></i>
+                                </div>
+                                
+                                <button onclick="openSolarConfigModal()" title="Configurar Planilha" class="glass-pill p-2 rounded-full text-indigo-200 hover:text-white transition-all active:scale-90">
+                                    <i class="fa-solid fa-gear text-sm"></i>
+                                </button>
+                            </div>
+
+                            <div class="relative block my-1">
+                                <h1 id="solar-total-revenue-display" class="text-4xl sm:text-6xl md:text-7xl font-black text-[#30d158] tracking-tight drop-shadow-md leading-tight">
+                                    R$ 0,00
+                                </h1>
+                            </div>
+                            <p id="solar-month-subtitle-display" class="text-xs sm:text-sm text-indigo-200/80 font-medium tracking-wide">
+                                Lucro Líquido da Usina no Período Selecionado
+                            </p>
+                        </header>
+
+                        <!-- Conteúdo Principal de Clientes -->
+                        <main class="w-full max-w-7xl mx-auto px-1 pt-2">
+                            <div class="flex items-center justify-between mb-4 px-1">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-users text-[#30d158] text-sm"></i>
+                                    <span class="text-xs font-bold uppercase tracking-wider text-indigo-200/80">Clientes & Faturas</span>
+                                </div>
+                                <span id="solar-cards-count-badge" class="text-[11px] font-bold bg-white/10 text-white px-3 py-0.5 rounded-full border border-white/10">0</span>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5" id="solar-cards-container">
+                            </div>
+                        </main>
+                    </div>
+
+                    <!-- MODAL DE DETALHES DA FATURA SOLAR -->
+                    <div class="modal-overlay" id="solar-modal-overlay" onclick="closeSolarModal()"></div>
+                    <div class="bottom-sheet-solar" id="solar-bottom-sheet">
+                        <div class="modal-pill-solar"></div>
+                        
+                        <div class="flex justify-between items-start mb-6 gap-3">
+                            <div class="pr-2">
+                                <h3 id="solar-modal-cliente-nome" class="text-2xl font-black capitalize leading-tight tracking-tight text-white break-words">Cliente</h3>
+                                <p id="solar-modal-mes-sub" class="text-xs text-slate-400 font-medium mt-1">Fatura do Mês</p>
+                            </div>
+                            <div class="flex items-center gap-2 flex-shrink-0">
+                                <span id="solar-modal-status" class="text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">STATUS</span>
+                                <button onclick="closeSolarModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-slate-300 hover:text-white active:scale-90 transition-transform">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="solar-modal-content-body" class="space-y-4 mb-5">
+                            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 space-y-3 text-xs shadow-inner">
+                                <span class="text-[10px] font-extrabold uppercase tracking-wider text-indigo-300 block border-b border-slate-800 pb-2">
+                                    <i class="fa-solid fa-file-invoice text-amber-400 mr-1"></i> Faturamento & Conta do Cliente
+                                </span>
+                                
+                                <div class="flex justify-between items-center text-slate-300">
+                                    <span class="font-medium">Consumo Medido:</span>
+                                    <span id="solar-modal-kwh" class="font-bold text-white text-sm">0 kWh</span>
+                                </div>
+                                <div class="flex justify-between items-center text-slate-300">
+                                    <span class="font-medium">Valor da Energia (R$ 0,81/kWh):</span>
+                                    <span id="solar-modal-custo-kwh" class="font-semibold text-white">R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between items-center text-slate-300">
+                                    <span class="font-medium">Iluminação Pública (CIP):</span>
+                                    <span id="solar-modal-cip" class="font-semibold text-white">R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between items-center text-slate-400 border-t border-slate-800/80 pt-2">
+                                    <span class="font-medium">Valor Concessionária Sem Desconto:</span>
+                                    <span id="solar-modal-valor-bruto" class="line-through text-red-400/90 font-medium">R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between items-center text-emerald-400 font-medium">
+                                    <span>Desconto Aplicado (20% OFF):</span>
+                                    <span id="solar-modal-desconto" class="font-bold">- R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between items-center text-white font-extrabold border-t border-slate-700 pt-2 text-sm">
+                                    <span>Faturamento do Cliente (Valor a Pagar):</span>
+                                    <span id="solar-modal-faturamento" class="text-amber-300">R$ 0,00</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 space-y-2.5 text-xs">
+                                <span class="text-[10px] font-extrabold uppercase tracking-wider text-indigo-300 block border-b border-slate-800 pb-2">
+                                    <i class="fa-solid fa-calculator text-red-400 mr-1"></i> Custos Operacionais da Usina
+                                </span>
+                                <div class="flex justify-between items-center text-slate-300">
+                                    <span class="font-medium">Custo de Geração (R$ 0,17/kWh):</span>
+                                    <span id="solar-modal-custo-kwh-usina" class="font-semibold text-red-400">- R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between items-center text-slate-300">
+                                    <span class="font-medium">Iluminação Pública Paga por Você (CIP):</span>
+                                    <span id="solar-modal-cip-usina" class="font-semibold text-red-400">- R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between items-center text-slate-200 font-bold border-t border-slate-800 pt-2">
+                                    <span>Custo Total da Usina:</span>
+                                    <span id="solar-modal-custo-total" class="text-red-400">- R$ 0,00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="solar-modal-profit-box" class="bg-gradient-to-br from-emerald-500/20 via-emerald-500/10 to-transparent border border-emerald-500/40 rounded-2xl p-5 text-center shadow-solar-glow">
+                            <h4 id="solar-modal-profit-label" class="text-xs text-emerald-400 font-bold uppercase tracking-wider mb-1">Seu Lucro Líquido Final</h4>
+                            <h2 id="solar-modal-valor-final" class="text-4xl font-black text-[#30d158] tracking-tight">R$ 0,00</h2>
+                        </div>
+                    </div>
+
+                    <!-- MODAL DE CONFIGURAÇÃO DA PLANILHA SOLAR LOCAL -->
+                    <div class="modal-overlay" id="solar-config-overlay" onclick="closeSolarConfigModal()"></div>
+                    <div class="bottom-sheet-solar" id="solar-config-sheet">
+                        <div class="modal-pill-solar"></div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-black text-white">Configurar Planilha Solar</h3>
+                            <button onclick="closeSolarConfigModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-slate-300 hover:text-white">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-4">Insira o Link ou ID da sua planilha do Google Sheets. Ela ficará salva **apenas neste navegador**.</p>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">Link ou ID da Planilha</label>
+                                <input type="text" id="solar-input-sheet-id" placeholder="Cole o Link ou ID aqui..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#30d158]">
+                            </div>
+                            
+                            <div class="flex gap-2">
+                                <button onclick="saveSolarSheetConfig()" class="flex-1 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-xs uppercase tracking-wider transition-colors">
+                                    Salvar e Carregar
+                                </button>
+                                <button onclick="clearSolarSheetConfig()" class="py-3 px-4 bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 font-bold rounded-xl text-xs uppercase transition-colors">
+                                    Limpar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
                 
                 <section id="lancar_fatura" class="section">
                     <div class="welcome-banner" style="background: linear-gradient(135deg, #30d158, #28a745);">
@@ -587,6 +877,22 @@
         const FORMS_CSV_URL = "https://docs.google.com/spreadsheets/d/1ivdu73z2cVMM7eWqDDOVu9wNWKgSCHlaHSbuyTuSZm8/export?format=csv";
         let pedidoAtualTexto = "";
 
+        // LÓGICA DE DADOS SOLARINVEST ADM
+        const SOLAR_STORAGE_KEY = 'solarinvest_sheet_id';
+        const SOLAR_TARIFA_KWH = 0.81;
+        const SOLAR_CUSTO_KWH_USINA = 0.175126;
+
+        const SOLAR_NATIVE_MONTHS = [
+            'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+            'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+        ];
+
+        const SOLAR_HEADER_WORDS = ['cliente', 'clientkey', 'nome', 'usuario', 'usuário', 'user', 'cip', 'consumo', 'mês', 'mes', 'status'];
+
+        let globalAllInvoicesSolar = [];
+        let globalAllClientsSolar = [];
+        let currentFilteredCardsSolar = [];
+
         document.addEventListener('DOMContentLoaded', () => { 
             initTheme(); 
             Object.keys(dados).forEach(k => dados[k] = JSON.parse(localStorage.getItem(k+'_data')) || []);
@@ -601,7 +907,477 @@
 
             fetchPedidosLive();
             setInterval(fetchPedidosLive, 15000); 
+
+            // Inicialização SolarInvest
+            initSolarInvestData();
         });
+
+        function getStoredSolarSheetId() {
+            return localStorage.getItem(SOLAR_STORAGE_KEY) || '';
+        }
+
+        function extractSolarSheetId(input) {
+            if (!input) return '';
+            const match = input.match(/\/d\/([a-zA-Z0-9-_]+)/);
+            return match ? match[1] : input.trim();
+        }
+
+        function saveSolarSheetConfig() {
+            const rawVal = document.getElementById('solar-input-sheet-id').value;
+            const extracted = extractSolarSheetId(rawVal);
+            if (!extracted) {
+                alert('Por favor, insira um ID ou Link válido.');
+                return;
+            }
+            localStorage.setItem(SOLAR_STORAGE_KEY, extracted);
+            closeSolarConfigModal();
+            loadSolarAdminData();
+        }
+
+        function clearSolarSheetConfig() {
+            if (confirm('Deseja remover a planilha salva deste navegador?')) {
+                localStorage.removeItem(SOLAR_STORAGE_KEY);
+                location.reload();
+            }
+        }
+
+        function openSolarConfigModal() {
+            document.getElementById('solar-input-sheet-id').value = getStoredSolarSheetId();
+            const overlay = document.getElementById('solar-config-overlay');
+            const sheet = document.getElementById('solar-config-sheet');
+            overlay.style.display = 'block';
+            setTimeout(() => {
+                overlay.style.opacity = '1';
+                sheet.style.transform = 'translate(-50%, 0)';
+            }, 10);
+        }
+
+        function closeSolarConfigModal() {
+            const overlay = document.getElementById('solar-config-overlay');
+            const sheet = document.getElementById('solar-config-sheet');
+            sheet.style.transform = 'translate(-50%, 100%)';
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 350);
+        }
+
+        function parseSolarCSV(str) {
+            const arr = []; let quote = false; let row = [], col = '';
+            for (let c = 0; c < str.length; c++) {
+                let cc = str[c], nc = str[c+1];
+                if (cc === '\r') continue; 
+                if (cc === '"' && quote && nc === '"') { col += cc; ++c; continue; }
+                if (cc === '"') { quote = !quote; continue; }
+                if (cc === ',' && !quote) { row.push(col.trim()); col = ''; continue; }
+                if (cc === '\n' && !quote) {
+                    if (col.trim() || row.length) { row.push(col.trim()); arr.push(row); }
+                    row = []; col = ''; continue;
+                }
+                col += cc;
+            }
+            if (col || row.length) { row.push(col.trim()); arr.push(row); }
+            return arr;
+        }
+
+        function safeParseFloatSolar(val) {
+            if (!val) return 0;
+            if (typeof val === 'number') return val;
+            let str = val.toString().replace(/[R$\s]/g, '');
+            if (str.includes(',') && str.includes('.')) { str = str.replace(/\./g, '').replace(',', '.'); } 
+            else if (str.includes(',')) { str = str.replace(',', '.'); }
+            let num = parseFloat(str); return isNaN(num) ? 0 : num;
+        }
+
+        async function fetchGoogleSheetSolar(sheetName) {
+            const SHEET_ID_SOLAR = getStoredSolarSheetId();
+            if(!SHEET_ID_SOLAR) throw new Error('NO_SHEET_ID');
+
+            const urls = [
+                `https://docs.google.com/spreadsheets/d/${SHEET_ID_SOLAR}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`,
+                `https://docs.google.com/spreadsheets/d/${SHEET_ID_SOLAR}/export?format=csv&sheet=${encodeURIComponent(sheetName)}`
+            ];
+
+            let lastError = null;
+            for (const url of urls) {
+                try {
+                    const response = await fetch(url);
+                    if (response.ok) {
+                        const text = await response.text();
+                        if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+                            throw new Error('PLANILHA_PRIVADA');
+                        }
+                        return parseSolarCSV(text);
+                    }
+                } catch (e) {
+                    lastError = e;
+                }
+            }
+            throw lastError || new Error('Falha ao acessar planilha');
+        }
+
+        function showSolarConfigScreen(msg) {
+            const loadingScreen = document.getElementById('solar-loading-screen');
+            loadingScreen.style.display = 'flex';
+            loadingScreen.style.opacity = '1';
+            loadingScreen.innerHTML = `
+                <div class="text-center p-6 bg-slate-900 border border-slate-700/60 rounded-3xl max-w-sm mx-auto shadow-2xl">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-solid fa-table text-xl"></i>
+                    </div>
+                    <h3 class="text-white font-black text-lg mb-2">Configuração Inicial Solar</h3>
+                    <p class="text-xs text-slate-300 mb-5 leading-relaxed font-normal">${msg}</p>
+                    <div class="space-y-2">
+                        <button onclick="openSolarConfigModal()" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-xl text-xs font-black uppercase tracking-wider transition-colors">Adicionar Planilha</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function initSolarInvestData() {
+            const savedId = getStoredSolarSheetId();
+            if (!savedId) {
+                showSolarConfigScreen('Por favor, adicione o ID ou Link da sua planilha para carregar os dados de energia.');
+            } else {
+                loadSolarAdminData();
+            }
+        }
+
+        async function loadSolarAdminData() {
+            try {
+                let loginData = [];
+                try {
+                    loginData = await fetchGoogleSheetSolar('login');
+                } catch (e) {
+                    if (e.message === 'PLANILHA_PRIVADA') {
+                        throw new Error('A sua planilha precisa estar pública ("Qualquer pessoa com o link").');
+                    }
+                    throw e;
+                }
+
+                const cipMap = {};
+                globalAllClientsSolar = [];
+
+                loginData.forEach(r => {
+                    if(r[0] && r[0].trim()) {
+                        const clientName = r[0].trim();
+                        const clientKey = clientName.toLowerCase();
+                        if (SOLAR_HEADER_WORDS.includes(clientKey)) return;
+
+                        cipMap[clientKey] = safeParseFloatSolar(r[1]);
+                        if(!globalAllClientsSolar.some(c => c.toLowerCase() === clientKey)) {
+                            globalAllClientsSolar.push(clientName);
+                        }
+                    }
+                });
+
+                let invoicesData = [];
+                const possibleSheetNames = ['Form_Responses', 'Respostas ao formulário 1', 'Respostas do formulário 1', 'Respostas'];
+                
+                for (const sheetName of possibleSheetNames) {
+                    try {
+                        const res = await fetchGoogleSheetSolar(sheetName);
+                        if (res && res.length > 0) {
+                            invoicesData = res;
+                            break;
+                        }
+                    } catch (e) {}
+                }
+
+                if (invoicesData.length > 0) {
+                    invoicesData.shift();
+                }
+
+                globalAllInvoicesSolar = [];
+                const monthsArray = [];
+
+                for(let row of invoicesData) {
+                    while(row.length < 7) row.push(""); 
+                    const clienteNome = (row[2] ? row[2].trim() : "");
+                    if(!clienteNome) continue;
+
+                    const clienteKey = clienteNome.toLowerCase();
+                    if (SOLAR_HEADER_WORDS.includes(clienteKey)) continue;
+
+                    if(!globalAllClientsSolar.some(c => c.toLowerCase() === clienteKey)) {
+                        globalAllClientsSolar.push(clienteNome);
+                    }
+
+                    const consumoNum = safeParseFloatSolar(row[1]);
+                    const clientCip = cipMap[clienteKey] !== undefined ? cipMap[clienteKey] : 0;
+                    
+                    const custoKwhNum = consumoNum * SOLAR_TARIFA_KWH;
+                    const valorBruto = custoKwhNum + clientCip;
+                    
+                    const faturamentoCalculado = valorBruto * 0.80; 
+                    const descontoReais = valorBruto - faturamentoCalculado;
+                    
+                    const custoProducaoKwh = consumoNum * SOLAR_CUSTO_KWH_USINA;
+                    const custoTotalUsina = custoProducaoKwh + clientCip;
+                    
+                    const lucroLiquido = faturamentoCalculado - custoTotalUsina;
+
+                    const mes = row[4] ? row[4].trim() : "Outro";
+                    const statusStr = (row[6] ? row[6].toLowerCase() : "");
+                    const isPaid = statusStr.includes('pago');
+
+                    if(mes && !SOLAR_HEADER_WORDS.includes(mes.toLowerCase()) && !monthsArray.includes(mes)) {
+                        monthsArray.push(mes);
+                    }
+
+                    globalAllInvoicesSolar.push({
+                        cliente: clienteNome,
+                        consumoNum: consumoNum,
+                        consumo: consumoNum.toString(),
+                        custoKwhStr: custoKwhNum.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+                        valorBrutoNum: valorBruto,
+                        faturamentoNum: faturamentoCalculado,
+                        lucroLiquidoNum: lucroLiquido,
+                        custoProducaoKwhNum: custoProducaoKwh,
+                        custoTotalUsinaNum: custoTotalUsina,
+                        faturamentoStr: faturamentoCalculado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+                        lucroStr: lucroLiquido.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+                        custoProducaoKwhStr: custoProducaoKwh.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+                        custoTotalUsinaStr: custoTotalUsina.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+                        valorBruto: valorBruto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+                        desconto: descontoReais.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+                        cipStr: clientCip.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+                        mes: mes,
+                        status: isPaid ? 'pago' : 'pendente'
+                    });
+                }
+
+                globalAllInvoicesSolar.reverse();
+
+                monthsArray.sort((a, b) => {
+                    let idxA = SOLAR_NATIVE_MONTHS.findIndex(m => a.toLowerCase().includes(m));
+                    let idxB = SOLAR_NATIVE_MONTHS.findIndex(m => b.toLowerCase().includes(m));
+                    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                    return 0;
+                });
+
+                const monthSelect = document.getElementById('solar-month-filter');
+                monthSelect.innerHTML = '';
+                
+                monthsArray.forEach(m => {
+                    monthSelect.innerHTML += `<option value="${m}" class="bg-[#0a081d] text-white">${m.toUpperCase()}</option>`;
+                });
+                monthSelect.innerHTML += `<option value="TODOS" class="bg-[#0a081d] text-white">TODOS OS MESES</option>`;
+
+                const now = new Date();
+                const currentMonthNamePt = SOLAR_NATIVE_MONTHS[now.getMonth()];
+                
+                let matchedCurrentMonth = monthsArray.find(m => m.toLowerCase().includes(currentMonthNamePt));
+                
+                if (matchedCurrentMonth) {
+                    monthSelect.value = matchedCurrentMonth;
+                } else if (monthsArray.length > 0) {
+                    monthSelect.value = monthsArray[monthsArray.length - 1];
+                }
+
+                filterSolarDataByMonth();
+
+                const loadingScreen = document.getElementById('solar-loading-screen');
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 450);
+
+            } catch (error) {
+                console.error("Erro ao carregar dados Solar ADM:", error);
+                showSolarConfigScreen(error.message || 'Erro ao ler dados da planilha.');
+            }
+        }
+
+        function filterSolarDataByMonth() {
+            const selectedMonth = document.getElementById('solar-month-filter').value;
+            currentFilteredCardsSolar = [];
+
+            if (selectedMonth === 'TODOS') {
+                document.getElementById('solar-month-subtitle-display').innerText = 'Lucro Líquido Total Acumulado (Todos os Meses)';
+                globalAllInvoicesSolar.forEach(inv => {
+                    currentFilteredCardsSolar.push({ hasData: true, ...inv });
+                });
+            } else {
+                document.getElementById('solar-month-subtitle-display').innerText = `Lucro Líquido da Usina em ${selectedMonth}`;
+                
+                globalAllClientsSolar.forEach(clientName => {
+                    const matchedInvoice = globalAllInvoicesSolar.find(
+                        inv => inv.cliente.toLowerCase() === clientName.toLowerCase() && 
+                               inv.mes.toLowerCase() === selectedMonth.toLowerCase()
+                    );
+
+                    if (matchedInvoice) {
+                        currentFilteredCardsSolar.push({ hasData: true, ...matchedInvoice });
+                    } else {
+                        currentFilteredCardsSolar.push({
+                            hasData: false,
+                            cliente: clientName,
+                            consumo: '--',
+                            custoKwhStr: 'R$ 0,00',
+                            valorBrutoNum: 0,
+                            faturamentoNum: 0,
+                            lucroLiquidoNum: 0,
+                            custoProducaoKwhNum: 0,
+                            custoTotalUsinaNum: 0,
+                            faturamentoStr: '--',
+                            lucroStr: '--',
+                            custoProducaoKwhStr: 'R$ 0,00',
+                            custoTotalUsinaStr: 'R$ 0,00',
+                            valorBruto: '--',
+                            desconto: '--',
+                            cipStr: 'R$ 0,00',
+                            mes: selectedMonth,
+                            status: 'sem_dados'
+                        });
+                    }
+                });
+            }
+
+            renderSolarDashboard();
+        }
+
+        function renderSolarDashboard() {
+            const container = document.getElementById('solar-cards-container');
+            container.innerHTML = '';
+
+            let totalLucroMes = 0;
+            currentFilteredCardsSolar.forEach(c => {
+                if(c.hasData) totalLucroMes += c.lucroLiquidoNum;
+            });
+
+            document.getElementById('solar-total-revenue-display').innerText = totalLucroMes.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('solar-cards-count-badge').innerText = currentFilteredCardsSolar.length;
+
+            if(currentFilteredCardsSolar.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full p-10 text-center glass-card rounded-2xl my-4">
+                        <i class="fa-solid fa-folder-open text-3xl text-indigo-300/40 mb-3"></i>
+                        <p class="text-sm text-slate-300 font-medium">Nenhum registro encontrado para este período.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            currentFilteredCardsSolar.forEach((item, index) => {
+                let statusBadge = '';
+                let subtextHtml = '';
+                let profitHtml = '';
+
+                if (item.hasData) {
+                    const isPaid = item.status === 'pago';
+                    statusBadge = isPaid 
+                        ? `<span class="bg-[#30d158] text-white text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider shadow-sm flex-shrink-0">RECEBIDO</span>` 
+                        : `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider flex-shrink-0">PENDENTE</span>`;
+
+                    subtextHtml = `
+                        <i class="fa-solid fa-bolt text-amber-500 text-[11px] mr-1"></i>
+                        Mês: ${item.mes} • Faturamento: ${item.faturamentoStr}
+                    `;
+
+                    profitHtml = `<span class="text-2xl font-black text-[#30d158] tracking-tight leading-none">${item.lucroStr}</span>`;
+                } else {
+                    statusBadge = `<span class="bg-slate-100 text-slate-400 border border-slate-200 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider flex-shrink-0">SEM DADOS</span>`;
+
+                    subtextHtml = `
+                        <i class="fa-solid fa-circle-minus text-slate-300 text-[11px] mr-1"></i>
+                        Mês: ${item.mes} • Consumo: -- kWh
+                    `;
+
+                    profitHtml = `<span class="text-xl font-bold text-slate-300 tracking-tight leading-none">--</span>`;
+                }
+
+                container.innerHTML += `
+                    <div class="admin-card fade-in-up" style="animation-delay: ${index * 0.03}s">
+                        <div class="p-5 flex-1 flex flex-col justify-between gap-4">
+                            <div>
+                                <div class="flex justify-between items-start gap-2 mb-2">
+                                    <h2 class="font-extrabold text-slate-900 text-base leading-snug capitalize tracking-tight break-words pr-1">${item.cliente}</h2>
+                                    ${statusBadge}
+                                </div>
+                                <p class="text-xs text-slate-500 font-semibold">
+                                    ${subtextHtml}
+                                </p>
+                            </div>
+
+                            <div class="pt-3 border-t border-slate-100 flex justify-between items-baseline gap-2">
+                                <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">LUCRO USINA</span>
+                                ${profitHtml}
+                            </div>
+                        </div>
+
+                        <button onclick="openSolarModal(${index})" class="card-details-btn">
+                            <span>Mais detalhes</span>
+                            <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        function openSolarModal(index) {
+            const card = currentFilteredCardsSolar[index];
+
+            document.getElementById('solar-modal-cliente-nome').innerText = card.cliente;
+            document.getElementById('solar-modal-mes-sub').innerText = `Fatura referente a ${card.mes}`;
+
+            const badge = document.getElementById('solar-modal-status');
+            const contentBody = document.getElementById('solar-modal-content-body');
+            const profitBox = document.getElementById('solar-modal-profit-box');
+            const profitLabel = document.getElementById('solar-modal-profit-label');
+
+            if (card.hasData) {
+                const isPaid = card.status === 'pago';
+                badge.innerText = isPaid ? 'RECEBIDO / PAGO' : 'PENDENTE';
+                badge.className = `text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider ${isPaid ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'}`;
+
+                contentBody.style.display = 'block';
+                
+                document.getElementById('solar-modal-kwh').innerText = `${card.consumo} kWh`;
+                document.getElementById('solar-modal-custo-kwh').innerText = card.custoKwhStr;
+                document.getElementById('solar-modal-cip').innerText = card.cipStr;
+                document.getElementById('solar-modal-valor-bruto').innerText = card.valorBruto;
+                document.getElementById('solar-modal-desconto').innerText = `- ${card.desconto}`;
+                document.getElementById('solar-modal-faturamento').innerText = card.faturamentoStr;
+                
+                document.getElementById('solar-modal-custo-kwh-usina').innerText = card.custoProducaoKwhStr;
+                document.getElementById('solar-modal-cip-usina').innerText = card.cipStr;
+                document.getElementById('solar-modal-custo-total').innerText = card.custoTotalUsinaStr;
+
+                profitBox.className = "bg-gradient-to-br from-emerald-500/20 via-emerald-500/10 to-transparent border border-emerald-500/40 rounded-2xl p-5 text-center shadow-solar-glow";
+                profitLabel.innerText = "Seu Lucro Líquido Final";
+                document.getElementById('solar-modal-valor-final').className = "text-4xl font-black text-[#30d158] tracking-tight";
+                document.getElementById('solar-modal-valor-final').innerText = card.lucroStr;
+            } else {
+                badge.innerText = 'SEM LANÇAMENTO';
+                badge.className = 'text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider bg-slate-800 text-slate-400 border border-slate-700';
+
+                contentBody.style.display = 'none';
+
+                profitBox.className = "bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center";
+                profitLabel.innerText = `Nenhum consumo registrado em ${card.mes}`;
+                document.getElementById('solar-modal-valor-final').className = "text-2xl font-bold text-slate-400 tracking-tight mt-1";
+                document.getElementById('solar-modal-valor-final').innerText = "Sem Fatura";
+            }
+
+            const overlay = document.getElementById('solar-modal-overlay');
+            const sheet = document.getElementById('solar-bottom-sheet');
+
+            overlay.style.display = 'block';
+            setTimeout(() => {
+                overlay.style.opacity = '1';
+                sheet.style.transform = 'translate(-50%, 0)';
+            }, 10);
+        }
+
+        function closeSolarModal() {
+            const overlay = document.getElementById('solar-modal-overlay');
+            const sheet = document.getElementById('solar-bottom-sheet');
+
+            sheet.style.transform = 'translate(-50%, 100%)';
+            overlay.style.opacity = '0';
+            setTimeout(() => { 
+                overlay.style.display = 'none'; 
+            }, 350);
+        }
 
         async function fetchPedidosLive() {
             try {
@@ -709,7 +1485,6 @@
                         ingredientesFormatados = listaIngredientes.map(ingrediente => `-> ${ingrediente}`).join('\n');
                     }
 
-                    // AQUI ESTÁ A ALTERAÇÃO: O TEXTO COPIADO FICOU LIMPO E DIRETO!
                     const textoParaCopiar = 
 `👤 *Cliente:* ${p.nome}
 🛒 *Quantidade:* ${p.qtd}x Açaí ${p.tamanho}ml
@@ -1378,10 +2153,7 @@ ${ingredientesFormatados}`;
         }
 
         function renderEnergia() {
-            document.getElementById('listaEnergia').innerHTML = dados.energia.map(e => {
-                const meses = calcMeses(e.data); const totalPago = meses * e.valor_final;
-                return `<div class="item-card"><div class="item-header"><div><h4 class="item-title">${e.nome}</h4><span class="badge success">Ativo</span></div></div><div style="margin-bottom: 5px;"><div class="item-meta-info"><i class="fa-brands fa-whatsapp"></i> <a href="https://wa.me/55${fZap(e.celular)}" target="_blank" class="link-zap">${e.celular}</a></div></div><div class="item-value"><div class="val-box"><span>Fatura (-20%)</span><strong style="color:var(--primary)">${fMoeda(e.valor_final)}</strong></div><div class="val-box"><span>LTV (${meses} Meses)</span><strong style="color:var(--success)">${fMoeda(totalPago)}</strong></div></div><div class="item-actions"><button class="btn-action generate" onclick="gerarFaturaCliente('${e.nome}')"><i class="fa-solid fa-file-invoice"></i> Fatura Integrada</button><button class="btn-action delete" onclick="deletarItem('energia', ${e.id})"><i class="fa-solid fa-trash"></i></button></div></div>`;
-            }).join('');
+            // A renderização completa de cartões dinâmicos e faturamento do SolarInvest ADM é gerenciada via renderSolarDashboard()
         }
 
         function renderJuridico() {
@@ -1445,7 +2217,12 @@ ${ingredientesFormatados}`;
         let chartGeralRef = null;
         function renderDashboard() {
             const mrrCasas = dados.casas.reduce((s,c)=>s+c.valor,0);
-            const mrrEnergia = dados.energia.reduce((s,e)=>s+e.valor_final,0);
+            
+            // MRR da energia calculado com base no faturamento real da usina Solar
+            let mrrEnergia = 0;
+            currentFilteredCardsSolar.forEach(c => { if(c.hasData) mrrEnergia += c.lucroLiquidoNum; });
+            if(mrrEnergia === 0) { mrrEnergia = dados.energia.reduce((s,e)=>s+e.valor_final,0); }
+
             const mrrEmprestimo = dados.emprestimo.reduce((s,e)=>s+e.valor_mensal,0);
             const totalMRR = mrrCasas + mrrEnergia + mrrEmprestimo;
 
@@ -1749,13 +2526,12 @@ ${ingredientesFormatados}`;
         }
 
         function abrirModalAtual() {
-            if(abaAtual === 'lancar_fatura' || abaAtual === 'acai' || abaAtual === 'cartoes') {
+            if(abaAtual === 'lancar_fatura' || abaAtual === 'acai' || abaAtual === 'cartoes' || abaAtual === 'energia') {
                 showToast("Esta aba gerencia dados via integrações/Sheets.");
                 return;
             }
             const tmpl = {
                 'casas': `<div class="form-grid two-cols"><div><label class="form-label">Nome Imóvel</label><input type="text" id="m_c_n" class="form-control"></div><div><label class="form-label">Endereço</label><input type="text" id="m_c_e" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Inquilino</label><input type="text" id="m_c_i" class="form-control"></div><div><label class="form-label">WhatsApp</label><input type="tel" id="m_c_cel" class="form-control" placeholder="62999999999"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Locação</label><input type="number" id="m_c_v" class="form-control"></div><div><label class="form-label">Vencimento (Dia)</label><input type="number" id="m_c_dia" class="form-control"></div></div><div class="form-grid"><label class="form-label">Início de Contrato</label><input type="date" id="m_c_d" class="form-control"></div>`,
-                'energia': `<div class="form-grid"><label class="form-label" style="color:var(--primary);"><i class="fa-solid fa-magic"></i> Puxar Inquilino</label><select class="form-control" onchange="importarInquilino(this.value)"><option value="">Novo Cliente</option>${dados.casas.map(c => `<option value="${c.inquilino}|${c.celular}">${c.inquilino}</option>`).join('')}</select></div><div class="form-grid two-cols"><div><label class="form-label">Cliente</label><input type="text" id="m_e_n" class="form-control"></div><div><label class="form-label">WhatsApp</label><input type="tel" id="m_e_cel" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Fatura Bruta (Sem desc.)</label><input type="number" id="m_e_v" class="form-control"></div><div><label class="form-label">Ref.</label><input type="date" id="m_e_d" class="form-control"></div></div>`,
                 'juridico': `<div class="form-grid"><div><label class="form-label">Nome do Cliente</label><input type="text" id="m_j_n" class="form-control"></div></div><div class="form-grid"><div><label class="form-label">Descrição da Causa</label><input type="text" id="m_j_t" class="form-control"></div></div><div class="form-grid"><div><label class="form-label">Valor da Causa</label><input type="number" id="m_j_v" class="form-control"></div></div><div class="form-grid"><label class="form-label">Agente</label><select id="m_j_i" class="form-control"><option value="junior">Junior (50% ROI)</option></select></div>`,
                 'emprestimo': `<div class="form-grid"><div><label class="form-label">Tomador</label><input type="text" id="m_em_n" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Custo do Capital</label><input type="number" id="m_em_vt" class="form-control"></div><div><label class="form-label">Prazo (>100 = Renda Fixa)</label><input type="number" id="m_em_p" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">MRR (Lucro 100% Mensal)</label><input type="number" id="m_em_v" class="form-control"></div><div><label class="form-label">Lançamento</label><input type="date" id="m_em_d" class="form-control"></div></div>`,
                 'barbearia': `<div class="form-grid"><label class="form-label">Data de Fechamento</label><input type="date" id="m_b_d" class="form-control"></div><div class="form-grid"><label class="form-label">Giro Bruto</label><input type="number" id="m_b_f" class="form-control"></div><div class="form-grid two-cols"><div><label class="form-label">Bebidas (Custo)</label><input type="number" id="m_b_b" class="form-control" value="0"></div><div><label class="form-label">Pomadas (Custo)</label><input type="number" id="m_b_p" class="form-control" value="0"></div></div>`
@@ -1767,12 +2543,9 @@ ${ingredientesFormatados}`;
         }
         function fecharModal() { document.getElementById('modalOverlay').classList.remove('active'); }
 
-        window.importarInquilino = function(val) { if(val) { const [n, c] = val.split('|'); document.getElementById('m_e_n').value = n; document.getElementById('m_e_cel').value = c; } }
-
         window.salvarItem = function() {
             const id = Date.now(); let obj = {id}, arr = [];
             if(abaAtual === 'casas'){ obj.nome = document.getElementById('m_c_n').value; obj.endereco = document.getElementById('m_c_e').value; obj.inquilino = document.getElementById('m_c_i').value; obj.celular = document.getElementById('m_c_cel').value; obj.valor = Number(document.getElementById('m_c_v').value); obj.dia = document.getElementById('m_c_dia').value; obj.data_inicio = document.getElementById('m_c_d').value; arr = [id, obj.nome, obj.endereco, obj.inquilino, obj.celular, obj.valor, obj.dia, obj.data_inicio]; }
-            else if(abaAtual === 'energia'){ const v = Number(document.getElementById('m_e_v').value); obj.nome = document.getElementById('m_e_n').value; obj.celular = document.getElementById('m_e_cel').value; obj.valor_original = v; obj.valor_final = v*0.80; obj.data = document.getElementById('m_e_d').value; arr = [id, obj.nome, obj.celular, obj.valor_original, obj.valor_final, obj.data]; }
             else if(abaAtual === 'juridico'){ obj.nome = document.getElementById('m_j_n').value; obj.tipo = document.getElementById('m_j_t').value; obj.valor = Number(document.getElementById('m_j_v').value); obj.investidor = document.getElementById('m_j_i').value; obj.status = 'Pendente'; arr = [Date.now(), obj.nome, '', '', obj.tipo, obj.investidor, obj.valor, obj.status]; }
             else if(abaAtual === 'emprestimo'){ obj.nome = document.getElementById('m_em_n').value; obj.valor = Number(document.getElementById('m_em_vt').value); obj.parcelas_totais = Number(document.getElementById('m_em_p').value); obj.parcelas_restantes = obj.parcelas_totais; obj.valor_mensal = Number(document.getElementById('m_em_v').value); obj.data = document.getElementById('m_em_d').value; arr = [id, obj.nome, obj.valor, obj.parcelas_totais, obj.parcelas_restantes, obj.valor_mensal, obj.data]; }
             else if(abaAtual === 'barbearia'){ obj.data = document.getElementById('m_b_d').value; obj.faturamento = Number(document.getElementById('m_b_f').value); obj.bebidas = Number(document.getElementById('m_b_b').value); obj.pomadas = Number(document.getElementById('m_b_p').value); arr = [id, obj.data, obj.faturamento, obj.bebidas, obj.pomadas]; }
