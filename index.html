@@ -196,7 +196,7 @@
         .pulse-dot { width: 8px; height: 8px; background-color: var(--success); border-radius: 50%; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
 
-        /* Estilos Customizados SolarInvest ADM Integrados */
+        /* Estilos Customizados SolarInvest ADM e Barbearia Fatura */
         .glass-pill {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
@@ -828,7 +828,59 @@
                     </div>
                 </section>
 
-                <section id="barbearia" class="section"><div class="welcome-banner" style="background: linear-gradient(135deg, #F97316, #C2410C);"><h2>Barbearia Junim</h2><p>Giro de caixa e margem líquida diária.</p></div><div class="items-grid" id="listaBarbearia"></div></section>
+                <!-- ABA BARBEARIA ATUALIZADA - INTEGRAÇÃO JUNIM BANK / FATURA DIGITAL -->
+                <section id="barbearia" class="section">
+                    <div class="welcome-banner" style="background: linear-gradient(135deg, #0F172A, #050608); border: 1px solid rgba(0, 242, 254, 0.2); box-shadow: 0 10px 30px rgba(0,242,254,0.15);">
+                        <div class="flex justify-between items-center flex-wrap gap-4">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h2 style="color: #FFF; font-family: var(--font-title); font-weight: 800; margin: 0;">Barbearia Junim Bank</h2>
+                                    <span style="background: rgba(0, 242, 254, 0.15); border: 1px solid rgba(0, 242, 254, 0.4); color: #00F2FE; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 20px; font-family: monospace;">Fatura Digital</span>
+                                </div>
+                                <p style="font-size: 0.85rem; opacity: 0.8; margin: 0;">Monitoramento de clientes e somatório do total pendente por fatura.</p>
+                            </div>
+                            <button onclick="carregarBarbeariaBankData()" class="acai-sync-btn" style="background: rgba(0, 242, 254, 0.15); border-color: rgba(0, 242, 254, 0.3); color: #00F2FE;">
+                                <i class="fa-solid fa-rotate"></i> Atualizar Faturas
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Métricas Principais da Barbearia -->
+                    <div class="summary-cards">
+                        <div class="summary-card" style="border-left: 4px solid #00F2FE;">
+                            <div class="summary-info">
+                                <span>Total a Receber (Faturas)</span>
+                                <h3 id="barbearia-total-devido" style="color: #00F2FE;">R$ 0,00</h3>
+                            </div>
+                        </div>
+                        <div class="summary-card" style="border-left: 4px solid var(--warning);">
+                            <div class="summary-info">
+                                <span>Clientes Cadastrados</span>
+                                <h3 id="barbearia-total-clientes">0</h3>
+                            </div>
+                        </div>
+                        <div class="summary-card" style="border-left: 4px solid var(--danger);">
+                            <div class="summary-info">
+                                <span>Clientes com Débito</span>
+                                <h3 id="barbearia-clientes-devedores">0</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Barra de Busca de Clientes -->
+                    <div style="margin-bottom: 20px; position: relative;">
+                        <input type="text" id="barbearia-search-input" onkeyup="filtrarClientesBarbearia()" placeholder="🔍 Buscar cliente pelo nome..." class="form-control" style="border-radius: var(--radius-md); padding-left: 20px; background: var(--bg-card); border: 1px solid var(--border-color); box-shadow: var(--shadow-soft);">
+                    </div>
+
+                    <!-- Loader de Carregamento -->
+                    <div id="barbearia-loading" style="text-align: center; padding: 50px 20px; color: var(--text-gray);">
+                        <i class="fa-solid fa-spinner loader-nuvem" style="font-size: 2.5rem; color: #00F2FE;"></i>
+                        <p style="margin-top: 15px; font-weight: 700; font-family: var(--font-title);">Lendo planilhas de clientes e calculando débitos...</p>
+                    </div>
+
+                    <!-- Grid de Clientes e Débitos -->
+                    <div class="items-grid" id="barbearia-clientes-container" style="display: none;"></div>
+                </section>
             </div>
         </div>
     </div>
@@ -893,6 +945,10 @@
         let globalAllClientsSolar = [];
         let currentFilteredCardsSolar = [];
 
+        // LÓGICA INTEGRADORA BARBEARIA BANK (FATURA DIGITAL)
+        const BARBEARIA_SHEET_ID = "1HbSh6tGTNn0MV4Vgr3b6FDqvx_MjuJrlT30IXb_sBGE";
+        let globalBarbeariaClientes = [];
+
         document.addEventListener('DOMContentLoaded', () => { 
             initTheme(); 
             Object.keys(dados).forEach(k => dados[k] = JSON.parse(localStorage.getItem(k+'_data')) || []);
@@ -910,6 +966,9 @@
 
             // Inicialização SolarInvest
             initSolarInvestData();
+
+            // Inicialização Barbearia Bank
+            carregarBarbeariaBankData();
         });
 
         function getStoredSolarSheetId() {
@@ -1377,6 +1436,243 @@
             setTimeout(() => { 
                 overlay.style.display = 'none'; 
             }, 350);
+        }
+
+        // ==========================================
+        // LÓGICA MINUCIOSA DA BARBEARIA BANK (FATURA)
+        // ==========================================
+        
+        function parseSingleItemLineBarbearia(rawText) {
+            if (!rawText) return null;
+            let line = String(rawText).replace(/%0A/gi, '').replace(/[\r\n]/g, '').trim();
+            if (!line || line.startsWith('---') || line.startsWith('===') || line.startsWith('___')) return null;
+
+            let date = 'Lançamento';
+            let itemPart = line;
+
+            if (line.includes('>')) {
+                const parts = line.split('>');
+                itemPart = parts[0].trim();
+                date = parts.slice(1).join('>').trim();
+            }
+
+            let title = itemPart;
+            let price = 0;
+
+            if (itemPart.includes(':')) {
+                const colonIdx = itemPart.indexOf(':');
+                title = itemPart.substring(0, colonIdx).trim();
+                const rest = itemPart.substring(colonIdx + 1).trim();
+                const numMatch = rest.match(/\d+(?:[\.,]\d+)?/);
+                if (numMatch) {
+                    price = parseFloat(numMatch[0].replace(',', '.'));
+                    const extraNote = rest.replace(numMatch[0], '').trim();
+                    if (extraNote) title += ` ${extraNote}`;
+                }
+            } else {
+                const numMatch = itemPart.match(/\d+(?:[\.,]\d+)?/);
+                if (numMatch) {
+                    price = parseFloat(numMatch[0].replace(',', '.'));
+                }
+            }
+
+            return { title: title || 'Item Consumo', price: price, date: date };
+        }
+
+        async function carregarBarbeariaBankData() {
+            const loadingEl = document.getElementById('barbearia-loading');
+            const containerEl = document.getElementById('barbearia-clientes-container');
+            
+            if (loadingEl) loadingEl.style.display = 'block';
+            if (containerEl) containerEl.style.display = 'none';
+
+            try {
+                // 1. Ler aba conf para pegar todos os clientes e status
+                const urlConf = `https://docs.google.com/spreadsheets/d/${BARBEARIA_SHEET_ID}/gviz/tq?tqx=out:json&sheet=conf`;
+                const resConf = await fetch(urlConf);
+                if (!resConf.ok) throw new Error("Não foi possível acessar a aba conf.");
+
+                const textConf = await resConf.text();
+                const jsonMatch = textConf.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);/);
+                if (!jsonMatch) throw new Error("Formato inválido na aba conf.");
+
+                const parsedConf = JSON.parse(jsonMatch[1]);
+                const rowsConf = parsedConf.table.rows;
+
+                const clientesBase = [];
+
+                rowsConf.forEach(r => {
+                    if (!r.c || !r.c[0]) return;
+                    const nomeStr = String(r.c[0].v || r.c[0].f || '').trim();
+                    if (!nomeStr || nomeStr.toLowerCase().includes('nome') || nomeStr.toLowerCase().includes('cliente')) return;
+
+                    let isPaidInConf = false;
+                    if (r.c[3]) {
+                        const rawColD = String(r.c[3].v || r.c[3].f || '').toLowerCase().trim();
+                        if (rawColD.includes('verde') || rawColD.includes('pago') || rawColD.includes('ok') || rawColD.includes('sim') || rawColD === 'true' || rawColD === '1') {
+                            isPaidInConf = true;
+                        }
+                    }
+
+                    let dueDay = "10";
+                    if (r.c[2]) {
+                        dueDay = String(r.c[2].v || r.c[2].f || '').trim();
+                    }
+
+                    clientesBase.push({
+                        nome: nomeStr,
+                        dueDateDay: dueDay,
+                        isPaidInConf: isPaidInConf
+                    });
+                });
+
+                globalBarbeariaClientes = [];
+                let somaTotalDevidoGlobal = 0;
+                let devedoresCount = 0;
+
+                // 2. Para cada cliente, processar sua aba individual e somar o valor devido
+                for (let cli of clientesBase) {
+                    let valorDebitoTotal = 0;
+                    let itensCount = 0;
+
+                    if (!cli.isPaidInConf) {
+                        try {
+                            const urlCliente = `https://docs.google.com/spreadsheets/d/${BARBEARIA_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(cli.nome)}`;
+                            const resCliente = await fetch(urlCliente);
+
+                            if (resCliente.ok) {
+                                const textCliente = await resCliente.text();
+                                const jsonMatchCli = textCliente.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);/);
+
+                                if (jsonMatchCli) {
+                                    const parsedCli = JSON.parse(jsonMatchCli[1]);
+                                    const rowsCli = parsedCli.table.rows;
+
+                                    let explicitTotal = null;
+                                    let calcTotal = 0;
+
+                                    rowsCli.forEach((r, idx) => {
+                                        if (!r.c) return;
+                                        let fullRowContent = "";
+                                        r.c.forEach(cellObj => {
+                                            if (cellObj) {
+                                                const val = cellObj.f || cellObj.v || "";
+                                                if (val) fullRowContent += " " + String(val);
+                                            }
+                                        });
+
+                                        fullRowContent = fullRowContent.trim();
+                                        if (!fullRowContent) return;
+
+                                        const item = parseSingleItemLineBarbearia(fullRowContent);
+
+                                        if (idx === 0) {
+                                            const lower = fullRowContent.toLowerCase();
+                                            if (lower.includes('total') || lower.includes('saldo')) {
+                                                if (item) explicitTotal = item.price;
+                                            } else if (item) {
+                                                calcTotal += item.price;
+                                                itensCount++;
+                                            }
+                                        } else if (item) {
+                                            calcTotal += item.price;
+                                            itensCount++;
+                                        }
+                                    });
+
+                                    valorDebitoTotal = explicitTotal !== null ? explicitTotal : calcTotal;
+                                }
+                            }
+                        } catch (errCli) {
+                            console.warn("Sem aba específica para " + cli.nome);
+                        }
+                    }
+
+                    if (valorDebitoTotal > 0) devedoresCount++;
+                    somaTotalDevidoGlobal += valorDebitoTotal;
+
+                    globalBarbeariaClientes.push({
+                        nome: cli.nome,
+                        debito: valorDebitoTotal,
+                        status: cli.isPaidInConf || valorDebitoTotal === 0 ? 'quitado' : 'pendente',
+                        vencimento: cli.dueDateDay,
+                        itensCount: itensCount
+                    });
+                }
+
+                // Atualizar Métricas na Tela
+                document.getElementById('barbearia-total-devido').innerText = somaTotalDevidoGlobal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                document.getElementById('barbearia-total-clientes').innerText = clientesBase.length;
+                document.getElementById('barbearia-clientes-devedores').innerText = devedoresCount;
+
+                renderBarbeariaClientesCards(globalBarbeariaClientes);
+
+                if (loadingEl) loadingEl.style.display = 'none';
+                if (containerEl) containerEl.style.display = 'grid';
+
+            } catch (err) {
+                console.error("Erro ao carregar Barbearia Bank:", err);
+                if (loadingEl) {
+                    loadingEl.innerHTML = `<div style="color:var(--danger); font-weight:bold;">Falha ao sincronizar com a planilha da Barbearia. Verifique a conexão.</div>`;
+                }
+            }
+        }
+
+        function renderBarbeariaClientesCards(lista) {
+            const container = document.getElementById('barbearia-clientes-container');
+            container.innerHTML = '';
+
+            if (lista.length === 0) {
+                container.innerHTML = '<div style="grid-column: span 3; text-align: center; color: var(--text-gray); padding: 30px;">Nenhum cliente encontrado.</div>';
+                return;
+            }
+
+            lista.forEach(c => {
+                const isQuitado = c.status === 'quitado';
+                const badgeStatus = isQuitado 
+                    ? `<span class="badge success"><i class="fa-solid fa-check"></i> Quitada</span>` 
+                    : `<span class="badge danger"><i class="fa-solid fa-clock"></i> Pendente</span>`;
+
+                const valorHtml = isQuitado 
+                    ? `<strong style="color: var(--success); font-family: var(--font-title); font-size: 1.3rem;">R$ 0,00</strong>` 
+                    : `<strong style="color: var(--danger); font-family: var(--font-title); font-size: 1.3rem;">${c.debito.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong>`;
+
+                const card = document.createElement('div');
+                card.className = 'item-card';
+                card.style.borderLeft = isQuitado ? '4px solid var(--success)' : '4px solid var(--danger)';
+
+                card.innerHTML = `
+                    <div class="item-header">
+                        <div>
+                            <h4 class="item-title" style="font-size: 1.15rem;">${c.nome}</h4>
+                            <span class="item-meta-info"><i class="fa-solid fa-calendar-day" style="color:#00F2FE;"></i> Vence dia ${c.vencimento}</span>
+                        </div>
+                        ${badgeStatus}
+                    </div>
+
+                    <div class="item-value" style="grid-template-columns: 1fr; background: var(--bg-input); border-left: none; padding: 15px;">
+                        <div class="val-box">
+                            <span>Somatório do Débito Fatura</span>
+                            ${valorHtml}
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--text-gray); font-weight: 600;">
+                        <span><i class="fa-solid fa-receipt"></i> ${c.itensCount} lançamentos</span>
+                        <a href="https://wa.me/?text=Olá%20${encodeURIComponent(c.nome)},%20sua%20fatura%20da%20Barbearia%20Junim%20está%20em%20${encodeURIComponent(c.debito.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))}." target="_blank" class="link-zap" style="display: flex; align-items: center; gap: 5px;">
+                            <i class="fa-brands fa-whatsapp"></i> Cobrar no Zap
+                        </a>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function filtrarClientesBarbearia() {
+            const q = document.getElementById('barbearia-search-input').value.toLowerCase().trim();
+            const filtrados = globalBarbeariaClientes.filter(c => c.nome.toLowerCase().includes(q));
+            renderBarbeariaClientesCards(filtrados);
         }
 
         async function fetchPedidosLive() {
@@ -2024,6 +2320,7 @@ ${ingredientesFormatados}`;
             abaAtual = aba; 
             if(aba === 'dashboard') renderDashboard();
             if(aba === 'cartoes') renderDashboardAndListCartoes();
+            if(aba === 'barbearia') carregarBarbeariaBankData();
             
             if (aba === 'acai') {
                 const elTabs = document.querySelectorAll('.acai-section-tab.active');
@@ -2143,7 +2440,7 @@ ${ingredientesFormatados}`;
         function fData(d) { if(!d) return '--'; const p = d.split('-'); return p.length===3 ? `${p[2]}/${p[1]}/${p[0]}` : d; }
         function fZap(num) { return num ? num.replace(/\D/g, '') : ''; }
 
-        function renderAll() { renderCasas(); renderEnergia(); renderJuridico(); renderEmprestimo(); renderBarbearia(); renderDashboard(); }
+        function renderAll() { renderCasas(); renderEnergia(); renderJuridico(); renderEmprestimo(); renderDashboard(); }
 
         function renderCasas() {
             document.getElementById('listaCasas').innerHTML = dados.casas.map(c => {
@@ -2209,10 +2506,6 @@ ${ingredientesFormatados}`;
             }).join('');
         }
         window.abaterEmprestimo = function(id) { const e = dados.emprestimo.find(x=>x.id===id); if(e && e.parcelas_restantes>0) { e.parcelas_restantes--; deletarItem('emprestimo',id,true); e.id=Date.now(); dados.emprestimo.push(e); saveLocal('emprestimo'); setTimeout(()=>callSheets('salvar','emprestimo',[e.id,e.nome,e.valor,e.parcelas_totais,e.parcelas_restantes,e.valor_mensal,e.data]),1000); showToast('Mensalidade Computada no MRR!'); } }
-
-        function renderBarbearia() {
-            document.getElementById('listaBarbearia').innerHTML = dados.barbearia.map(b=>`<div class="item-card"><div class="item-header"><div><h4 class="item-title">Operação ${fData(b.data)}</h4></div></div><div class="item-value"><div class="val-box"><span>Faturamento</span><strong style="color:var(--success)">${fMoeda(b.faturamento)}</strong></div><div class="val-box"><span>Margem Líquida</span><strong style="color:var(--primary)">${fMoeda(b.faturamento-(b.bebidas+b.pomadas))}</strong></div></div><button class="btn-action delete" style="width:100%;margin-top:10px;" onclick="deletarItem('barbearia',${b.id})"><i class="fa-solid fa-trash"></i> Excluir Caixa</button></div>`).join('');
-        }
 
         let chartGeralRef = null;
         function renderDashboard() {
@@ -2526,15 +2819,14 @@ ${ingredientesFormatados}`;
         }
 
         function abrirModalAtual() {
-            if(abaAtual === 'lancar_fatura' || abaAtual === 'acai' || abaAtual === 'cartoes' || abaAtual === 'energia') {
+            if(abaAtual === 'lancar_fatura' || abaAtual === 'acai' || abaAtual === 'cartoes' || abaAtual === 'energia' || abaAtual === 'barbearia') {
                 showToast("Esta aba gerencia dados via integrações/Sheets.");
                 return;
             }
             const tmpl = {
                 'casas': `<div class="form-grid two-cols"><div><label class="form-label">Nome Imóvel</label><input type="text" id="m_c_n" class="form-control"></div><div><label class="form-label">Endereço</label><input type="text" id="m_c_e" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Inquilino</label><input type="text" id="m_c_i" class="form-control"></div><div><label class="form-label">WhatsApp</label><input type="tel" id="m_c_cel" class="form-control" placeholder="62999999999"></div></div><div class="form-grid two-cols"><div><label class="form-label">Valor Locação</label><input type="number" id="m_c_v" class="form-control"></div><div><label class="form-label">Vencimento (Dia)</label><input type="number" id="m_c_dia" class="form-control"></div></div><div class="form-grid"><label class="form-label">Início de Contrato</label><input type="date" id="m_c_d" class="form-control"></div>`,
                 'juridico': `<div class="form-grid"><div><label class="form-label">Nome do Cliente</label><input type="text" id="m_j_n" class="form-control"></div></div><div class="form-grid"><div><label class="form-label">Descrição da Causa</label><input type="text" id="m_j_t" class="form-control"></div></div><div class="form-grid"><div><label class="form-label">Valor da Causa</label><input type="number" id="m_j_v" class="form-control"></div></div><div class="form-grid"><label class="form-label">Agente</label><select id="m_j_i" class="form-control"><option value="junior">Junior (50% ROI)</option></select></div>`,
-                'emprestimo': `<div class="form-grid"><div><label class="form-label">Tomador</label><input type="text" id="m_em_n" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Custo do Capital</label><input type="number" id="m_em_vt" class="form-control"></div><div><label class="form-label">Prazo (>100 = Renda Fixa)</label><input type="number" id="m_em_p" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">MRR (Lucro 100% Mensal)</label><input type="number" id="m_em_v" class="form-control"></div><div><label class="form-label">Lançamento</label><input type="date" id="m_em_d" class="form-control"></div></div>`,
-                'barbearia': `<div class="form-grid"><label class="form-label">Data de Fechamento</label><input type="date" id="m_b_d" class="form-control"></div><div class="form-grid"><label class="form-label">Giro Bruto</label><input type="number" id="m_b_f" class="form-control"></div><div class="form-grid two-cols"><div><label class="form-label">Bebidas (Custo)</label><input type="number" id="m_b_b" class="form-control" value="0"></div><div><label class="form-label">Pomadas (Custo)</label><input type="number" id="m_b_p" class="form-control" value="0"></div></div>`
+                'emprestimo': `<div class="form-grid"><div><label class="form-label">Tomador</label><input type="text" id="m_em_n" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">Custo do Capital</label><input type="number" id="m_em_vt" class="form-control"></div><div><label class="form-label">Prazo (>100 = Renda Fixa)</label><input type="number" id="m_em_p" class="form-control"></div></div><div class="form-grid two-cols"><div><label class="form-label">MRR (Lucro 100% Mensal)</label><input type="number" id="m_em_v" class="form-control"></div><div><label class="form-label">Lançamento</label><input type="date" id="m_em_d" class="form-control"></div></div>`
             };
             if(!tmpl[abaAtual]) return;
             document.getElementById('modalTitle').textContent = "Novo Ativo | " + abaAtual.toUpperCase();
@@ -2548,7 +2840,6 @@ ${ingredientesFormatados}`;
             if(abaAtual === 'casas'){ obj.nome = document.getElementById('m_c_n').value; obj.endereco = document.getElementById('m_c_e').value; obj.inquilino = document.getElementById('m_c_i').value; obj.celular = document.getElementById('m_c_cel').value; obj.valor = Number(document.getElementById('m_c_v').value); obj.dia = document.getElementById('m_c_dia').value; obj.data_inicio = document.getElementById('m_c_d').value; arr = [id, obj.nome, obj.endereco, obj.inquilino, obj.celular, obj.valor, obj.dia, obj.data_inicio]; }
             else if(abaAtual === 'juridico'){ obj.nome = document.getElementById('m_j_n').value; obj.tipo = document.getElementById('m_j_t').value; obj.valor = Number(document.getElementById('m_j_v').value); obj.investidor = document.getElementById('m_j_i').value; obj.status = 'Pendente'; arr = [Date.now(), obj.nome, '', '', obj.tipo, obj.investidor, obj.valor, obj.status]; }
             else if(abaAtual === 'emprestimo'){ obj.nome = document.getElementById('m_em_n').value; obj.valor = Number(document.getElementById('m_em_vt').value); obj.parcelas_totais = Number(document.getElementById('m_em_p').value); obj.parcelas_restantes = obj.parcelas_totais; obj.valor_mensal = Number(document.getElementById('m_em_v').value); obj.data = document.getElementById('m_em_d').value; arr = [id, obj.nome, obj.valor, obj.parcelas_totais, obj.parcelas_restantes, obj.valor_mensal, obj.data]; }
-            else if(abaAtual === 'barbearia'){ obj.data = document.getElementById('m_b_d').value; obj.faturamento = Number(document.getElementById('m_b_f').value); obj.bebidas = Number(document.getElementById('m_b_b').value); obj.pomadas = Number(document.getElementById('m_b_p').value); arr = [id, obj.data, obj.faturamento, obj.bebidas, obj.pomadas]; }
             dados[abaAtual].push(obj); saveLocal(abaAtual); callSheets('salvar', abaAtual, arr); showToast('Ativo Registrado!'); fecharModal();
         }
     </script>
