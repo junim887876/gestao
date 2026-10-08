@@ -9,14 +9,30 @@
     <link rel="apple-touch-icon" href="./logo_nova.jpg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Gestão Junim</title>
+    <title>Gestão Junimmm</title>
     
+    <!-- OneSignal Web SDK v16 -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "SEU_APP_ID_ONESIGNAL_AQUI", // Replace with your OneSignal App ID
+          notifyButton: {
+            enable: true,
+          },
+          allowLocalhostAsSecureOrigin: true,
+        });
+      });
+    </script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
@@ -188,7 +204,7 @@
         .admin-card:hover { transform: translateY(-4px) scale(1.01); box-shadow: 0 18px 38px rgba(0, 0, 0, 0.35); }
         .admin-card:active { transform: scale(0.985); }
 
-        .card-details-btn { background: #f8fafc; color: #475569; font-size: 11px; font-weight: 800; text-align: center; padding: 14px 16px; border-top: 1px solid #f1f5f9; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 0.6px; display: flex; items-center: justify-content: center; gap: 6px; width: 100%; cursor: pointer; border: none; }
+        .card-details-btn { background: #f8fafc; color: #475569; font-size: 11px; font-weight: 800; text-align: center; padding: 14px 16px; border-top: 1px solid #f1f5f9; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 0.6px; display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; cursor: pointer; border: none; }
         .card-details-btn:hover { background: #0f172a; color: #ffffff; }
 
         .bottom-sheet-solar { position: fixed; bottom: 0; left: 50%; transform: translate(-50%, 100%); width: 100%; max-width: 540px; background: #141a29; color: #ffffff; border-top-left-radius: 28px; border-top-right-radius: 28px; padding: 24px 24px 40px; z-index: 10001; border: 1px solid rgba(255,255,255,0.14); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); max-height: 88vh; overflow-y: auto; box-shadow: 0 -10px 50px rgba(0,0,0,0.8); }
@@ -1115,7 +1131,7 @@
 
             buildPieChartCartoes(chartLabels, chartData, chartColors);
             renderTransactionsListCartoes(filteredTransactions);
-            lucide.createIcons();
+            if(window.lucide) lucide.createIcons();
         }
 
         function buildPieChartCartoes(labels, data, colors) {
